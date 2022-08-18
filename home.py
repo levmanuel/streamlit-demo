@@ -5,7 +5,7 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.write("# Welcome to Streamlit! 👋")
+st.write("# Welcome to my personal Streamlit projects portfolio! 👋")
 
 st.sidebar.success("Select a demo above.")
 
@@ -17,6 +17,6 @@ st.markdown(
     of what Streamlit can do!
     ### Want to learn more?
     - Check out [streamlit.io](https://streamlit.io)
-    - Jump into our [documentation](https://docs.streamlit.io)
+    - Jump into to the [documentation](https://docs.streamlit.io)
 """
 )
