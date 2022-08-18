@@ -52,10 +52,11 @@ nof.iloc[1, 2] = 0.75*((1+factor_out/100) * nof.iloc[0, 1])
 nof.iloc[2, 2] = (1+factor_in/100) * nof.iloc[2, 1]
 nof.iloc[3, 2] = min(nof.iloc[1, 2] , nof.iloc[2, 2])
 nof.iloc[4, 2] = nof.iloc[0, 2] - nof.iloc[3, 2]
-#st.dataframe(nof)
 
 col1, col2 = st.columns(2)
+col1.write("LCR calculation detail")
 col1.dataframe(df)
+col2.write("Net Outflow calculation detail")
 col2.dataframe(nof)
 
 if nof.iloc[1, 2] > nof.iloc[2, 2]:
