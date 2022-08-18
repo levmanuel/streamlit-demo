@@ -40,7 +40,7 @@ df.iloc[2, 4] = df.iloc[2, 2] / df.iloc[2, 1] - 1
 df.iloc[3, 3] = df.iloc[3, 2] - df.iloc[3, 1]
 df.iloc[3, 4] = df.iloc[3, 2] / df.iloc[3, 1] - 1
 
-st.dataframe(df)
+#st.dataframe(df)
 
 nof = pd.DataFrame({
 "Name": ["Outflow", "75cpt_Outflow", "Inflow", "Min(0.75 OF, IF)", "Net_Ouflow"],
@@ -52,7 +52,11 @@ nof.iloc[1, 2] = 0.75*((1+factor_out/100) * nof.iloc[0, 1])
 nof.iloc[2, 2] = (1+factor_in/100) * nof.iloc[2, 1]
 nof.iloc[3, 2] = min(nof.iloc[1, 2] , nof.iloc[2, 2])
 nof.iloc[4, 2] = nof.iloc[0, 2] - nof.iloc[3, 2]
-st.dataframe(nof)
+#st.dataframe(nof)
+
+col1, col2 = st.columns(2)
+col1.dataframe(df)
+col2.dataframe(nof)
 
 if nof.iloc[1, 2] > nof.iloc[2, 2]:
     st.write("case: Inflows NOT capped")
