@@ -66,7 +66,7 @@ else:
 
 st.title("Simulation of LCR in case of change of x pct of Outflows during 30 days")
 
-OF_factor = st.slider('Outflow rate decrease', 0, 100, 1)
+OF_factor = st.slider('Outflow rate increase', 0, 100, 1)
 
 days = []
 lcr_list = []
@@ -83,10 +83,6 @@ for i in range(0,30):
      lcr = round(100*df.iloc[0, 2] / (outflows - min( 0.75*outflows ,df.iloc[2, 2])),1)
      lcr_list.append(lcr)
      days.append(i+1)
-
-# print(days)
-# print(outflows_list)
-# print(lcr_list)
 
 chart_data = pd.DataFrame(data=lcr_list, index=days, columns=['LCR'])
 
