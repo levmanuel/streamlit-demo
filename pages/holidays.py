@@ -16,7 +16,7 @@ nof = pd.DataFrame({
 "Coor": [[59.91512811000568, 10.739105977295354], [60.46905260044231, 5.371412422001533]]})
 
 # center on Oslo
-m = folium.Map(location=[59.91512811000568, 10.739105977295354], zoom_start=8)
+m = folium.Map(location=61.288166058744565, 8.047184986151029, zoom_start=6)
 folium.Marker([59.91512811000568, 10.739105977295354], popup="Oslo", tooltip="Oslo").add_to(m)
   
 # Create a list of coordinates representing the points along the route
