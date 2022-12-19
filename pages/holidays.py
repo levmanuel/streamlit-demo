@@ -30,4 +30,4 @@ with col1:
     st.dataframe(nof)
 
 with col2:
-    st_data = st_folium(m, width=725, height=500)
+    st_data = st_folium(m)
