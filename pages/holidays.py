@@ -29,8 +29,8 @@ nof = pd.DataFrame({
 "updated": [45, 0.75*45, 25, min(0.75*45, 25), 20]})
 
 col1, col2 = st.columns(2)
-with c1:
+with col1:
     st.df(nof)
 
-with c2:
+with col2:
     st_data = st_folium(m, width=725)
