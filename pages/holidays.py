@@ -12,7 +12,7 @@ st.write("Day-to-Day Planner")
 #Dataframe
 nof = pd.DataFrame({
 "City": ["Oslo", "Bergen"],
-"Days": [1,2]
+"Days": [1,2],
 "Coor": [[59.91512811000568, 10.739105977295354], [60.46905260044231, 5.371412422001533]]
 
 # center on Oslo
