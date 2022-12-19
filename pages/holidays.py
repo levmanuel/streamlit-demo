@@ -30,7 +30,7 @@ nof = pd.DataFrame({
 
 col1, col2 = st.columns(2)
 with col1:
-    st.df(nof)
+    st.dataframe(nof)
 
 with col2:
     st_data = st_folium(m, width=725)
