@@ -20,13 +20,19 @@ coordinates = [[59.91512811000568, 10.739105977295354], [60.46905260044231, 5.37
 folium.PolyLine(coordinates, color="red", weight=2.5, opacity=1).add_to(m)
 
 # call to render Folium map in Streamlit
-#st_data = st_folium(m, width=725)
+#
 
 #Dataframe
 nof = pd.DataFrame({
 "Name": ["Outflow", "75cpt_Outflow", "Inflow", "Min(0.75 OF, IF)", "Net_Ouflow"],
 "start": [45, 0.75*45, 25, min(0.75*45, 25), 20],
 "updated": [45, 0.75*45, 25, min(0.75*45, 25), 20]})
+
+with c1:
+    st.df(nof)
+
+with c2:
+    st_data = st_folium(m, width=725)
 
 col1, col2 = st.columns(2)
 col1.dataframe(nof)
