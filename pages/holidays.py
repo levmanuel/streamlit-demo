@@ -12,7 +12,7 @@ folium.Marker(
 coordinates = [[59.91512811000568, 10.739105977295354], [60.46905260044231, 5.371412422001533]
 
 # Add the itinerary to the map as a PolyLine
-folium.PolyLine(coordinates, color="red", weight=2.5, opacity=1).add_to(m)
+#folium.PolyLine(coordinates, color="red", weight=2.5, opacity=1).add_to(m)
 
 # call to render Folium map in Streamlit
 st_data = st_folium(m, width=725)
