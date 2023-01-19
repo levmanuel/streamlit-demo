@@ -18,7 +18,7 @@ st.markdown(""" [Lien vers le site Tesla Model 3](https://www.tesla.com/fr_fr/mo
 st.title("Consommation")
 
 df = pd.DataFrame({
-"Columns": ["% initiale de la batterie","Route","Temperature"],
+"Columns": ["pct initiale de la batterie","Route","Temperature"],
 "100": [20, 45, 25],
 "90": [20, 45, 25],
 "50": [0, 0, 0],
@@ -27,3 +27,5 @@ df = pd.DataFrame({
 st.title("Temps de recharge")
 st.title("Coût de recharge")
 st.title("Planification")
+
+#test
