@@ -24,6 +24,8 @@ df = pd.DataFrame({
 "50": [0, 0, 0],
 "10": [0, 0, 0]})
 
+st.dataframe(df)
+
 st.title("Temps de recharge")
 st.title("Coût de recharge")
 st.title("Planification")
