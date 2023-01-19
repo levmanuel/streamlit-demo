@@ -12,8 +12,7 @@ st.set_page_config(page_title="Model 3 SR+ Overview", page_icon="🚗")
 st.title("Model 3 SR+ Overview")
 st.markdown(
     """
-    -
-    - text [Link](https://docs.streamlit.io)
+    - text [Model 3](https://www.tesla.com/fr_fr/model3)
 """
 )
 
