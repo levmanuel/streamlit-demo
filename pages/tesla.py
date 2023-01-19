@@ -10,12 +10,10 @@ import numpy as np
 st.set_page_config(page_title="Model 3 SR+ Overview", page_icon="🚗")
 
 st.title("Model 3 SR+ Overview")
-st.markdown(
-    """
-    - text [Model 3](https://www.tesla.com/fr_fr/model3)
-"""
-)
+st.markdown(""" [Lien vers le site Tesla Model 3](https://www.tesla.com/fr_fr/model3)
+""")
 
 st.title("Consommation")
+st.title("Temps de recharge")
 st.title("Coût de recharge")
 st.title("Planification")
