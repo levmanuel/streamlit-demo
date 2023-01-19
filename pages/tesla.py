@@ -11,6 +11,8 @@ st.set_page_config(page_title="Model 3 SR+ Overview", page_icon="🚗")
 
 st.title("Model 3 SR+ Overview")
 st.markdown(""" [Lien vers le site Tesla Model 3](https://www.tesla.com/fr_fr/model3)
+
+[Lien vers le manuel utilisateur](https://www.tesla.com/ownersmanual/model3/fr_lu/)
 """)
 
 st.title("Consommation")
