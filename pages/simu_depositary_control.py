@@ -27,6 +27,7 @@ with col1:
 
 with col2:
     st.title("Transaction Summary")
+    df = pd.DataFrame(booking_date, value_date, description, net_amount, market_value)
 
 if st.button('Submit'):
     st.write("Données soumises avec succès")
