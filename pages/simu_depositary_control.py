@@ -30,7 +30,7 @@ with col2:
     data_dict = {'Booking Date': [booking_date], 'Value Date': [value_date], 
                  'Description': [description], 'net_amount': [net_amount], "market_value": [market_value]}
     df = pd.DataFrame(data_dict)
-    st.dataframe(df.transpose)
+    st.dataframe(df.transpose())
 
 if st.button('Submit'):
     st.write("Données soumises avec succès")
