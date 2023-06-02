@@ -27,7 +27,8 @@ with col1:
 
 with col2:
     st.title("Transaction Summary")
-    df = pd.DataFrame(booking_date, value_date, description, net_amount, market_value)
+    data_dict = {'Booking Date': booking_date, 'Value Date': value_date, 'Description':description}
+    df = pd.DataFrame(data_dict)
     st.dataframe(df)
 
 if st.button('Submit'):
