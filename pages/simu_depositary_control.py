@@ -29,7 +29,7 @@ with col2:
     st.title("Transaction Summary")
     data_dict = {'Booking Date': booking_date, 'Value Date': value_date, 'Description':description}
     df = pd.DataFrame(data_dict)
-    st.dataframe(df)
+    #st.dataframe(df)
 
 if st.button('Submit'):
     st.write("Données soumises avec succès")
