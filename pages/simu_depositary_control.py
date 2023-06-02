@@ -20,7 +20,7 @@ st.write("Vous avez entré la description: ", description)
 net_amount = st.number_input('Net Amount', value=0.00)
 st.write("Vous avez entré le montant net: ", net_amount)
 
-market_value = st.number_input('Market Value', value=0.00)
+market_value = st.number_input('Fund Market Value', value=0.00)
 st.write("Vous avez entré la valeur du marché: ", market_value)
 
 if st.button('Submit'):
