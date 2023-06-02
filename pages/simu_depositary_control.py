@@ -17,7 +17,7 @@ with col1:
     value_date = st.date_input('Value Date')
     st.write("Vous avez sélectionné la date de valeur: ", value_date)
 
-    description = st.text_input(' XYZ')
+    description = st.text_input(' Description')
     st.write("Vous avez entré la description: ", description)
 
     net_amount = st.number_input('Net Amount', value= 300_000 )
