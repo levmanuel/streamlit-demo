@@ -7,9 +7,10 @@ st.set_page_config(page_title="Depositary Control Data Science Project", page_ic
 
 st.title("Depositary Control Data Science Project")
 
-
-booking_date = st.date_input('Booking Date')
-st.write("Vous avez sélectionné la date de réservation: ", booking_date)
+col1, col2 = st.columns(2)
+with col1:
+    booking_date = st.date_input('Booking Date')
+    st.write("Vous avez sélectionné la date de réservation: ", booking_date)
 
 value_date = st.date_input('Value Date')
 st.write("Vous avez sélectionné la date de valeur: ", value_date)
@@ -23,5 +24,13 @@ st.write("Vous avez entré le montant net: ", net_amount)
 market_value = st.number_input('Fund Market Value', value=0.00)
 st.write("Vous avez entré la valeur du marché: ", market_value)
 
+
+
+
 if st.button('Submit'):
     st.write("Données soumises avec succès")
+
+with col2:
+    st_data = st_folium(m)
+
+
