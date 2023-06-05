@@ -10,7 +10,7 @@ st.title("Depositary Control Data Science Project")
 col1, col2 = st.columns(2)
 with col1:
     
-    st.title("Transaction Input")
+    st.write("Transaction Input")
     booking_date = st.date_input('Booking Date')
     st.write("Vous avez sélectionné la date de réservation: ", booking_date)
 
@@ -28,7 +28,7 @@ with col1:
 
 
 with col2:
-    st.title("Transaction Summary")
+    st.write("Transaction Summary")
     data_dict = {'Booking Date': [booking_date], 'Value Date': [value_date], 
                  'Description': [description], 'net_amount': [net_amount], "market_value": [market_value]}
     df = pd.DataFrame(data_dict)
