@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, timedelta
 
-st.set_page_config(page_title="Depositary Control Data Science Project", page_icon="🐶")
+st.set_page_config(page_title="cas Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
 
 col1, col2 = st.columns(2)
