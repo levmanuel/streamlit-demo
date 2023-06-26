@@ -102,7 +102,4 @@ def extract_alpha_sequences(string, max_word=None):
         matches = re.sub(regex, '[CCY]', matches)
         return matches
 
-test= "110-Ext.Ref: Our Ref: userINT-XRD INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119"
-extract_alpha_sequences(test,15)
-
-st.write(extract_alpha_sequences(test,15))
+st.write(description)
