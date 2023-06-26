@@ -206,4 +206,4 @@ label = extract_alpha_sequences(description,15)
 st.write(label)
 st.write(has_bad_words(label))
 
-has_bad_words(string)
+print(has_bad_words(string))
