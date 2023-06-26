@@ -46,7 +46,7 @@ else:
     is_opp_transaction_0 = 0.0
     is_opp_transaction_1 = 1.0
 
-is_3_sigma_0 = st.checkbox("3 sigmas transactions ?")
+is_3_sigma = st.checkbox("3 sigmas transactions ?")
 if is_3_sigma:
     is_3_sigma_0 = 1.0
     is_3_sigma_1 = 0.0
