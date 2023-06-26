@@ -51,8 +51,9 @@ else:
     is_similar_0 = 0.0
     is_similar_1 = 1.0
 
+print(type(value_date))
 #df["date_delta"] 
-delta =  (value_date - booking_date).dt.days
+#delta =  (value_date - booking_date).dt.days
 #df["date_delta_7"] = np.where(np.abs(df["date_delta"])> 7,1,0)
 #df["date_delta_30"] = np.where(np.abs(df["date_delta"])> 30,1,0)
 #df['fin_semaine'] = df["Booking Date"].apply(lambda x: (x.weekday() >= 5)).astype(int)
