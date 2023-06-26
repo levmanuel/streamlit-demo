@@ -201,6 +201,9 @@ def has_bad_words(string):
         return 1
     else:
         return 0
-    
-st.write(extract_alpha_sequences(description,15))
-st.write(has_bad_words(extract_alpha_sequences(description,15)))
+
+label = extract_alpha_sequences(description,15)
+st.write(label)
+st.write(has_bad_words(label))
+
+has_bad_words(string)
