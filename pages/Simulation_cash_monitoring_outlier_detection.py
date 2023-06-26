@@ -36,6 +36,8 @@ with col1:
     last_day_semester = calendar.monthrange(booking_date.year, semester_end_month)[1]
     fin_semestre = booking_date.day >= last_day_semester - 5
     fin_annee = booking_date.month == 12 and booking_date.day >= 26
+    is_opp_transaction = st.checkbox("Opposite Transaction ?")
+    is_3_sigma = st.checkbox("3 sigmas transactions ?")
 
 with col2:
     st.write("Transaction Summary")
@@ -54,7 +56,7 @@ with col2:
 #if st.button('Submit'):
 #    st.write("Données soumises avec succès")
 
-is_opp_transaction = st.checkbox("Opposite Transaction ?")
+
 if is_opp_transaction:
     is_opp_transaction_0 = 1.0
     is_opp_transaction_1 = 0.0
@@ -62,7 +64,7 @@ else:
     is_opp_transaction_0 = 0.0
     is_opp_transaction_1 = 1.0
 
-is_3_sigma = st.checkbox("3 sigmas transactions ?")
+
 if is_3_sigma:
     is_3_sigma_0 = 1.0
     is_3_sigma_1 = 0.0
