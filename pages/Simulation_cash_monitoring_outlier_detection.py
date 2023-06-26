@@ -22,7 +22,7 @@ with col1:
     fin_semaine = int(booking_date.weekday() >= 5)
     last_day = calendar.monthrange(booking_date.year, booking_date.month)[1]
     fin_mois = booking_date.day >= last_day - 5
-    fin_mois = int(is_end_of_month)
+    fin_mois = int(fin_mois)
     #df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
     #df['fin_semestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//6+1)*6)[1]-5)).astype(int)
     #df['fin_annee'] = df['Booking Date'].apply(lambda x: (x.month == 12 and x.day >= 26)).astype(int)
