@@ -16,6 +16,7 @@ with col1:
     description = st.text_input(' Description')
     net_amount = st.number_input('Net Amount', value= 300_000 )
     market_value = st.number_input('Fund Market Value', value= 10_000_000 )
+    date_delta =  (value_date - booking_date).days
 
 with col2:
     st.write("Transaction Summary")
@@ -54,7 +55,7 @@ else:
     is_similar_0 = 0.0
     is_similar_1 = 1.0
 
-date_delta =  (value_date - booking_date).days
+
 df["date_delta_7"] = np.where(np.abs(df["date_delta"])> 7,1,0)
 df["date_delta_30"] = np.where(np.abs(df["date_delta"])> 30,1,0)
 df['fin_semaine'] = df["Booking Date"].apply(lambda x: (x.weekday() >= 5)).astype(int)
