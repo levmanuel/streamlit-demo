@@ -49,7 +49,7 @@ with col2:
     
     df = pd.DataFrame(data_dict)
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
-    st.dataframe(df.transpose(), st.session_state.use_container_width)
+    st.dataframe(df.transpose())
 
 #if st.button('Submit'):
 #    st.write("Données soumises avec succès")
