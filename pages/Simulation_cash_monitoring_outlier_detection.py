@@ -14,7 +14,7 @@ with col1:
     st.write("Transaction Input")
     booking_date = st.date_input('Booking Date')
     value_date = st.date_input('Value Date')
-    description = st.text_input(' Description')
+    description = st.text_input('110-Ext.Ref: Our Ref: userINT-XRD INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119')
     net_amount = st.number_input('Net Amount', value= 300_000 )
     market_value = st.number_input('Fund Market Value', value= 10_000_000 )
     date_delta =  (value_date - booking_date).days
@@ -70,3 +70,30 @@ if is_similar:
 else:
     is_similar_0 = 0.0
     is_similar_1 = 1.0
+
+### NLP part
+exlusion_list = ["ref", "our", "for", "ext", "prc", "wgs", "useri", "caceis", "luxembourg", "bank",
+                "kqj", "yen", "cswnew", "roc", "isaebebbxxx", "luxe", "belgium", "bsuilull", "bran" "bra","buq",
+                "scr", "userint", "rua", "qwe", "xrd", "nos", "brussels", "branc", "xxx", "isaebebb", "cbf",
+                "isaefr","xxxxx", "bom", "nonref", "notprovided", "acou", "ajs", "clb", "cbb", "hev", "int"]
+
+ccy = ['eur', 'usd', 'jpy', 'bgn', 'czk', 'dkk', 'gbp', 'huf', 'pln', 'ron', 'sek', 'chf', 'isk', 'nok', 'try', 'aud',
+ 'brl', 'cad', 'cny', 'hkd', 'idr', 'ils', 'inr', 'krw', 'mxn', 'myr', 'nzd', 'php', 'sgd', 'thb', 'zar', 'rub', 'cnh', 'twd']
+regex = '|'.join(ccy)
+
+def extract_alpha_sequences(string, max_word=None):
+    if max_word == None:
+        matches = re.findall(r'[A-Za-z]+', string.lower())
+        matches = [i for i in matches if (len(i)> 2 and i not in exlusion_list)]
+        matches = ' '.join(matches)
+        matches = re.sub(regex, '[CCY]', matches)
+        return matches
+    else:
+        matches = re.findall(r'[A-Za-z]+', string.lower())
+        matches = [i for i in matches if (len(i)> 2 and i not in exlusion_list)][:max_word]
+        matches = ' '.join(matches)
+        matches = re.sub(regex, '[CCY]', matches)
+        return matches
+
+test= "110-Ext.Ref: Our Ref: userINT-XRD INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119"
+extract_alpha_sequences(test,15)
