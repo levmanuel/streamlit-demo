@@ -22,8 +22,7 @@ with col2:
     data_dict = {
         'Booking Date': [booking_date], 'Value Date': [value_date], 
         'Description': [description], 'net_amount': [net_amount], 
-        'market_value': [market_value], df["date_delta_7"] 
-    }
+        'market_value': [market_value], 'date_delta' : [date_delta] }
     df = pd.DataFrame(data_dict)
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
     st.dataframe(df.transpose())
@@ -57,7 +56,7 @@ else:
 
 
 delta =  (value_date - booking_date).days
-df["date_delta"] = delta
+date_delta = delta
 df["date_delta_7"] = np.where(np.abs(df["date_delta"])> 7,1,0)
 df["date_delta_30"] = np.where(np.abs(df["date_delta"])> 30,1,0)
 df['fin_semaine'] = df["Booking Date"].apply(lambda x: (x.weekday() >= 5)).astype(int)
