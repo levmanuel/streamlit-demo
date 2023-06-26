@@ -24,7 +24,7 @@ with col1:
     last_day = calendar.monthrange(booking_date.year, booking_date.month)[1]
     fin_mois = booking_date.day >= last_day - 5
     fin_mois = int(fin_mois)
-    last_day_of_quarter = booking_date + timedelta(day=31, months=((booking_date.month-1)//3+1)*3)
+    last_day_of_quarter = booking_date + relativedelta(day=31, months=((booking_date.month-1)//3+1)*3)
     fin_trimestre = booking_date.day >= last_day_of_quarter.day - 5
     fin_trimestre = int(fin_trimestre)
     #df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
