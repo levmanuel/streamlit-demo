@@ -91,10 +91,10 @@ df = df.join(pd.get_dummies(df["fin_semestre"], prefix="fin_semestre"))
 df = df.join(pd.get_dummies(df["fin_annee"], prefix="fin_annee"))
 df = df.join(pd.get_dummies(df["Similar Transaction Last Day"], prefix="is_similar"))
 
-df = df.drop(columns=['Client Name', 'Currency', 'Booking Date', 'Value Date', 'Description',
-       'net_amount', 'Swift Classification', 'FX_Rate',
-       'net_amount_fx_abs', 'Market value', 'amount_bin',
-       'is_opp_transaction', 'net_amount_fx_abs_mean', 'net_amount_fx_abs_std',
-       'is_3_sigma', 'date_delta', 'date_delta_7', 'date_delta_30',
-       'fin_semaine', 'fin_mois', 'fin_trimestre', 'fin_semestre', 'fin_annee',
-       'Similar Transaction Last Day'])
+#df = df.drop(columns=['Client Name', 'Currency', 'Booking Date', 'Value Date', 'Description',
+#       'net_amount', 'Swift Classification', 'FX_Rate',
+#       'net_amount_fx_abs', 'Market value', 'amount_bin',
+#       'is_opp_transaction', 'net_amount_fx_abs_mean', 'net_amount_fx_abs_std',
+#       'is_3_sigma', 'date_delta', 'date_delta_7', 'date_delta_30',
+#       'fin_semaine', 'fin_mois', 'fin_trimestre', 'fin_semestre', 'fin_annee',
+#       'Similar Transaction Last Day'])
