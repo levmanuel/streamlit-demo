@@ -53,3 +53,20 @@ if is_3_sigma:
 else:
     is_3_sigma_0 = 0.0
     is_3_sigma_1 = 1.0
+
+is_similar = st.checkbox("3 sigmas transactions ?")
+if is_similar:
+    is_similar_0 = 1.0
+    is_similar_1 = 0.0
+else:
+    is_similar_0 = 0.0
+    is_similar_1 = 1.0
+
+df["date_delta"] =  (df["Value Date"] - df["Booking Date"]).dt.days
+df["date_delta_7"] = np.where(np.abs(df["date_delta"])> 7,1,0)
+df["date_delta_30"] = np.where(np.abs(df["date_delta"])> 30,1,0)
+df['fin_semaine'] = df["Booking Date"].apply(lambda x: (x.weekday() >= 5)).astype(int)
+df['fin_mois'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, x.month)[1]-5)).astype(int)
+df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
+df['fin_semestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//6+1)*6)[1]-5)).astype(int)
+df['fin_annee'] = df['Booking Date'].apply(lambda x: (x.month == 12 and x.day >= 26)).astype(int)
