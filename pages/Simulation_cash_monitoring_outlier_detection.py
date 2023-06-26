@@ -102,8 +102,7 @@ def extract_alpha_sequences(string, max_word=None):
         matches = re.sub(regex, '[CCY]', matches)
         return matches
 
-st.write(extract_alpha_sequences(description,15))
-st.write(has_bad_words(description))
+
 
 bad_words = ["fraud",
     "suspicious",
@@ -204,3 +203,6 @@ def has_bad_words(string):
         return 1
     else:
         return 0
+    
+st.write(extract_alpha_sequences(description,15))
+st.write(has_bad_words(description))
