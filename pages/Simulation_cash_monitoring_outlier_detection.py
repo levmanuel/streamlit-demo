@@ -37,11 +37,3 @@ with col2:
 
 if st.button('Submit'):
     st.write("Données soumises avec succès")
-
-
-###verif
-print(df.columns)
-####Function
-#       'is_3_sigma', 'date_delta', 'date_delta_7', 'date_delta_30',
-#       'fin_semaine', 'fin_mois', 'fin_trimestre', 'fin_semestre', 'fin_annee',
-#       'Similar Transaction Last Day'])
