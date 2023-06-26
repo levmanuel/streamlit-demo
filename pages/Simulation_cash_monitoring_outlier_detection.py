@@ -102,4 +102,4 @@ def extract_alpha_sequences(string, max_word=None):
         matches = re.sub(regex, '[CCY]', matches)
         return matches
 
-st.write(description)
+st.write(extract_alpha_sequences(description,15))
