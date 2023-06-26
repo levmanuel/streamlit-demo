@@ -43,7 +43,7 @@ else:
     is_3_sigma_0 = 0.0
     is_3_sigma_1 = 1.0
 
-is_similar = st.checkbox("3 sigmas transactions ?")
+is_similar = st.checkbox("Similar transactions ?")
 if is_similar:
     is_similar_0 = 1.0
     is_similar_1 = 0.0
