@@ -14,7 +14,7 @@ with col1:
     st.write("Transaction Input")
     booking_date = st.date_input('Booking Date')
     value_date = st.date_input('Value Date')
-    description = st.text_input('110-Ext.Ref: Our Ref: userINT-XRD INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119')
+    description = st.text_input('Description...', value="110-Ext.Ref: Our Ref: userINT-XRD INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119")
     net_amount = st.number_input('Net Amount', value= 300_000 )
     market_value = st.number_input('Fund Market Value', value= 10_000_000 )
     date_delta =  (value_date - booking_date).days
