@@ -20,7 +20,7 @@ with col1:
     date_delta =  (value_date - booking_date).days
     date_delta_7 = np.where(np.abs(date_delta)> 7,1,0)
     date_delta_30 = np.where(np.abs(date_delta)> 30,1,0)
-    fin_semaine = int(booking_date.weekday() >= 5)
+    fin_semaine = booking_date.weekday() >= 5
     last_day = calendar.monthrange(booking_date.year, booking_date.month)[1]
     fin_mois = booking_date.day >= last_day - 5
     #fin_mois = int(fin_mois)
