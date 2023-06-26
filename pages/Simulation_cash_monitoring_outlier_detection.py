@@ -24,8 +24,8 @@ with col2:
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
     st.dataframe(df.transpose())
 
-if st.button('Submit'):
-    st.write("Données soumises avec succès")
+#if st.button('Submit'):
+#    st.write("Données soumises avec succès")
 
 is_opp_transaction = st.checkbox("Opposite Transaction ?")
 if is_opp_transaction:
@@ -54,10 +54,10 @@ else:
 
 delta =  (value_date - booking_date).days
 df["date_delta"] = delta
-#df["date_delta_7"] = np.where(np.abs(df["date_delta"])> 7,1,0)
-#df["date_delta_30"] = np.where(np.abs(df["date_delta"])> 30,1,0)
-#df['fin_semaine'] = df["Booking Date"].apply(lambda x: (x.weekday() >= 5)).astype(int)
-#df['fin_mois'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, x.month)[1]-5)).astype(int)
-#df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
-#df['fin_semestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//6+1)*6)[1]-5)).astype(int)
-#df['fin_annee'] = df['Booking Date'].apply(lambda x: (x.month == 12 and x.day >= 26)).astype(int)
+df["date_delta_7"] = np.where(np.abs(df["date_delta"])> 7,1,0)
+df["date_delta_30"] = np.where(np.abs(df["date_delta"])> 30,1,0)
+df['fin_semaine'] = df["Booking Date"].apply(lambda x: (x.weekday() >= 5)).astype(int)
+df['fin_mois'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, x.month)[1]-5)).astype(int)
+df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
+df['fin_semestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//6+1)*6)[1]-5)).astype(int)
+df['fin_annee'] = df['Booking Date'].apply(lambda x: (x.month == 12 and x.day >= 26)).astype(int)
