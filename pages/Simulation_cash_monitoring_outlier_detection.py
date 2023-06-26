@@ -38,6 +38,9 @@ with col2:
 if st.button('Submit'):
     st.write("Données soumises avec succès")
 
+
+###verif
+print(df.columns)
 ####Function
 
 def assign_value(row):
