@@ -23,16 +23,12 @@ with col1:
     fin_semaine = booking_date.weekday() >= 5
     last_day = calendar.monthrange(booking_date.year, booking_date.month)[1]
     fin_mois = booking_date.day >= last_day - 5
-    #fin_mois = int(fin_mois)
     last_day_of_quarter = booking_date + relativedelta(day=31, months=((booking_date.month-1)//3+1)*3)
     fin_trimestre = booking_date.day >= last_day_of_quarter.day - 5
-    #fin_trimestre = int(fin_trimestre)
     semester_end_month = ((booking_date.month - 1) // 6 + 1) * 6
     last_day_semester = calendar.monthrange(booking_date.year, semester_end_month)[1]
     fin_semestre = booking_date.day >= last_day_semester - 5
-    #fin_semestre = int(fin_semestre)
     fin_annee = booking_date.month == 12 and booking_date.day >= 26
-    #fin_annee = int(fin_annee)
 
 with col2:
     st.write("Transaction Summary")
