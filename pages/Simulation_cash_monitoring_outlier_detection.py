@@ -54,9 +54,6 @@ with col2:
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
     st.dataframe(df.transpose())
 
-#if st.button('Submit'):
-#    st.write("Données soumises avec succès")
-
 
 if is_opp_transaction:
     is_opp_transaction_0 = 1.0
@@ -107,3 +104,5 @@ def extract_alpha_sequences(string, max_word=None):
 
 test= "110-Ext.Ref: Our Ref: userINT-XRD INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119"
 extract_alpha_sequences(test,15)
+
+st.write(extract_alpha_sequences(test,15))
