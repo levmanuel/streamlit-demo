@@ -197,7 +197,7 @@ bad_words = ["fraud",
     "access"]
 
 def has_bad_words(string):
-    if string in bad_words:
+    if bad_words in string:
         return 1
     else:
         return 0
