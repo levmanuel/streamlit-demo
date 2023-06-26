@@ -19,8 +19,11 @@ with col1:
 
 with col2:
     st.write("Transaction Summary")
-    data_dict = {'Booking Date': [booking_date], 'Value Date': [value_date], 
-                 'Description': [description], 'net_amount': [net_amount], "market_value": [market_value]}
+    data_dict = {
+        'Booking Date': [booking_date], 'Value Date': [value_date], 
+        'Description': [description], 'net_amount': [net_amount], 
+        'market_value': [market_value], df["date_delta_7"] 
+    }
     df = pd.DataFrame(data_dict)
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
     st.dataframe(df.transpose())
