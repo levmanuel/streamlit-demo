@@ -23,6 +23,9 @@ with col1:
     last_day = calendar.monthrange(booking_date.year, booking_date.month)[1]
     fin_mois = booking_date.day >= last_day - 5
     fin_mois = int(fin_mois)
+    last_day_of_quarter = booking_date + relativedelta(day=31, months=((booking_date.month-1)//3+1)*3)
+    fin_trimestre = booking_date.day >= last_day_of_quarter.day - 5
+    fin_trimestre = int(fin_trimestre)
     #df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
     #df['fin_semestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//6+1)*6)[1]-5)).astype(int)
     #df['fin_annee'] = df['Booking Date'].apply(lambda x: (x.month == 12 and x.day >= 26)).astype(int)
@@ -34,7 +37,7 @@ with col2:
         'Description': [description], 'net_amount': [net_amount], 
         'market_value': [market_value], 'date_delta' : [date_delta],
         'date_delta_7' : [date_delta_7], 'date_delta_30' : [date_delta_30],
-        'fin_semaine' : [fin_semaine], 'fin_mois':[fin_mois] }
+        'fin_semaine' : [fin_semaine], 'fin_mois':[fin_mois], 'fin_trimestre': [fin_trimestre] }
     
     df = pd.DataFrame(data_dict)
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
