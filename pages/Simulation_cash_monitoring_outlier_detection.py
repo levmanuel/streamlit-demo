@@ -19,7 +19,7 @@ with col1:
     date_delta =  (value_date - booking_date).days
     date_delta_7 = np.where(np.abs(date_delta)> 7,1,0)
     date_delta_30 = np.where(np.abs(date_delta)> 30,1,0)
-    fin_semaine = booking_date.apply(lambda x: (x.weekday() >= 5)).astype(int)
+    fin_semaine = int(booking_date.weekday() >= 5)
     df['fin_mois'] = booking_date.apply(lambda x: (x.day >= calendar.monthrange(x.year, x.month)[1]-5)).astype(int)
     df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
     df['fin_semestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//6+1)*6)[1]-5)).astype(int)
