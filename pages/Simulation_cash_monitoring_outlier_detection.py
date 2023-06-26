@@ -38,10 +38,7 @@ with col2:
 if st.button('Submit'):
     st.write("Données soumises avec succès")
 
-
-is_opp_transaction = st.checkbox("is_opp_transaction")
-
-# Logique de transformation des valeurs
+is_opp_transaction = st.checkbox("Opposite Transaction ?")
 if is_opp_transaction:
     is_opp_transaction_0 = 1.0
     is_opp_transaction_1 = 0.0
@@ -49,6 +46,10 @@ else:
     is_opp_transaction_0 = 0.0
     is_opp_transaction_1 = 1.0
 
-# Affichage des valeurs résultantes
-st.write("is_opp_transaction_0:", is_opp_transaction_0)
-st.write("is_opp_transaction_1:", is_opp_transaction_1)
+is_3_sigma_0 = st.checkbox("3 sigmas transactions ?")
+if is_3_sigma:
+    is_3_sigma_0 = 1.0
+    is_3_sigma_1 = 0.0
+else:
+    is_3_sigma_0 = 0.0
+    is_3_sigma_1 = 1.0
