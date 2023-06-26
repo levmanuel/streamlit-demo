@@ -86,7 +86,7 @@ exlusion_list = ["ref", "our", "for", "ext", "prc", "wgs", "useri", "caceis", "l
 
 ccy = ['eur', 'usd', 'jpy', 'bgn', 'czk', 'dkk', 'gbp', 'huf', 'pln', 'ron', 'sek', 'chf', 'isk', 'nok', 'try', 'aud',
  'brl', 'cad', 'cny', 'hkd', 'idr', 'ils', 'inr', 'krw', 'mxn', 'myr', 'nzd', 'php', 'sgd', 'thb', 'zar', 'rub', 'cnh', 'twd']
-regex = '|'.join(ccy)
+regex = r'\b(?:' + '|'.join(ccy) + r')\b|\b(?:' + '|'.join(ccy) + r'){2,}\b'
 
 def extract_alpha_sequences(string, max_word=None):
     if max_word == None:
