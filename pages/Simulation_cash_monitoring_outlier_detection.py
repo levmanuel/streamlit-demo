@@ -74,12 +74,3 @@ if is_similar:
 else:
     is_similar_0 = 0.0
     is_similar_1 = 1.0
-
-
-df["date_delta_7"] = np.where(np.abs(df["date_delta"])> 7,1,0)
-df["date_delta_30"] = np.where(np.abs(df["date_delta"])> 30,1,0)
-df['fin_semaine'] = df["Booking Date"].apply(lambda x: (x.weekday() >= 5)).astype(int)
-df['fin_mois'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, x.month)[1]-5)).astype(int)
-df['fin_trimestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//3+1)*3)[1]-5)).astype(int)
-df['fin_semestre'] = df['Booking Date'].apply(lambda x: (x.day >= calendar.monthrange(x.year, ((x.month-1)//6+1)*6)[1]-5)).astype(int)
-df['fin_annee'] = df['Booking Date'].apply(lambda x: (x.month == 12 and x.day >= 26)).astype(int)
