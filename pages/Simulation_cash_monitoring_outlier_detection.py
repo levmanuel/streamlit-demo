@@ -206,5 +206,3 @@ def has_bad_words(string):
 label = extract_alpha_sequences(description,15)
 st.write(label)
 st.write(has_bad_words(label))
-
-print(has_bad_words(string))
