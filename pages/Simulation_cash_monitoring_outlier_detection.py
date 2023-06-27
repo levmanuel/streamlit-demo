@@ -95,5 +95,5 @@ with col2:
         'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
 
 
-    df_nlp = pd.DataFrame(data_dict_nlp, width="auto")
-    st.dataframe(df_nlp.transpose())
+    df_nlp = pd.DataFrame(data_dict_nlp)
+    st.dataframe(df_nlp.transpose(), width="auto")
