@@ -54,12 +54,12 @@ with col2:
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
     st.dataframe(df.transpose())
 
-    data_dict_nlp = {
-        'Booking Date': [booking_date]}
 
-    df_nlp = pd.DataFrame(data_dict)
-    df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
-    st.dataframe(df.transpose())
+    st.write("NLP")
+    data_dict_nlp = {
+        'Description': [description]}
+    df_nlp = pd.DataFrame(data_dict_nlp)
+    st.dataframe(df_nlp.transpose())
 
 
 if is_opp_transaction:
