@@ -98,4 +98,4 @@ with open('kmeans_nlp.pkl', 'rb') as fichier:
 
 # Utiliser le modèle chargé pour faire des prédictions
 predictions = kmeans_charge.predict(label)
-st.write(predictions)
+st.write(kmeans_charge)
