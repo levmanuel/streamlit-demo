@@ -18,7 +18,13 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import IsolationForest
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title="Ex-stream-ly Cool App",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    }
+)
 
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
