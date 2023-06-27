@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from tqdm import tqdm
 import string
-import file_upload
+import file_upload as X
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
@@ -82,7 +82,7 @@ with col2:
 
 
     st.write("NLP")
-    label = extract_alpha_sequences(description)
+    label = X.extract_alpha_sequences(description)
     data_dict_nlp = {
         'Description': [description], 'label' : [label]}
 
