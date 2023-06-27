@@ -120,8 +120,8 @@ def extract_alpha_sequences(string, max_word=None):
         return matches
 
 def has_bad_words(string):
-  for i in string.split():
-    if i in bad_words:
-        return 1
-    else:
-        return 0
+    for i in string.split():
+        if i in bad_words:
+            return 1
+        else:
+            return 0
