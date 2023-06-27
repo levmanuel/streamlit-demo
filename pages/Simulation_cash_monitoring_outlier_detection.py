@@ -89,7 +89,7 @@ with col2:
         'fin_semaine' : [fin_semaine], 'fin_mois':[fin_mois], 'fin_trimestre': [fin_trimestre],
         'fin_semestre': [fin_semestre], 'fin_annee': [fin_annee] }
     
-    df_date = pd.DataFrame(datadata_date_dict_dict)
+    df_date = pd.DataFrame(data_date_dict)
     st.dataframe(df_date.transpose(),  width = 800)
 
     st.write("NLP")
