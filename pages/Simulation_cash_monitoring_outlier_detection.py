@@ -82,7 +82,7 @@ with col2:
 
 
     st.write("NLP")
-    label = description
+    label = extract_alpha_sequences(description)
     data_dict_nlp = {
         'Description': [description], 'label' : [label]}
 
