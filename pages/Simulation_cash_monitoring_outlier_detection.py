@@ -82,20 +82,10 @@ with col2:
 
 
     st.write("NLP")
+    label = description
     data_dict_nlp = {
         'Description': [description], 'label' : [label]}
 
 
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose())
-
-
-
-
-
-
-
-
-# label = extract_alpha_sequences(description,15)
-# st.write(label)
-# st.write(has_bad_words(label))
