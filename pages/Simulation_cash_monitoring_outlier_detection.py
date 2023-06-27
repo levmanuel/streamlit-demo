@@ -18,6 +18,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import IsolationForest
 
+st.set_page_config(layout="wide")
+
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
