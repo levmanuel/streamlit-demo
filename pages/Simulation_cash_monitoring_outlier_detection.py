@@ -16,6 +16,8 @@ import file_upload as X
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.ensemble import IsolationForest
+
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
@@ -89,7 +91,6 @@ with col2:
     bad_words = X.has_bad_words(label)
     CV_pred = X.C_V_charge.transform([label])
     predictions_cluster = X.kmeans_charge.predict(CV_pred)
-    #st.write(predictions)
     data_dict_nlp = {
         'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
 
