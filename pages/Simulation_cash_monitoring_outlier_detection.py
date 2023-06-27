@@ -28,6 +28,7 @@ with col1:
     booking_date = st.date_input('Booking Date')
     value_date = st.date_input('Value Date')
     description = st.text_input('Description', value="110-Ext.Ref: Our Ref: INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119")
+    is_anomaly_in_custer = st.checkbox("Anomaly in Cluster ?")
     net_amount = st.number_input('Net Amount', value= 300_000 )
     market_value = st.number_input('Fund Market Value', value= 10_000_000 )
     date_delta =  (value_date - booking_date).days
@@ -98,8 +99,7 @@ with col2:
     CV_pred = X.C_V_charge.transform([label])
     predictions_cluster = X.kmeans_charge.predict(CV_pred)
     data_dict_nlp = {
-        'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
-
+        'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': [is_anomaly_in_custer]}
 
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose(), width = 800)
