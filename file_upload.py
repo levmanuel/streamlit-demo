@@ -1,3 +1,5 @@
+import re
+
 bad_words = ["fraud",
     "suspicious",
     "unauthorized",
