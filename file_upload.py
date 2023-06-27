@@ -91,6 +91,17 @@ bad_words = ["fraud",
     "transaction",
     "unauthorized",
     "access"]
+    
+### NLP part
+exlusion_list = ["ref", "our", "for", "ext", "prc", "wgs", "useri", "caceis", "luxembourg", "bank",
+                "kqj", "yen", "cswnew", "roc", "isaebebbxxx", "luxe", "belgium", "bsuilull", "bran" "bra","buq",
+                "scr", "userint", "rua", "qwe", "xrd", "nos", "brussels", "branc", "xxx", "isaebebb", "cbf",
+                "isaefr","xxxxx", "bom", "nonref", "notprovided", "acou", "ajs", "clb", "cbb", "hev", "int"]
+
+ccy = ['eur', 'usd', 'jpy', 'bgn', 'czk', 'dkk', 'gbp', 'huf', 'pln', 'ron', 'sek', 'chf', 'isk', 'nok', 'try', 'aud',
+ 'brl', 'cad', 'cny', 'hkd', 'idr', 'ils', 'inr', 'krw', 'mxn', 'myr', 'nzd', 'php', 'sgd', 'thb', 'zar', 'rub', 'cnh', 'twd']
+regex = r'\b(?:' + '|'.join(ccy) + r')\b|\b(?:' + '|'.join(ccy) + r'){2,}\b'
+
 
 def extract_alpha_sequences(string, max_word=None):
     if max_word == None:
