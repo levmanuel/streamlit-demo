@@ -87,22 +87,12 @@ with col2:
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
     bad_words = X.has_bad_words(label)
+    CV_pred = C_V_charge.transform([label])
+    predictions_cluster = kmeans_charge.predict(CV_pred)
+    #st.write(predictions)
     data_dict_nlp = {
-        'label' : [label], 'Cluster': ['to_fill'], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
+        'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
 
 
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose())
-
-
-with open('kmeans_nlp.pkl', 'rb') as fichier:
-    kmeans_charge = pickle.load(fichier)
-
-with open('count_vectorizer.pkl', 'rb') as fichier:
-    C_V_charge = pickle.load(fichier)
-
-# Utiliser le modèle chargé pour faire des prédictions
-
-CV_pred = C_V_charge.transform([label])
-predictions = kmeans_charge.predict(CV_pred)
-st.write(predictions)

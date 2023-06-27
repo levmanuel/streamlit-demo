@@ -125,3 +125,10 @@ def has_bad_words(string):
             return 1
         else:
             return 0
+        
+
+with open('kmeans_nlp.pkl', 'rb') as fichier:
+    kmeans_charge = pickle.load(fichier)
+
+with open('count_vectorizer.pkl', 'rb') as fichier:
+    C_V_charge = pickle.load(fichier)
