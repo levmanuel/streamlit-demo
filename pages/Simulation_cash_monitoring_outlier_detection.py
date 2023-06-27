@@ -87,8 +87,8 @@ with col2:
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
     bad_words = X.has_bad_words(label)
-    CV_pred = C_V_charge.transform([label])
-    predictions_cluster = kmeans_charge.predict(CV_pred)
+    CV_pred = X.C_V_charge.transform([label])
+    predictions_cluster = X.kmeans_charge.predict(CV_pred)
     #st.write(predictions)
     data_dict_nlp = {
         'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
