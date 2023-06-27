@@ -76,15 +76,21 @@ with col2:
     data_dict = {
         'Booking Date': [booking_date], 'Value Date': [value_date], 'Description': [description],
         'net_amount': [net_amount], 
-        'market_value': [market_value], 'date_delta' : [date_delta],
-        'date_delta_7' : [date_delta_7], 'date_delta_30' : [date_delta_30],
-        'fin_semaine' : [fin_semaine], 'fin_mois':[fin_mois], 'fin_trimestre': [fin_trimestre],
-        'fin_semestre': [fin_semestre], 'fin_annee': [fin_annee]}
+        'market_value': [market_value]}
     
     df = pd.DataFrame(data_dict)
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
     st.dataframe(df.transpose(),  width = 800)
 
+    st.write("Date features")
+    data_date_dict = {
+        'date_delta' : [date_delta],
+        'date_delta_7' : [date_delta_7], 'date_delta_30' : [date_delta_30],
+        'fin_semaine' : [fin_semaine], 'fin_mois':[fin_mois], 'fin_trimestre': [fin_trimestre],
+        'fin_semestre': [fin_semestre], 'fin_annee': [fin_annee] }
+    
+    df_date = pd.DataFrame(datadata_date_dict_dict)
+    st.dataframe(df_date.transpose(),  width = 800)
 
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
