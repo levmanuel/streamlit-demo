@@ -36,6 +36,8 @@ with col1:
     last_day_semester = calendar.monthrange(booking_date.year, semester_end_month)[1]
     fin_semestre = booking_date.day >= last_day_semester - 5
     fin_annee = booking_date.month == 12 and booking_date.day >= 26
+
+    st.write("Transaction Caracteristics")
     is_opp_transaction = st.checkbox("Opposite Transaction ?")
     is_3_sigma = st.checkbox("3 sigmas transactions ?")
     is_similar = st.checkbox("Similar transactions ?")
