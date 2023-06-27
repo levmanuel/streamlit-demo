@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from tqdm import tqdm
 import string
-import retrieve_file
+import file_upload
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
