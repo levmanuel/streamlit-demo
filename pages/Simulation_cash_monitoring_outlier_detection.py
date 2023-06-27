@@ -13,6 +13,7 @@ from collections import Counter
 from tqdm import tqdm
 import string
 import file_upload as X
+import pickle
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
@@ -90,3 +91,11 @@ with col2:
 
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose())
+
+
+with open('kmeans_nlp.pkl', 'rb') as fichier:
+    kmeans_charge = pickle.load(fichier)
+
+# Utiliser le modèle chargé pour faire des prédictions
+predictions = kmeans_charge.predict(label)
+st.write(predictions)
