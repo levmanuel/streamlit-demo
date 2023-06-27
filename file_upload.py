@@ -1,4 +1,5 @@
 import re
+import pickle
 
 bad_words = ["fraud",
     "suspicious",
