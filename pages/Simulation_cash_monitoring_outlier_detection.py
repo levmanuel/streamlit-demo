@@ -96,19 +96,4 @@ with col2:
 
 
     df_nlp = pd.DataFrame(data_dict_nlp)
-    st.dataframe(df_nlp.transpose())
-
-
-data = {
-    'Colonne 1': ['Contenu court', 'Contenu plus long', 'Contenu très très long'],
-    'Colonne 2': ['Contenu court', 'Contenu encore plus long', 'Contenu très très long'],
-    'Colonne 3': ['Contenu court', 'Contenu plus long', 'Contenu très très très très long'],
-}
-
-df = pd.DataFrame(data)
-
-# Afficher le DataFrame avec la largeur adaptée aux cellules
-
-df_html = df.to_html().replace('<table','<table style="width:100%"')
-# Afficher le HTML dans streamlit
-st.write(df_html, unsafe_allow_html=True)
+    st.dataframe(df_nlp.transpose(), width = 50)
