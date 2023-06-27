@@ -108,4 +108,7 @@ data = {
 df = pd.DataFrame(data)
 
 # Afficher le DataFrame avec la largeur adaptée aux cellules
-st.dataframe(df, width="auto")
+
+df_html = df.to_html().replace('<table','<table style="width:100%"')
+# Afficher le HTML dans streamlit
+st.write(df_html, unsafe_allow_html=True)
