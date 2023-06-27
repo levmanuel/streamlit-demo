@@ -14,6 +14,7 @@ from tqdm import tqdm
 import string
 import file_upload as X
 import pickle
+from sklearn.neighbors import KNeighborsClassifier
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
