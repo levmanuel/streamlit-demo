@@ -15,6 +15,7 @@ import string
 import file_upload as X
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.feature_extraction.text import CountVectorizer
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
 st.title("Depositary Control Data Science Project")
@@ -97,6 +98,11 @@ with col2:
 with open('kmeans_nlp.pkl', 'rb') as fichier:
     kmeans_charge = pickle.load(fichier)
 
+with open('count_vectorizer.pkl', 'rb') as fichier:
+    C_V_charge = pickle.load(fichier)
+
 # Utiliser le modèle chargé pour faire des prédictions
-predictions = kmeans_charge.predict(label)
-st.write(kmeans_charge)
+
+CV_pred = C_V_charge.transform(label)
+predictions = kmeans_charge.predict(CV_pred)
+st.write(predictions)
