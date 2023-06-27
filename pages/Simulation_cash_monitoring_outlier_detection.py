@@ -103,6 +103,6 @@ with open('count_vectorizer.pkl', 'rb') as fichier:
 
 # Utiliser le modèle chargé pour faire des prédictions
 
-CV_pred = C_V_charge.transform(label)
+CV_pred = C_V_charge.transform([label])
 predictions = kmeans_charge.predict(CV_pred)
 st.write(predictions)
