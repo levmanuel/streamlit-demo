@@ -97,3 +97,15 @@ with col2:
 
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose())
+
+
+data = {
+    'Colonne 1': ['Contenu court', 'Contenu plus long', 'Contenu très très long'],
+    'Colonne 2': ['Contenu court', 'Contenu encore plus long', 'Contenu très très long'],
+    'Colonne 3': ['Contenu court', 'Contenu plus long', 'Contenu très très très très long'],
+}
+
+df = pd.DataFrame(data)
+
+# Afficher le DataFrame avec la largeur adaptée aux cellules
+st.dataframe(df, width="auto")
