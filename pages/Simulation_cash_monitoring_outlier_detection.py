@@ -59,7 +59,9 @@ with col2:
 
     st.write("NLP")
     data_dict_nlp = {
-        'Description': [description]}
+        'Description': [description], 'label' = [label]}
+
+
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose())
 
