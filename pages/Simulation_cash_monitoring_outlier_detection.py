@@ -83,7 +83,7 @@ with col2:
     
     df = pd.DataFrame(data_dict)
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
-    st.dataframe(df.transpose(),  width = 500)
+    st.dataframe(df.transpose(),  width = 800)
 
 
     st.write("NLP")
@@ -96,4 +96,4 @@ with col2:
 
 
     df_nlp = pd.DataFrame(data_dict_nlp)
-    st.dataframe(df_nlp.transpose(), width = 500)
+    st.dataframe(df_nlp.transpose(), width = 800)
