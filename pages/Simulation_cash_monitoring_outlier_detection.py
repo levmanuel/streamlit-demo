@@ -83,7 +83,7 @@ with col2:
     
     df = pd.DataFrame(data_dict)
     df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
-    st.dataframe(df.transpose())
+    st.dataframe(df.transpose(), width="auto")
 
 
     st.write("NLP")
@@ -95,5 +95,5 @@ with col2:
         'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
 
 
-    df_nlp = pd.DataFrame(data_dict_nlp)
+    df_nlp = pd.DataFrame(data_dict_nlp, width="auto")
     st.dataframe(df_nlp.transpose())
