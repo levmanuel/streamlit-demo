@@ -98,5 +98,5 @@ with open('kmeans_nlp.pkl', 'rb') as fichier:
     kmeans_charge = pickle.load(fichier)
 
 # Utiliser le modèle chargé pour faire des prédictions
-#predictions = kmeans_charge.predict(label)
-#st.write(kmeans_charge)
+predictions = kmeans_charge.predict(label)
+st.write(kmeans_charge)
