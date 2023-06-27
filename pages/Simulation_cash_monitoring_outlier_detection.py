@@ -18,16 +18,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import IsolationForest
 
-st.set_page_config(
-    page_title="Ex-stream-ly Cool App",
-    page_icon="🧊",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    }
-)
-
-
-st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶")
+st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶", layout="wide")
 st.title("Depositary Control Data Science Project")
 
 col1, col2 = st.columns(2)
