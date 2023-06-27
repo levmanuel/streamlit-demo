@@ -83,8 +83,9 @@ with col2:
 
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
+    bad_words = has_bad_words(label)
     data_dict_nlp = {
-        'label' : [label], 'Cluster': ['to_fill'], 'Bad Words ?': ['to_fill'], 'Anomaly': ['to_fill']}
+        'label' : [label], 'Cluster': ['to_fill'], 'Bad Words ?': [bad_words], 'Anomaly': ['to_fill']}
 
 
     df_nlp = pd.DataFrame(data_dict_nlp)
