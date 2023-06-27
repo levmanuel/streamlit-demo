@@ -91,3 +91,24 @@ bad_words = ["fraud",
     "transaction",
     "unauthorized",
     "access"]
+
+def extract_alpha_sequences(string, max_word=None):
+    if max_word == None:
+        matches = re.findall(r'[A-Za-z]+', string.lower())
+        matches = [i for i in matches if (len(i)> 2 and i not in exlusion_list)]
+        matches = ' '.join(matches)
+        matches = re.sub(regex, '[CCY]', matches)
+        return matches
+    else:
+        matches = re.findall(r'[A-Za-z]+', string.lower())
+        matches = [i for i in matches if (len(i)> 2 and i not in exlusion_list)][:max_word]
+        matches = ' '.join(matches)
+        matches = re.sub(regex, '[CCY]', matches)
+        return matches
+
+def has_bad_words(string):
+  for i in string.split():
+    if i in bad_words:
+        return 1
+    else:
+        return 0

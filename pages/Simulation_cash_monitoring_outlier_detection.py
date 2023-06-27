@@ -102,28 +102,7 @@ ccy = ['eur', 'usd', 'jpy', 'bgn', 'czk', 'dkk', 'gbp', 'huf', 'pln', 'ron', 'se
  'brl', 'cad', 'cny', 'hkd', 'idr', 'ils', 'inr', 'krw', 'mxn', 'myr', 'nzd', 'php', 'sgd', 'thb', 'zar', 'rub', 'cnh', 'twd']
 regex = r'\b(?:' + '|'.join(ccy) + r')\b|\b(?:' + '|'.join(ccy) + r'){2,}\b'
 
-def extract_alpha_sequences(string, max_word=None):
-    if max_word == None:
-        matches = re.findall(r'[A-Za-z]+', string.lower())
-        matches = [i for i in matches if (len(i)> 2 and i not in exlusion_list)]
-        matches = ' '.join(matches)
-        matches = re.sub(regex, '[CCY]', matches)
-        return matches
-    else:
-        matches = re.findall(r'[A-Za-z]+', string.lower())
-        matches = [i for i in matches if (len(i)> 2 and i not in exlusion_list)][:max_word]
-        matches = ' '.join(matches)
-        matches = re.sub(regex, '[CCY]', matches)
-        return matches
 
-
-
-def has_bad_words(string):
-  for i in string.split():
-    if i in bad_words:
-        return 1
-    else:
-        return 0
 
 label = extract_alpha_sequences(description,15)
 st.write(label)
