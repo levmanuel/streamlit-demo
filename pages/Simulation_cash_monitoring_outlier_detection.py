@@ -118,7 +118,7 @@ else:
     is_similar_1 = 1.0
 
 master_dict = {
-        'Booking Date': [booking_date], 'Value Date': [value_date], 'Description': [description],
-        'net_amount': [net_amount], 'market_value': [market_value]}
+        'Booking Date': booking_date, 'Value Date': value_date, 'Description': description,
+        'net_amount': net_amount, 'market_value': market_value}
 
 st.write(master_dict)
