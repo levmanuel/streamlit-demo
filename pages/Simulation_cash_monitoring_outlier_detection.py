@@ -114,6 +114,7 @@ with col2:
     st.dataframe(df_nlp.transpose(), width = 800)
 
 
+info = df.info()
 #master = master.to_dict()
 st.write(df)
-st.write(df.info())
+st.write(info)
