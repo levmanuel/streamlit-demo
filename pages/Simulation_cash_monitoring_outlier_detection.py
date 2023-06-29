@@ -252,4 +252,4 @@ with st.sidebar:
     if anomaly == -1:
         st.write(-1 , "Transaction is an anomaly")
     else:
-        st.write(1 , "Transaction is normal", :sunglasses:)
+        st.write(1 , "Transaction is normal :sunglasses: ")
