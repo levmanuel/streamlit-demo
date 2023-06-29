@@ -57,7 +57,8 @@ with col2:
     
     df = pd.DataFrame(data_dict)
     nav_pct = 100 * df["net_amount"] / df["market_value"]
-    df["nav_pct"] = nav_pct.values
+    nav_pct = nav_pct.values
+    df["nav_pct"] = nav_pct
     st.dataframe(df.transpose(),  width = 800)
 
     st.write("Date features")
