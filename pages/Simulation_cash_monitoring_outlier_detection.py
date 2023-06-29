@@ -245,4 +245,5 @@ test = {'net_amount_fx': net_amount,
 #GOst.write(test)
 X_test = pd.DataFrame(test, index=[0])
 anomaly = X.clf_charge.predict(X_test)
+st.write(-1 , "la tarnsaction est une anomalie", 1 ,"la transaction est normale")
 st.write(anomaly)
