@@ -96,7 +96,7 @@ with col2:
     transactions_dict = {
         'Is opposite transaction ?' : [is_opp_transaction],
         'Is 3 sigmas transaction ?' : [is_3_sigma],
-        'Is similar transaction ?' : [is_similar],
+        'Is similar transaction ?' : is_similar,
           }
     
     is_similar = pd.DataFrame(transactions_dict)
