@@ -92,10 +92,6 @@ with col2:
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose(), width = 800)
 
-
-master = pd.concat([df, df_date, transactions_fetures, df_nlp], axis=1)
-st.dataframe(master)
-
 if is_opp_transaction:
     is_opp_transaction_0 = 1.0
     is_opp_transaction_1 = 0.0
