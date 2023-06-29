@@ -206,6 +206,11 @@ elif predictions_cluster == 5:
     deal_type_4 = 0.0
     deal_type_5 = 1.0
 
+if is_anomaly_in_custer:
+    anomaly_in_custer = 1
+else:
+    anomaly_in_custer = 0
+
 test = {'net_amount_fx': net_amount,
  'nav_pct': nav_pct,
  'is_opp_transaction_0': is_opp_transaction_0,
@@ -229,7 +234,7 @@ test = {'net_amount_fx': net_amount,
  'is_similar_0': is_similar_0,
  'is_similar_1': is_similar_1,
  'has_bad_word': bad_words,
- 'anomaly_predict_cluster': is_anomaly_in_custer ,
+ 'anomaly_predict_cluster': anomaly_in_custer ,
  'deal_type_0': deal_type_0,
  'deal_type_1': deal_type_1,
  'deal_type_2': deal_type_2,
