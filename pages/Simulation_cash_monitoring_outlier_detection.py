@@ -116,4 +116,4 @@ with col2:
 
 master = df + df_nlp
 
-st.dataframe(master, width = 800)
+st.dataframe(df, width = 800)
