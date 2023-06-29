@@ -243,7 +243,7 @@ test = {'net_amount_fx': net_amount,
  'deal_type_5': deal_type_5}
 
 #GOst.write(test)
-st.header('A header with _italics_ :blue[Conclusions] and emojis :sunglasses:')
+st.header(':blue[Conclusions] :sunglasses:')
 X_test = pd.DataFrame(test, index=[0])
 anomaly = X.clf_charge.predict(X_test)
 
