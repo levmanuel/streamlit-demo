@@ -242,14 +242,12 @@ test = {'net_amount_fx': net_amount,
  'deal_type_4': deal_type_4,
  'deal_type_5': deal_type_5}
 
-#GOst.write(test)
-st.header(':blue[Conclusions] :sunglasses:')
 X_test = pd.DataFrame(test, index=[0])
 anomaly = X.clf_charge.predict(X_test)
 
 with st.sidebar:
     st.header(':blue[Conclusions] ')
     if anomaly == -1:
-        st.write(-1 , "Transaction is an anomaly")
+        st.write(-1 , "Transaction is an anomaly :scream:")
     else:
         st.write(1 , "Transaction is normal :sunglasses: ")
