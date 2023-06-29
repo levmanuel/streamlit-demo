@@ -112,3 +112,6 @@ with col2:
 
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose(), width = 800)
+
+
+st.write("test")
