@@ -258,4 +258,5 @@ plt.xlabel("Taux de contamination")
 plt.ylabel("Decision Function Score")
 plt.axvline(x = 0.01, color="red", linestyle='-')
 #plt.annotate("Contamination trigger env. 1%", (0.02, 0.011))
-plt.title("Taux de contamination détectant l'anomalie");
+plt.title("Taux de contamination détectant l'anomalie")
+st.pyplot()
