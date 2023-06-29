@@ -248,6 +248,7 @@ X_test = pd.DataFrame(test, index=[0])
 anomaly = X.clf_charge.predict(X_test)
 
 with st.sidebar:
+    st.header(':blue[Conclusions] :sunglasses:')
     if anomaly == -1:
         st.write(-1 , "Transaction is an anomaly")
     else:
