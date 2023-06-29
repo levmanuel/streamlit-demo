@@ -116,5 +116,5 @@ with col2:
 
 info = df.info()
 #master = master.to_dict()
-st.write(df)
-st.write(info)
+st.text(df)
+st.text(info)
