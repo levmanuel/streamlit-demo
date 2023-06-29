@@ -28,8 +28,8 @@ with col1:
     value_date = st.date_input('Value Date')
     description = st.text_input('Description', value="110-Ext.Ref: Our Ref: INT002667762PRC Transfer of EUR 676.90 in favour of FUND INVESTMENTS - FEES MONEY-210119")
     is_anomaly_in_custer = st.checkbox("Anomaly in Cluster ?")
-    net_amount = st.number_input('Net Amount', value= 300_000 )
-    market_value = st.number_input('Fund Market Value', value= 10_000_000 )
+    net_amount = st.slider('Transaction Amount', 0, 30_000_000, 100_000)
+    market_value = st.slider('Fund Market Value', 0, 300_000_000, 10_000_000)
     date_delta =  (value_date - booking_date).days
     date_delta_7 = np.where(np.abs(date_delta)> 7,1,0)
     date_delta_30 = np.where(np.abs(date_delta)> 30,1,0)
