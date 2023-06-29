@@ -48,29 +48,6 @@ with col1:
     is_3_sigma = st.checkbox("3 sigmas transactions ?")
     is_similar = st.checkbox("Similar transactions ?")
 
-    if is_opp_transaction:
-        is_opp_transaction_0 = 1.0
-        is_opp_transaction_1 = 0.0
-    else:
-        is_opp_transaction_0 = 0.0
-        is_opp_transaction_1 = 1.0
-
-
-    if is_3_sigma:
-        is_3_sigma_0 = 1.0
-        is_3_sigma_1 = 0.0
-    else:
-        is_3_sigma_0 = 0.0
-        is_3_sigma_1 = 1.0
-
-
-    if is_similar:
-        is_similar_0 = 1.0
-        is_similar_1 = 0.0
-    else:
-        is_similar_0 = 0.0
-        is_similar_1 = 1.0
-
 with col2:
     st.write("Transaction Summary")
     data_dict = {
@@ -116,3 +93,32 @@ with col2:
 
 master = pd.concat([df, df_date, transactions_fetures, df_nlp], axis=1)
 st.dataframe(master)
+
+if is_opp_transaction:
+    is_opp_transaction_0 = 1.0
+    is_opp_transaction_1 = 0.0
+else:
+    is_opp_transaction_0 = 0.0
+    is_opp_transaction_1 = 1.0
+
+
+if is_3_sigma:
+    is_3_sigma_0 = 1.0
+    is_3_sigma_1 = 0.0
+else:
+    is_3_sigma_0 = 0.0
+    is_3_sigma_1 = 1.0
+
+
+if is_similar:
+    is_similar_0 = 1.0
+    is_similar_1 = 0.0
+else:
+    is_similar_0 = 0.0
+    is_similar_1 = 1.0
+
+master_dict = {
+        'Booking Date': [booking_date], 'Value Date': [value_date], 'Description': [description],
+        'net_amount': [net_amount], 'market_value': [market_value]}
+
+st.write(master_dict)
