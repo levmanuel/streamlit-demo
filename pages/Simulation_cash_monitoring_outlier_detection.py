@@ -237,3 +237,25 @@ test = {'net_amount_fx': net_amount,
  'deal_type_5': deal_type_5}
 
 st.write(test)
+X_test = pd.DataFrame(test, index=[0])
+
+contamination = []
+score = []
+pred = []
+
+for y in tqdm(range(1,30)):
+    clf = IsolationForest(n_estimators=100, contamination=y/1000)
+    clf.fit(df)
+    contamination.append(y/1000)
+    score.append(clf.decision_function(X_test))
+    pred.append(clf.predict(X_test))
+
+pred = [arr[0] for arr in pred]
+score = [arr[0] for arr in score]
+
+sns.relplot(x=contamination,y = score, hue=pred)
+plt.xlabel("Taux de contamination")
+plt.ylabel("Decision Function Score")
+plt.axvline(x = 0.01, color="red", linestyle='-')
+#plt.annotate("Contamination trigger env. 1%", (0.02, 0.011))
+plt.title("Taux de contamination détectant l'anomalie");
