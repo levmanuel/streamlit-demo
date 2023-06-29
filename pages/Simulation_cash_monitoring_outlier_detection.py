@@ -92,14 +92,14 @@ with col2:
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose(), width = 800)
 
-if is_opp_transaction:
+if is_opp_transaction == False:
     is_opp_transaction_0 = 1.0
     is_opp_transaction_1 = 0.0
 else:
     is_opp_transaction_0 = 0.0
     is_opp_transaction_1 = 1.0
 
-if is_3_sigma:
+if is_3_sigma ==  False:
     is_3_sigma_0 = 1.0
     is_3_sigma_1 = 0.0
 else:
@@ -107,56 +107,56 @@ else:
     is_3_sigma_1 = 1.0
 
 
-if is_similar:
+if is_similar == False:
     is_similar_0 = 1.0
     is_similar_1 = 0.0
 else:
     is_similar_0 = 0.0
     is_similar_1 = 1.0
 
-if date_delta_7:
+if date_delta_7 == False:
     date_delta_7_0 = 1.0
     date_delta_7_1 = 0.0
 else:
     date_delta_7_0 = 0.0
     date_delta_7_1 = 1.0
 
-if date_delta_30:
+if date_delta_30 == False:
     date_delta_30_0 = 1.0
     date_delta_30_1 = 0.0
 else:
     date_delta_30_0 = 0.0
     date_delta_30_1 = 1.0
 
-if fin_semaine:
+if fin_semaine == False:
     fin_semaine_0 = 1.0
     fin_semaine_1 = 0.0
 else:
     fin_semaine_0 = 0.0
     fin_semaine_1 = 1.0
 
-if fin_mois:
+if fin_mois == False:
     fin_mois_0 = 1.0
     fin_mois_1 = 0.0
 else:
     fin_mois_0 = 0.0
     fin_mois_1 = 1.0
 
-if fin_trimestre:
+if fin_trimestre == False:
     fin_trimestre_0 = 1.0
     fin_trimestre_1 = 0.0
 else:
     fin_trimestre_0 = 0.0
     fin_trimestre_1 = 1.0
 
-if fin_semestre:
+if fin_semestre == False:
     fin_semestre_0 = 1.0
     fin_semestre_1 = 0.0
 else:
     fin_semestre_0 = 0.0
     fin_semestre_1 = 1.0
 
-if fin_annee:
+if fin_annee == False:
     fin_annee_0 = 1.0
     fin_annee_1 = 0.0
 else:
