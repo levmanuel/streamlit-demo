@@ -132,3 +132,6 @@ with open('kmeans_nlp.pkl', 'rb') as fichier:
 
 with open('count_vectorizer.pkl', 'rb') as fichier:
     C_V_charge = pickle.load(fichier)
+
+with open('iso_forest_trades.pkl', 'rb') as fichier:
+    clf_charge = pickle.load(fichier)

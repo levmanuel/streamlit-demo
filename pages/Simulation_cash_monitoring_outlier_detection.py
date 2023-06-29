@@ -245,6 +245,9 @@ test = {'net_amount_fx': net_amount,
 st.write(test)
 X_test = pd.DataFrame(test, index=[0])
 
+
+
+
 # contamination = []
 # score = []
 # pred = []
