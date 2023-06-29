@@ -114,5 +114,5 @@ with col2:
     st.dataframe(df_nlp.transpose(), width = 800)
 
 
-master = df + df_date + transactions_fetures + df_nlp
+master = pd.concat([df, df_date, transactions_fetures, df_nlp], axis=1)
 st.dataframe(master)
