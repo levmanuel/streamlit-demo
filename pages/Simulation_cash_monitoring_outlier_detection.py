@@ -243,6 +243,8 @@ test = {'net_amount_fx': net_amount,
  'deal_type_5': deal_type_5}
 
 X_test = pd.DataFrame(test, index=[0])
+col = ["net_amount_fx", "nav_pct"]
+X_test[col] = X.scaler_charge.transform(X_test[col].values.reshape(-1,2))
 anomaly = X.clf_charge.predict(X_test)
 
 with st.sidebar:
