@@ -56,7 +56,8 @@ with col2:
         'market_value': [market_value]}
     
     df = pd.DataFrame(data_dict)
-    df["NAV_pct"] = 100 * df["net_amount"] / df["market_value"]
+    nav_pct = 100 * df["net_amount"] / df["market_value"]
+    df["nav_pct"] = nav_pct
     st.dataframe(df.transpose(),  width = 800)
 
     st.write("Date features")
@@ -117,8 +118,34 @@ else:
     is_similar_0 = 0.0
     is_similar_1 = 1.0
 
-master_dict = {
-        'Booking Date': booking_date, 'Value Date': value_date, 'Description': description,
-        'net_amount': net_amount, 'market_value': market_value}
 
-st.write(master_dict)
+test = {'net_amount_fx': net_amount,
+ 'nav_pct': nav_pct,
+ 'is_opp_transaction_0': is_opp_transaction_0,
+ 'is_opp_transaction_1': is_opp_transaction_1,
+ 'is_3_sigma_0': is_3_sigma_0,
+ 'is_3_sigma_1': is_3_sigma_1,
+ 'date_delta_7_0': 1.0,
+ 'date_delta_7_1': 0.0,
+ 'date_delta_30_0': 1.0,
+ 'date_delta_30_1': 0.0,
+ 'fin_semaine_0': 1.0,
+ 'fin_mois_0': 0.0,
+ 'fin_mois_1': 1.0,
+ 'fin_trimestre_0': 0.0,
+ 'fin_trimestre_1': 1.0,
+ 'fin_semestre_0': 0.0,
+ 'fin_semestre_1': 1.0,
+ 'fin_annee_0': 0.0,
+ 'fin_annee_1': 1.0,
+ 'is_similar_0': 1.0,
+ 'is_similar_1': 0.0,
+ 'has_bad_word': 1.0,
+ 'deal_type_0': 0.0,
+ 'deal_type_1': 0.0,
+ 'deal_type_2': 0.0,
+ 'deal_type_3': 0.0,
+ 'deal_type_4': 0.0,
+ 'deal_type_5': 1.0}
+
+st.write(test)
