@@ -103,7 +103,6 @@ else:
     is_opp_transaction_0 = 0.0
     is_opp_transaction_1 = 1.0
 
-
 if is_3_sigma:
     is_3_sigma_0 = 1.0
     is_3_sigma_1 = 0.0
@@ -126,6 +125,20 @@ else:
     date_delta_7_0 = 0.0
     date_delta_7_1 = 1.0
 
+if date_delta_30:
+    date_delta_30_0 = 1.0
+    date_delta_30_1 = 0.0
+else:
+    date_delta_30_0 = 0.0
+    date_delta_30_1 = 1.0
+
+if fin_semaine:
+    fin_semaine_0 = 1.0
+    fin_semaine_1 = 0.0
+else:
+    fin_semaine_0 = 0.0
+    fin_semaine_1 = 1.0   
+
 
 test = {'net_amount_fx': net_amount,
  'nav_pct': nav_pct,
@@ -133,11 +146,12 @@ test = {'net_amount_fx': net_amount,
  'is_opp_transaction_1': is_opp_transaction_1,
  'is_3_sigma_0': is_3_sigma_0,
  'is_3_sigma_1': is_3_sigma_1,
- 'date_delta_7_0': 1.0,
- 'date_delta_7_1': 0.0,
- 'date_delta_30_0': 1.0,
- 'date_delta_30_1': 0.0,
- 'fin_semaine_0': 1.0,
+ 'date_delta_7_0': date_delta_7_0,
+ 'date_delta_7_1': date_delta_7_1,
+ 'date_delta_30_0': date_delta_30_0,
+ 'date_delta_30_1': date_delta_30_1,
+ 'fin_semaine_0': fin_semaine_0,
+ 'fin_semaine_0': fin_semaine_1,
  'fin_mois_0': 0.0,
  'fin_mois_1': 1.0,
  'fin_trimestre_0': 0.0,
