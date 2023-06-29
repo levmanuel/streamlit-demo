@@ -99,8 +99,8 @@ with col2:
         'Is similar transaction ?' : is_similar,
           }
     
-    is_similar = pd.DataFrame(transactions_dict)
-    st.dataframe(is_similar.transpose(),  width = 800)
+    transactions_fetures = pd.DataFrame(transactions_dict)
+    st.dataframe(transactions_fetures.transpose(),  width = 800)
 
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
@@ -114,7 +114,5 @@ with col2:
     st.dataframe(df_nlp.transpose(), width = 800)
 
 
-info = df.info()
-#master = master.to_dict()
-st.text(df)
-st.text(info)
+master = df + df_date + transactions_fetures + df_nlp
+st.dataframe(master)
