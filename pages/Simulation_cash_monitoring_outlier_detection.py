@@ -117,3 +117,4 @@ with col2:
 master = df
 #master = master.to_dict()
 st.write(master)
+st.write(df.info())
