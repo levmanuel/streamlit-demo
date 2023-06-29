@@ -116,4 +116,4 @@ with col2:
 
 master = df + df_nlp
 master = master.to_dict()
-print(master)
+st.text(master)
