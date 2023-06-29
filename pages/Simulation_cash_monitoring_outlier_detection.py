@@ -119,6 +119,13 @@ else:
     is_similar_0 = 0.0
     is_similar_1 = 1.0
 
+if date_delta_7:
+    date_delta_7_0 = 1.0
+    date_delta_7_1 = 0.0
+else:
+    date_delta_7_0 = 0.0
+    date_delta_7_1 = 1.0
+
 
 test = {'net_amount_fx': net_amount,
  'nav_pct': nav_pct,
