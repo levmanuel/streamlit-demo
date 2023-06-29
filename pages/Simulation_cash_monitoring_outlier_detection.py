@@ -242,7 +242,7 @@ test = {'net_amount_fx': net_amount,
  'deal_type_4': deal_type_4,
  'deal_type_5': deal_type_5}
 
-st.write(test)
+#GOst.write(test)
 X_test = pd.DataFrame(test, index=[0])
 anomaly = X.clf_charge.predict(X_test)
 st.write(anomaly)
