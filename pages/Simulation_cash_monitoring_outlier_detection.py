@@ -137,8 +137,78 @@ if fin_semaine:
     fin_semaine_1 = 0.0
 else:
     fin_semaine_0 = 0.0
-    fin_semaine_1 = 1.0   
+    fin_semaine_1 = 1.0
 
+if fin_mois:
+    fin_mois_0 = 1.0
+    fin_mois_1 = 0.0
+else:
+    fin_mois_0 = 0.0
+    fin_mois_1 = 1.0
+
+if fin_trimestre:
+    fin_trimestre_0 = 1.0
+    fin_trimestre_1 = 0.0
+else:
+    fin_trimestre_0 = 0.0
+    fin_trimestre_1 = 1.0
+
+if fin_semestre:
+    fin_semestre_0 = 1.0
+    fin_semestre_1 = 0.0
+else:
+    fin_semestre_0 = 0.0
+    fin_semestre_1 = 1.0
+
+if fin_annee:
+    fin_annee_0 = 1.0
+    fin_annee_1 = 0.0
+else:
+    fin_annee_0 = 0.0
+    fin_annee_1 = 1.0      
+
+if predictions_cluster == 0:
+    deal_type_0 = 1.0
+    deal_type_1 = 0.0
+    deal_type_2 = 0.0
+    deal_type_3 = 0.0
+    deal_type_4 = 0.0
+    deal_type_5 = 0.0
+elif predictions_cluster == 1:
+    deal_type_0 = 0.0
+    deal_type_1 = 1.0
+    deal_type_2 = 0.0
+    deal_type_3 = 0.0
+    deal_type_4 = 0.0
+    deal_type_5 = 0.0
+elif predictions_cluster == 2:
+    deal_type_0 = 0.0
+    deal_type_1 = 0.0
+    deal_type_2 = 1.0
+    deal_type_3 = 0.0
+    deal_type_4 = 0.0
+    deal_type_5 = 0.0
+elif predictions_cluster == 3:
+    deal_type_0 = 0.0
+    deal_type_1 = 0.0
+    deal_type_2 = 0.0
+    deal_type_3 = 1.0
+    deal_type_4 = 0.0
+    deal_type_5 = 0.0
+elif predictions_cluster == 4:
+    deal_type_0 = 0.0
+    deal_type_1 = 0.0
+    deal_type_2 = 0.0
+    deal_type_3 = 0.0
+    deal_type_4 = 1.0
+    deal_type_5 = 0.0
+elif predictions_cluster == 5:
+    deal_type_0 = 0.0
+    deal_type_1 = 0.0
+    deal_type_2 = 0.0
+    deal_type_3 = 0.0
+    deal_type_4 = 0.0
+    deal_type_5 = 1.0
 
 test = {'net_amount_fx': net_amount,
  'nav_pct': nav_pct,
@@ -152,22 +222,22 @@ test = {'net_amount_fx': net_amount,
  'date_delta_30_1': date_delta_30_1,
  'fin_semaine_0': fin_semaine_0,
  'fin_semaine_0': fin_semaine_1,
- 'fin_mois_0': 0.0,
- 'fin_mois_1': 1.0,
- 'fin_trimestre_0': 0.0,
- 'fin_trimestre_1': 1.0,
- 'fin_semestre_0': 0.0,
- 'fin_semestre_1': 1.0,
- 'fin_annee_0': 0.0,
- 'fin_annee_1': 1.0,
- 'is_similar_0': 1.0,
- 'is_similar_1': 0.0,
- 'has_bad_word': 1.0,
- 'deal_type_0': 0.0,
- 'deal_type_1': 0.0,
- 'deal_type_2': 0.0,
- 'deal_type_3': 0.0,
- 'deal_type_4': 0.0,
- 'deal_type_5': 1.0}
+ 'fin_mois_0': fin_mois_0,
+ 'fin_mois_1': fin_mois_1,
+ 'fin_trimestre_0': fin_trimestre_0,
+ 'fin_trimestre_1': fin_trimestre_1,
+ 'fin_semestre_0': fin_semestre_0,
+ 'fin_semestre_1': fin_semestre_1,
+ 'fin_annee_0': fin_annee_0,
+ 'fin_annee_1': fin_annee_1,
+ 'is_similar_0': is_similar_0,
+ 'is_similar_1': is_similar_0,
+ 'has_bad_word': bad_words,
+ 'deal_type_0': deal_type_0,
+ 'deal_type_1': deal_type_1,
+ 'deal_type_2': deal_type_2,
+ 'deal_type_3': deal_type_3,
+ 'deal_type_4': deal_type_4,
+ 'deal_type_5': deal_type_5}
 
 st.write(test)
