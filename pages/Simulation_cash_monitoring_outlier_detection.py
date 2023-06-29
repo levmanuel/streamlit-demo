@@ -115,5 +115,5 @@ with col2:
 
 
 master = df + df_nlp
-
-st.dataframe(df, width = 800)
+master = master.to_dict()
+print(master)
