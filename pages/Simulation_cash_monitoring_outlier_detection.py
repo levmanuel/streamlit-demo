@@ -114,4 +114,6 @@ with col2:
     st.dataframe(df_nlp.transpose(), width = 800)
 
 
-st.write("test")
+master = df + df_nlp
+
+st.dataframe(master, width = 800)
