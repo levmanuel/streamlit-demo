@@ -63,16 +63,6 @@ with col2:
     df["nav_pct"] = nav_pct
     st.dataframe(df.transpose(),  width = 800)
 
-    st.write("Date features")
-    data_date_dict = {
-        'date_delta' : [date_delta],
-        'date_delta_7' : [date_delta_7], 'date_delta_30' : [date_delta_30],
-        'fin_semaine' : [fin_semaine], 'fin_mois':[fin_mois], 'fin_trimestre': [fin_trimestre],
-        'fin_semestre': [fin_semestre], 'fin_annee': [fin_annee] }
-    
-    df_date = pd.DataFrame(data_date_dict)
-    st.dataframe(df_date.transpose(),  width = 800)
-
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
     bad_words = X.has_bad_words(label)
@@ -83,6 +73,16 @@ with col2:
 
     df_nlp = pd.DataFrame(data_dict_nlp)
     st.dataframe(df_nlp.transpose(), width = 800)
+
+    st.write("Date features")
+    data_date_dict = {
+        'date_delta' : [date_delta],
+        'date_delta_7' : [date_delta_7], 'date_delta_30' : [date_delta_30],
+        'fin_semaine' : [fin_semaine], 'fin_mois':[fin_mois], 'fin_trimestre': [fin_trimestre],
+        'fin_semestre': [fin_semestre], 'fin_annee': [fin_annee] }
+    
+    df_date = pd.DataFrame(data_date_dict)
+    st.dataframe(df_date.transpose(),  width = 800)
 
 if is_opp_transaction == False:
     is_opp_transaction_0 = 1.0
@@ -252,20 +252,3 @@ with st.sidebar:
     else:
         st.write(1 , "Transaction is normal :sunglasses: ")
         st.write("Score : ", anomaly_score)
-
-
-
-# Transformer l'Isolation Forest en une liste de décisions d'arbres
-trees = [tree.tree_ for tree in models.clf_charge.estimators_]
-
-# Créer un TreeExplainer SHAP pour chaque arbre
-explainers = [shap.TreeExplainer(tree) for tree in trees]
-
-# Calculer les valeurs SHAP pour chaque arbre
-shap_values_list = [explainer.shap_values(X_test) for explainer in explainers]
-
-# Moyenner les valeurs SHAP sur tous les arbres
-shap_values = np.mean(shap_values_list, axis=0)
-
-# Visualiser les valeurs SHAP
-shap.summary_plot(shap_values, X)
