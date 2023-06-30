@@ -13,7 +13,7 @@ from collections import Counter
 from tqdm import tqdm
 import string
 import file_upload as X
-import models as m
+import models
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
@@ -75,8 +75,8 @@ with col2:
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
     bad_words = X.has_bad_words(label)
-    CV_pred = X.C_V_charge.transform([label])
-    predictions_cluster = X.kmeans_charge.predict(CV_pred)
+    CV_pred = models.C_V_charge.transform([label])
+    predictions_cluster = models.kmeans_charge.predict(CV_pred)
     data_dict_nlp = {
         'label' : [label], 'Cluster': [predictions_cluster], 'Bad Words ?': [bad_words], 'Anomaly': [is_anomaly_in_custer]}
 
@@ -235,13 +235,13 @@ test = {'net_amount_fx': net_amount,
 
 X_test = pd.DataFrame(test, index=[0])
 col = ["net_amount_fx", "nav_pct"]
-X_test[col] = X.scaler_charge.transform(X_test[col].values.reshape(-1,2))
+X_test[col] = models.scaler_charge.transform(X_test[col].values.reshape(-1,2))
 
 st.divider() 
 
 st.write(X_test.to_dict())
 
-anomaly = X.clf_charge.predict(X_test)
+anomaly = models.clf_charge.predict(X_test)
 
 with st.sidebar:
     st.header(':blue[Conclusions] ')
