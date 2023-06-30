@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from tqdm import tqdm
 import string
-import file_upload as X
+#import file_upload as X
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
