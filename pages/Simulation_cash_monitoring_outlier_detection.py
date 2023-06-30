@@ -254,10 +254,10 @@ with st.sidebar:
         return models.clf_charge.decision_function(X)
 
     # Créer l'explainer SHAP
-    explainer = shap.KernelExplainer(score_func, X_test[col].values.reshape(-1,2))
+    explainer = shap.KernelExplainer(score_func, X_test)
 
     # Calculer les valeurs SHAP
-    shap_values = explainer.shap_values(X_test[col].values.reshape(-1,2))
+    shap_values = explainer.shap_values(X_test)
 
     # Visualiser les valeurs SHAP
-    shap.summary_plot(shap_values, X_test[col].values.reshape(-1,2))
+    shap.summary_plot(shap_values, X_test)
