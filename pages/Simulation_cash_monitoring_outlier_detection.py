@@ -97,7 +97,6 @@ else:
     is_3_sigma_0 = 0.0
     is_3_sigma_1 = 1.0
 
-
 if is_similar == False:
     is_similar_0 = 1.0
     is_similar_1 = 0.0
