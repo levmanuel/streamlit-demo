@@ -1,5 +1,4 @@
 import re
-import pickle
 
 bad_words = ["fraud",
     "suspicious",
@@ -126,15 +125,3 @@ def has_bad_words(string):
             return 1
         else:
             return 0
-        
-with open('kmeans_nlp.pkl', 'rb') as fichier:
-    kmeans_charge = pickle.load(fichier)
-
-with open('count_vectorizer.pkl', 'rb') as fichier:
-    C_V_charge = pickle.load(fichier)
-
-with open('iso_forest_trades.pkl', 'rb') as fichier:
-    clf_charge = pickle.load(fichier)
-
-#with open('scaler.pkl', 'rb') as fichier:
-#    scaler_charge = pickle.load(fichier)
