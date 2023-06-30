@@ -253,14 +253,19 @@ with st.sidebar:
         st.write(1 , "Transaction is normal :sunglasses: ")
         st.write("Score : ", anomaly_score)
 
-    def score_func(X):
-        return models.clf_charge.decision_function(X)
 
-    # Créer l'explainer SHAP
-    explainer = shap.KernelExplainer(score_func, X_test)
 
-    # Calculer les valeurs SHAP
-    shap_values = explainer.shap_values(X_test)
+# Transformer l'Isolation Forest en une liste de décisions d'arbres
+trees = [tree.tree_ for tree in models.clf_charge.estimators_]
 
-    # Visualiser les valeurs SHAP
-    shap.summary_plot(shap_values, X_test)
+# Créer un TreeExplainer SHAP pour chaque arbre
+explainers = [shap.TreeExplainer(tree) for tree in trees]
+
+# Calculer les valeurs SHAP pour chaque arbre
+shap_values_list = [explainer.shap_values(X_test) for explainer in explainers]
+
+# Moyenner les valeurs SHAP sur tous les arbres
+shap_values = np.mean(shap_values_list, axis=0)
+
+# Visualiser les valeurs SHAP
+shap.summary_plot(shap_values, X)
