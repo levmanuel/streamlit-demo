@@ -71,15 +71,6 @@ with col2:
     df_date = pd.DataFrame(data_date_dict)
     st.dataframe(df_date.transpose(),  width = 800)
 
-    # st.write("Transactions features")
-    # transactions_dict = {
-    #     'Is opposite transaction ?' : [is_opp_transaction],
-    #     'Is 3 sigmas transaction ?' : [is_3_sigma],
-    #     'Is similar transaction ?' : is_similar,
-    #       }
-    # transactions_fetures = pd.DataFrame(transactions_dict)
-    # st.dataframe(transactions_fetures.transpose(),  width = 800)
-
     st.write("NLP")
     label = X.extract_alpha_sequences(description)
     bad_words = X.has_bad_words(label)
