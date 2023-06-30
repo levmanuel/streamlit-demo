@@ -250,5 +250,5 @@ with st.sidebar:
     else:
         st.write(1 , "Transaction is normal :sunglasses: ")
 
-explainer = shap.KernelExplainer(models.clf_charge, X_test)
-shap_values = explainer.shap_values(X)
+    explainer = shap.KernelExplainer(models.clf_charge, X_test)
+    shap_values = explainer.shap_values(X)
