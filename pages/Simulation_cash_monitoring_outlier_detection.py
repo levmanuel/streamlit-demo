@@ -242,7 +242,7 @@ st.divider()
 # st.write(X_test.to_dict())
 
 anomaly = models.clf_charge.predict(X_test)
-anomaly_score = models.decision_function(X_test)
+anomaly_score = models.clf_charge.decision_function(X_test)
 
 with st.sidebar:
     st.header(':blue[Conclusions] ')
