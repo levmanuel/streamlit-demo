@@ -31,3 +31,12 @@ with col1:
 
 with col2:
     st_data = st_folium(m)
+
+
+import pkg_resources
+
+# Obtenir la version de scikit-learn
+sklearn_version = pkg_resources.get_distribution("scikit-learn").version
+
+# Afficher la version dans Streamlit
+st.write("Version de scikit-learn :", sklearn_version)
