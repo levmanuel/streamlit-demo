@@ -18,6 +18,7 @@ import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import IsolationForest
+import shap
 
 st.set_page_config(page_title="Cash Monitoring Outlier Detection", page_icon="🐶", layout="wide")
 st.title("Depositary Control Data Science Project")
@@ -248,3 +249,6 @@ with st.sidebar:
         st.write(-1 , "Transaction is an anomaly :scream:")
     else:
         st.write(1 , "Transaction is normal :sunglasses: ")
+
+explainer = shap.KernelExplainer(models.clf_charge, X_test)
+shap_values = explainer.shap_values(X)
