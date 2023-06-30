@@ -242,13 +242,16 @@ st.divider()
 # st.write(X_test.to_dict())
 
 anomaly = models.clf_charge.predict(X_test)
+anomaly_score = models.decision_function(X_test)
 
 with st.sidebar:
     st.header(':blue[Conclusions] ')
     if anomaly == -1:
         st.write(-1 , "Transaction is an anomaly :scream:")
+        st.write("Score : ", anomaly_score)
     else:
         st.write(1 , "Transaction is normal :sunglasses: ")
+        st.write("Score : ", anomaly_score)
 
     def score_func(X):
         return models.clf_charge.decision_function(X)
