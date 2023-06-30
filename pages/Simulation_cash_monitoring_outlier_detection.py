@@ -251,7 +251,7 @@ with st.sidebar:
         st.write(1 , "Transaction is normal :sunglasses: ")
 
     def score_func(X):
-    return models.clf_charge.decision_function(X)
+        return models.clf_charge.decision_function(X)
 
     # Créer l'explainer SHAP
     explainer = shap.KernelExplainer(score_func, X_test[col].values.reshape(-1,2))
