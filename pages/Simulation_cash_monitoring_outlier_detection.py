@@ -260,4 +260,4 @@ with st.sidebar:
     shap_values = explainer.shap_values(X_test)
 
     # Visualiser les valeurs SHAP
-    st.write(shap.summary_plot(shap_values, X_test))
+    shap.summary_plot(shap_values, X_test)
