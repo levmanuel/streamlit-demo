@@ -123,5 +123,4 @@ def has_bad_words(string):
     for i in string.split():
         if i in bad_words:
             return 1
-        else:
-            return 0
+    return 0
