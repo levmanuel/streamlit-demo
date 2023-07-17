@@ -239,7 +239,7 @@ X_test[col] = models.scaler_charge.transform(X_test[col].values.reshape(-1,2))
 
 st.divider() 
 
-# st.write(X_test.to_dict())
+st.write(X_test.to_dict())
 
 anomaly = models.clf_charge.predict(X_test)
 anomaly_score = float(models.clf_charge.decision_function(X_test))
