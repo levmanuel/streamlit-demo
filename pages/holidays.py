@@ -9,27 +9,33 @@ st.set_page_config(page_title="Voyages en Europe", page_icon="✈️")
 st.title("Voyages en Europe ✈️")
 st.write("Planificateur de voyage")
 
-# Création d'un DataFrame avec une liste de villes européennes et leurs coordonnées
-villes_europe = pd.DataFrame({
-    "Ville": ["Paris", "Berlin", "Rome", "Madrid", "Londres"],
-    "Coordonnées": [[48.8566, 2.3522], [52.5200, 13.4050], [41.9028, 12.4964], [40.4168, -3.7038], [51.5074, -0.1278]]
-})
+# Chargement des données des villes
+villes_europe = pd.read_csv("villes_europe.csv")
 
-# Liste déroulante pour choisir une ville
-selected_city = st.selectbox("Choisissez une ville :", villes_europe["Ville"])
+# Initialisation de la liste des villes sélectionnées
+selected_cities = []
 
-# Trouver les coordonnées de la ville sélectionnée
-city_data = villes_europe[villes_europe["Ville"] == selected_city]
-city_coor = city_data.iloc[0]['Coordonnées']
+# Widget pour ajouter des villes
+with st.form(key='city_form'):
+    city = st.selectbox("Ajoutez une ville :", villes_europe["Ville"])
+    submit_button = st.form_submit_button(label='Ajouter cette ville')
 
-# Création et mise à jour de la carte
-m = folium.Map(location=city_coor, zoom_start=5)
-for _, city in villes_europe.iterrows():
-    folium.Marker(location=city['Coordonnées'], popup=city['Ville'], tooltip=city['Ville']).add_to(m)
+if submit_button:
+    selected_cities.append(city)
+
+# Affichage de la liste des villes sélectionnées
+st.write("Villes sélectionnées :", ', '.join(selected_cities))
+
+# Création de la carte
+m = folium.Map(location=[48.8566, 2.3522], zoom_start=4) # Paris comme point de départ
+
+# Ajout des marqueurs et tracé des lignes
+for i, city in enumerate(selected_cities):
+    city_coord = villes_europe[villes_europe["Ville"] == city].iloc[0]['Coordonnées']
+    folium.Marker(city_coord, popup=city, tooltip=city).add_to(m)
+    if i > 0:
+        previous_city_coord = villes_europe[villes_europe["Ville"] == selected_cities[i-1]].iloc[0]['Coordonnées']
+        folium.PolyLine([previous_city_coord, city_coord], color="red", weight=2.5, opacity=1).add_to(m)
 
 # Affichage de la carte dans Streamlit
 st_data = st_folium(m, width=700, height=500)
-
-# Affichage du DataFrame
-st.write("Liste des villes en Europe :")
-st.dataframe(villes_europe)
