@@ -9,6 +9,17 @@ st.set_page_config(page_title="Holidays in Norway", page_icon="✈️")
 st.title("Holidays in Norway ✈️")
 st.write("Day-to-Day Planner")
 
+# Liste déroulante pour choisir une ville
+selected_city = st.selectbox("Choose a city:", nof["City"])
+
+# Trouver les coordonnées de la ville sélectionnée
+city_data = nof[nof["City"] == selected_city]
+city_coor = city_data.iloc[0]['Coor']
+
+# Mise à jour de la carte
+m = folium.Map(location=city_coor, zoom_start=10)
+folium.Marker(city_coor, popup=selected_city, tooltip=selected_city).add_to(m)
+
 #Dataframe
 nof = pd.DataFrame({
 "City": ["Oslo", "Bergen"],
@@ -31,3 +42,8 @@ with col1:
 
 with col2:
     st_data = st_folium(m)
+
+
+
+
+
