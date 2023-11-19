@@ -1,49 +1,35 @@
 import folium
 import streamlit as st
 import pandas as pd
-
 from streamlit_folium import st_folium
 
-st.set_page_config(page_title="Holidays in Norway", page_icon="✈️")
+# Configuration de la page Streamlit
+st.set_page_config(page_title="Voyages en Europe", page_icon="✈️")
 
-st.title("Holidays in Norway ✈️")
-st.write("Day-to-Day Planner")
+st.title("Voyages en Europe ✈️")
+st.write("Planificateur de voyage")
+
+# Création d'un DataFrame avec une liste de villes européennes et leurs coordonnées
+villes_europe = pd.DataFrame({
+    "Ville": ["Paris", "Berlin", "Rome", "Madrid", "Londres"],
+    "Coordonnées": [[48.8566, 2.3522], [52.5200, 13.4050], [41.9028, 12.4964], [40.4168, -3.7038], [51.5074, -0.1278]]
+})
 
 # Liste déroulante pour choisir une ville
-selected_city = st.selectbox("Choose a city:", nof["City"])
+selected_city = st.selectbox("Choisissez une ville :", villes_europe["Ville"])
 
 # Trouver les coordonnées de la ville sélectionnée
-city_data = nof[nof["City"] == selected_city]
-city_coor = city_data.iloc[0]['Coor']
+city_data = villes_europe[villes_europe["Ville"] == selected_city]
+city_coor = city_data.iloc[0]['Coordonnées']
 
-# Mise à jour de la carte
-m = folium.Map(location=city_coor, zoom_start=10)
-folium.Marker(city_coor, popup=selected_city, tooltip=selected_city).add_to(m)
+# Création et mise à jour de la carte
+m = folium.Map(location=city_coor, zoom_start=5)
+for _, city in villes_europe.iterrows():
+    folium.Marker(location=city['Coordonnées'], popup=city['Ville'], tooltip=city['Ville']).add_to(m)
 
-#Dataframe
-nof = pd.DataFrame({
-"City": ["Oslo", "Bergen"],
-"Days": [1,2],
-"Coor": [[59.91512811000568, 10.739105977295354], [60.46905260044231, 5.371412422001533]]})
+# Affichage de la carte dans Streamlit
+st_data = st_folium(m, width=700, height=500)
 
-# center on Oslo
-m = folium.Map(location=[61.787196162404165, 15.042911177078336], zoom_start=5 )
-folium.Marker([59.91512811000568, 10.739105977295354], popup="Oslo", tooltip="Oslo").add_to(m)
-  
-# Create a list of coordinates representing the points along the route
-coordinates = [[59.91512811000568, 10.739105977295354], [60.46905260044231, 5.371412422001533]]
-# Add the itinerary to the map as a PolyLine
-folium.PolyLine(coordinates, color="red", weight=2.5, opacity=1).add_to(m)
-
-
-col1, col2 = st.columns(2)
-with col1:
-    st.dataframe(nof)
-
-with col2:
-    st_data = st_folium(m)
-
-
-
-
-
+# Affichage du DataFrame
+st.write("Liste des villes en Europe :")
+st.dataframe(villes_europe)
