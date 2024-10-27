@@ -139,12 +139,13 @@ def main():
     if 'gcp_service_account' not in st.secrets:
         st.error("Les credentials Google Sheets ne sont pas configurés!")
         st.stop()
-    if 'sheet_key' not in st.secrets:
+    if 'secrets' not in st.secrets:
         st.error("La clé du Google Sheet n'est pas configurée!")
         st.stop()
 
     # Initialisation des classes
-    sheet_key = st.secrets["sheet_key"]
+    sheet_key = st.secrets["secrets"]["sheet_key"]
+
     bar = Bar(sheet_key)
     finder = CocktailFinder(sheet_key)
 
