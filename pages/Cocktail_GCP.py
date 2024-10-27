@@ -135,7 +135,7 @@ def main():
     st.set_page_config(page_title="Mon Bar à Cocktails", page_icon="🍸")
     st.title("🍸 Mon Bar à Cocktails")
 
-    st.text(st.secrets["gcp_service_account"])
+    # st.text(st.secrets["gcp_service_account"])
 
     # Vérifier que les secrets sont configurés
     if 'gcp_service_account' not in st.secrets:
