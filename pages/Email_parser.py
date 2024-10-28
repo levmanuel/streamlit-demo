@@ -14,6 +14,7 @@ def parse_msg_file(file):
         "Sender": msg_obj.sender,
         "To": msg_obj.to,
         "Sent Date": msg_obj.sent_date,
+        "Recipients": msg_obj.recipients,
     }
     
     attachments = []
@@ -35,11 +36,12 @@ uploaded_file = st.file_uploader("Téléchargez un fichier .msg", type=["msg"])
 if uploaded_file is not None:
     email_data = parse_msg_file(uploaded_file)
     st.subheader("Informations sur l'Email")
+
     st.write("**Sender:**", email_data["Sender"])
+    st.write("**Recipients:**", email_data["Recipients"])
     st.write("**To:**", email_data["To"])
     st.write("**Sujet:**", email_data["Subject"])
     st.write("**Date d'Envoi:**", email_data["Sent Date"])
-   
     
     st.subheader("Pièces Jointes PDF")
     if email_data["Attachments"]:
