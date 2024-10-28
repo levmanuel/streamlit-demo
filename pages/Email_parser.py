@@ -11,6 +11,7 @@ def parse_msg_file(file):
     
     email_info = {
         "Subject": msg_obj.subject,
+        "Sender": msg_obj.sender,
         "To": msg_obj.to,
         "Sent Date": msg_obj.sent_date,
     }
