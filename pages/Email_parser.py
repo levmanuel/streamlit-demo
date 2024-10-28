@@ -16,8 +16,8 @@ def parse_msg_file(file):
     # Extraire les informations principales de l'email
     email_info = {
         "Subject": msg_obj.subject,
-        "Sent Date": msg_properties_dict.get("delivery_time") or msg_properties_dict.get("creation_time"),
         "Created Date": msg_obj.created_date,
+        "Sent Date": msg_obj.sent_date,
     }
     
     # Extraire les pièces jointes PDF
