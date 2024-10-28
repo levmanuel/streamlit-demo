@@ -35,9 +35,11 @@ uploaded_file = st.file_uploader("Téléchargez un fichier .msg", type=["msg"])
 if uploaded_file is not None:
     email_data = parse_msg_file(uploaded_file)
     st.subheader("Informations sur l'Email")
+    st.write("**Sender:**", email_data["Sender"])
+    st.write("**To:**", email_data["To"])
     st.write("**Sujet:**", email_data["Subject"])
     st.write("**Date d'Envoi:**", email_data["Sent Date"])
-    st.write("**Date de Création:**", email_data["Created Date"])
+   
     
     st.subheader("Pièces Jointes PDF")
     if email_data["Attachments"]:
