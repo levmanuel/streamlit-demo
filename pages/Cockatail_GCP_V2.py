@@ -72,7 +72,11 @@ class Bar(GoogleSheetsManager):
         """Get bar ingredients from Google Sheets"""
         worksheet = self.get_worksheet(self.worksheet_name)
         if worksheet:
-            return {ing.lower() for ing in worksheet.col_values(1) if ing}
+            # Skip the header row and get all ingredients
+            all_values = worksheet.get_all_values()
+            # Skip first row (header) and get only first column
+            ingredients = [row[0] for row in all_values[1:] if row and row[0]]
+            return {ing.lower().strip() for ing in ingredients}
         return set()
 
     @handle_google_errors
@@ -85,9 +89,9 @@ class Bar(GoogleSheetsManager):
         if not worksheet:
             return False
             
-        ingredients = {ing.lower() for ing in worksheet.col_values(1)}
-        if ingredient.lower() not in ingredients:
-            worksheet.append_row([ingredient.lower()])
+        ingredients = self.get_ingredients()
+        if ingredient.lower().strip() not in ingredients:
+            worksheet.append_row([ingredient.lower().strip()])
             return True
         return False
 
@@ -96,10 +100,13 @@ class Bar(GoogleSheetsManager):
         """Remove ingredient from bar"""
         worksheet = self.get_worksheet(self.worksheet_name)
         if worksheet:
-            cell = worksheet.find(ingredient.lower())
-            if cell:
-                worksheet.delete_row(cell.row)
-                return True
+            try:
+                cell = worksheet.find(ingredient.lower().strip())
+                if cell:
+                    worksheet.delete_row(cell.row)
+                    return True
+            except gspread.exceptions.CellNotFound:
+                pass
         return False
 
 class CocktailManager(GoogleSheetsManager):
@@ -114,32 +121,20 @@ class CocktailManager(GoogleSheetsManager):
         if not worksheet:
             return []
             
-        # Get all data including headers
-        all_data = worksheet.get_all_values()
-        if not all_data:
+        # Get all values including headers
+        all_values = worksheet.get_all_values()
+        if len(all_values) < 2:  # Need at least header row and one cocktail
             return []
-
-        # First row contains headers
-        headers = all_data[0]
-        
-        # Find the indices for name and ingredients columns
-        try:
-            name_idx = headers.index('nom')
-            ingredients_idx = headers.index('ingredients')
-        except ValueError:
-            logger.error("Required columns 'nom' and 'ingredients' not found in worksheet")
-            return []
-
-        # Process the rest of the rows
+            
+        # Skip header row
         cocktails = []
-        for row in all_data[1:]:  # Skip header row
-            if len(row) > max(name_idx, ingredients_idx):
-                name = row[name_idx]
-                ingredients_str = row[ingredients_idx]
-                if name and ingredients_str:
-                    ingredients = [ing.strip().lower() for ing in ingredients_str.split(',')]
-                    cocktails.append(Cocktail(name=name, ingredients=ingredients))
-                    
+        for row in all_values[1:]:
+            if len(row) >= 2 and row[0] and row[1]:  # Ensure we have both name and ingredients
+                name = row[0].strip()
+                # Split ingredients and clean them
+                ingredients = [ing.lower().strip() for ing in row[1].split(',')]
+                cocktails.append(Cocktail(name=name, ingredients=ingredients))
+                
         return cocktails
 
     @handle_google_errors
@@ -150,20 +145,10 @@ class CocktailManager(GoogleSheetsManager):
             
         worksheet = self.get_worksheet(self.worksheet_name)
         if worksheet:
-            # Verify headers
-            headers = worksheet.row_values(1)
-            try:
-                name_idx = headers.index('nom')
-                ingredients_idx = headers.index('ingredients')
-            except ValueError:
-                logger.error("Required columns 'nom' and 'ingredients' not found")
-                return False
-
-            # Create row with correct column placement
-            row = [""] * len(headers)  # Initialize empty row
-            row[name_idx] = cocktail.name
-            row[ingredients_idx] = ', '.join(cocktail.ingredients)
-            
+            row = [
+                cocktail.name,
+                ', '.join(ing.lower().strip() for ing in cocktail.ingredients)
+            ]
             worksheet.append_row(row)
             return True
         return False
@@ -173,19 +158,13 @@ class CocktailManager(GoogleSheetsManager):
         """Remove cocktail recipe"""
         worksheet = self.get_worksheet(self.worksheet_name)
         if worksheet:
-            # Find the column index for cocktail names
-            headers = worksheet.row_values(1)
             try:
-                name_idx = headers.index('nom') + 1  # gspread uses 1-based indexing for find
-            except ValueError:
-                logger.error("Column 'nom' not found")
-                return False
-
-            # Find the cell in the correct column
-            cell = worksheet.findall(name, in_column=name_idx)
-            if cell:
-                worksheet.delete_row(cell[0].row)
-                return True
+                cell = worksheet.find(name)
+                if cell:
+                    worksheet.delete_row(cell.row)
+                    return True
+            except gspread.exceptions.CellNotFound:
+                pass
         return False
 
     def find_possible_cocktails(self, available_ingredients: Set[str], threshold: float = 0) -> List[Dict]:
