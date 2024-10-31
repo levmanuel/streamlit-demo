@@ -21,7 +21,7 @@ def load_gsheet_data():
     gc = connect_to_gspread()
     
     # Ouvrir le spreadsheet
-    sheet_id = st.secrets["sheet_id"]
+    sheet_id = st.secrets["sheet_key"]
     sh = gc.open_by_key(sheet_id)
     
     # Récupérer la liste des feuilles
