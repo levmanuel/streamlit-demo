@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
-from google.oauth2.service_account import Credentials
-from googleapiclient.discovery import build
 import gspread
+from google.oauth2.service_account import Credentials
 
-def load_gsheet():
+def connect_to_gspread():
     # Configurer les credentials
     credentials = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
@@ -14,44 +13,76 @@ def load_gsheet():
         ],
     )
     
-    # Créer une connexion avec Google Sheets
-    gc = gspread.authorize(credentials)
+    # Se connecter à Google Sheets
+    return gspread.authorize(credentials)
+
+def load_gsheet_data():
+    # Établir la connexion
+    gc = connect_to_gspread()
     
-    # Ouvrir le spreadsheet par son ID
+    # Ouvrir le spreadsheet
     sheet_id = st.secrets["sheet_id"]
     sh = gc.open_by_key(sheet_id)
     
-    # Sélectionner la première feuille
-    worksheet = sh.get_worksheet(0)
+    # Récupérer la liste des feuilles
+    worksheet_list = sh.worksheets()
     
-    # Récupérer toutes les données
+    # Créer un sélecteur de feuilles
+    worksheet_names = [ws.title for ws in worksheet_list]
+    selected_worksheet = st.selectbox("Sélectionner une feuille:", worksheet_names)
+    
+    # Récupérer la feuille sélectionnée
+    worksheet = sh.worksheet(selected_worksheet)
+    
+    # Récupérer les données
     data = worksheet.get_all_records()
-    
-    # Convertir en DataFrame pandas
-    df = pd.DataFrame(data)
-    return df
+    return pd.DataFrame(data)
 
 def main():
-    st.title("Visualisation Google Sheets")
+    st.title("Données Google Sheets")
     
     try:
         # Charger les données
-        df = load_gsheet()
+        df = load_gsheet_data()
+        
+        # Afficher les dimensions du DataFrame
+        st.write(f"Dimensions: {df.shape[0]} lignes × {df.shape[1]} colonnes")
         
         # Afficher les données
-        st.write("### Aperçu des données")
+        st.write("### Données")
         st.dataframe(df)
         
-        # Ajouter des métriques basiques
-        st.write("### Statistiques")
-        st.write(f"Nombre total de lignes: {len(df)}")
-        
-        # Si vous avez des colonnes numériques, vous pouvez afficher des statistiques
-        numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
-        if len(numeric_cols) > 0:
-            st.write("Statistiques descriptives:")
-            st.write(df[numeric_cols].describe())
-        
+        # Ajouter des filtres simples si le DataFrame n'est pas vide
+        if not df.empty:
+            st.write("### Filtres")
+            # Permettre la sélection de colonnes pour le filtrage
+            col_to_filter = st.selectbox(
+                "Filtrer par colonne:",
+                df.columns.tolist()
+            )
+            
+            # Créer un filtre basé sur le type de données
+            if df[col_to_filter].dtype in ['int64', 'float64']:
+                min_val = float(df[col_to_filter].min())
+                max_val = float(df[col_to_filter].max())
+                filter_val = st.slider(
+                    f"Valeur minimale pour {col_to_filter}",
+                    min_val, max_val, min_val
+                )
+                filtered_df = df[df[col_to_filter] >= filter_val]
+            else:
+                # Pour les colonnes textuelles
+                unique_vals = df[col_to_filter].unique().tolist()
+                selected_val = st.multiselect(
+                    f"Sélectionner les valeurs pour {col_to_filter}",
+                    unique_vals,
+                    default=unique_vals
+                )
+                filtered_df = df[df[col_to_filter].isin(selected_val)]
+            
+            st.write("### Données filtrées")
+            st.dataframe(filtered_df)
+            
     except Exception as e:
         st.error(f"Une erreur s'est produite: {str(e)}")
 
