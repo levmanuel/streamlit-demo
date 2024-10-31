@@ -20,9 +20,9 @@ def load_gsheet_data():
     # Établir la connexion
     gc = connect_to_gspread()
     
-    # Ouvrir le spreadsheet
-    sheet_id = st.secrets["sheet_key"]
-    sh = gc.open_by_key(sheet_id)
+    # Ouvrir le spreadsheet en utilisant la clé depuis la section [secrets]
+    sheet_key = st.secrets["secrets"]["sheet_key"]
+    sh = gc.open_by_key(sheet_key)
     
     # Récupérer la liste des feuilles
     worksheet_list = sh.worksheets()
@@ -52,10 +52,9 @@ def main():
         st.write("### Données")
         st.dataframe(df)
         
-        # Ajouter des filtres simples si le DataFrame n'est pas vide
+        # Ajouter des filtres si le DataFrame n'est pas vide
         if not df.empty:
             st.write("### Filtres")
-            # Permettre la sélection de colonnes pour le filtrage
             col_to_filter = st.selectbox(
                 "Filtrer par colonne:",
                 df.columns.tolist()
@@ -71,7 +70,6 @@ def main():
                 )
                 filtered_df = df[df[col_to_filter] >= filter_val]
             else:
-                # Pour les colonnes textuelles
                 unique_vals = df[col_to_filter].unique().tolist()
                 selected_val = st.multiselect(
                     f"Sélectionner les valeurs pour {col_to_filter}",
