@@ -4,4 +4,5 @@ numpy
 pillow
 gspread
 google-auth
-msg-parser
+extract-msg
+googleapiclient
