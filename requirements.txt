@@ -5,3 +5,4 @@ pillow
 gspread
 google-auth
 extract-msg
+streamlit_gsheets
