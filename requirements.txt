@@ -5,3 +5,5 @@ pillow
 st-gsheets-connection
 google-auth
 extract-msg
+scikit-learn
+mlflow
