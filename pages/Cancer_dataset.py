@@ -54,9 +54,3 @@ if st.button("Entraîner le modèle"):
         st.write("**Précision (Precision)** :", precision)
         st.write("**Rappel (Recall)** :", recall)
         st.success("Entraînement terminé et suivi enregistré dans MLflow !")
-
-    # Affichage des prédictions vs Réalité
-    st.write("### Prédictions vs Réalité")
-    results_df = pd.DataFrame({"Réalité": y_test, "Prédiction": y_pred})
-    st.write(results_df.head(10))
-    st.write("Tableau des 10 premières prédictions pour vérifier les résultats.")
