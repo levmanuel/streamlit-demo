@@ -19,7 +19,7 @@ st.title("Modèle de Classification du Cancer du Sein - Suivi avec MLflow et Fin
 # Fraction de test pour le dataset
 test_size = st.slider("Sélectionner la taille de l'ensemble de test", 0.1, 0.5, 0.2)
 
-st.write(X.head(10))
+st.write(X.head())
 
 # Bouton pour exécuter l'entraînement avec recherche d'hyperparamètres
 if st.button("Entraîner le modèle avec Fine-Tuning"):
