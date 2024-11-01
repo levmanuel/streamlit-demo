@@ -1,13 +1,16 @@
-# streamlit_app.py
-
 import streamlit as st
+
 from streamlit_gsheets import GSheetsConnection
 
-# Create a connection object.
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-df = conn.read()
+# Read Google WorkSheet as DataFrame
+df = conn.read(
+    worksheet="ingredients",
+    usecols=[
+        0,
+    ],  # specify columns which you want to get, comment this out to get all columns
+)
 
-# Print results.
-for row in df.itertuples():
-    st.write(f"{row.name} has a :{row.pet}:")
+# Display our Spreadsheet as st.dataframe
+st.dataframe(df)
