@@ -17,6 +17,8 @@ st.title("Modèle de Classification du Cancer du Sein - Suivi avec MLflow")
 # Fraction de test pour le dataset
 test_size = st.slider("Sélectionner la taille de l'ensemble de test", 0.1, 0.5, 0.2)
 
+st.write(X.head(10))
+
 # Bouton pour exécuter l'entraînement
 if st.button("Entraîner le modèle"):
     # Division du dataset
