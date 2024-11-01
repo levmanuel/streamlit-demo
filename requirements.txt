@@ -5,4 +5,3 @@ pillow
 st-gsheets-connection
 google-auth
 extract-msg
-streamlit_gsheets
