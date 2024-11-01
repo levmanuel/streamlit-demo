@@ -1,18 +1,18 @@
 import streamlit as st
 import pandas as pd
-from sklearn.datasets import load_boston
+from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 import mlflow
 
-# Chargement du dataset Boston
-boston = load_boston()
-X = pd.DataFrame(boston.data, columns=boston.feature_names)
-y = pd.Series(boston.target, name="MEDV")  # MEDV : Median value of owner-occupied homes
+# Chargement du dataset Breast Cancer
+data = load_breast_cancer()
+X = pd.DataFrame(data.data, columns=data.feature_names)
+y = pd.Series(data.target, name="target")
 
 # Titre de l'application
-st.title("Modèle de Régression des Prix de Maison - Suivi avec MLflow")
+st.title("Modèle de Classification du Cancer du Sein - Suivi avec MLflow")
 
 # Fraction de test pour le dataset
 test_size = st.slider("Sélectionner la taille de l'ensemble de test", 0.1, 0.5, 0.2)
@@ -23,36 +23,38 @@ if st.button("Entraîner le modèle"):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
 
     # Initialisation de MLflow
-    mlflow.set_experiment("Boston_House_Price_Prediction")
-    
+    mlflow.set_experiment("Breast_Cancer_Classification")
+
     with mlflow.start_run():
-        # Création et entraînement du modèle de régression linéaire
-        model = LinearRegression()
+        # Création et entraînement du modèle de classification
+        model = LogisticRegression(max_iter=10000)
         model.fit(X_train, y_train)
 
         # Prédiction sur l'ensemble de test
         y_pred = model.predict(X_test)
 
         # Calcul des métriques
-        mse = mean_squared_error(y_test, y_pred)
-        r2 = r2_score(y_test, y_pred)
+        accuracy = accuracy_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred)
+        recall = recall_score(y_test, y_pred)
 
         # Enregistrement des métriques et paramètres dans MLflow
         mlflow.log_param("test_size", test_size)
-        mlflow.log_metric("MSE", mse)
-        mlflow.log_metric("R2", r2)
-
-        # Affichage des résultats
-        st.write("**Erreur quadratique moyenne (MSE)** :", mse)
-        st.write("**Coefficient de détermination (R²)** :", r2)
+        mlflow.log_metric("accuracy", accuracy)
+        mlflow.log_metric("precision", precision)
+        mlflow.log_metric("recall", recall)
 
         # Enregistrement du modèle
-        mlflow.sklearn.log_model(model, "linear_regression_model")
+        mlflow.sklearn.log_model(model, "logistic_regression_model")
 
+        # Affichage des résultats dans Streamlit
+        st.write("**Précision (Accuracy)** :", accuracy)
+        st.write("**Précision (Precision)** :", precision)
+        st.write("**Rappel (Recall)** :", recall)
         st.success("Entraînement terminé et suivi enregistré dans MLflow !")
 
-    # Affichage des prédictions
+    # Affichage des prédictions vs Réalité
     st.write("### Prédictions vs Réalité")
     results_df = pd.DataFrame({"Réalité": y_test, "Prédiction": y_pred})
     st.write(results_df.head(10))
-    st.line_chart(results_df)
+    st.write("Tableau des 10 premières prédictions pour vérifier les résultats.")
