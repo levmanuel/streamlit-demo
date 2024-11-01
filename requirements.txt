@@ -2,7 +2,7 @@ streamlit
 opencv-python-headless
 numpy
 pillow
-gspread
+st-gsheets-connection
 google-auth
 extract-msg
 streamlit_gsheets
