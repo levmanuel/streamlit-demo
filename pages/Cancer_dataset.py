@@ -7,6 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 import mlflow
 import matplotlib.pyplot as plt
+import pickle  # Pour la sérialisation du modèle
 
 # Chargement du dataset Breast Cancer
 data = load_breast_cancer()
@@ -19,7 +20,7 @@ st.title("Modèle de Classification du Cancer du Sein - Suivi avec MLflow et Fin
 # Fraction de test pour le dataset
 test_size = st.slider("Sélectionner la taille de l'ensemble de test", 0.1, 0.5, 0.2)
 
-st.write(X.head())
+st.write(X.head(10))
 
 # Bouton pour exécuter l'entraînement avec recherche d'hyperparamètres
 if st.button("Entraîner le modèle avec Fine-Tuning"):
@@ -31,8 +32,8 @@ if st.button("Entraîner le modèle avec Fine-Tuning"):
 
     # Définir la grille des hyperparamètres pour Logistic Regression
     param_grid = {
-        'C': np.logspace(-3, 3, 7),  # Différentes valeurs de régularisation
-        'solver': ['liblinear']  # Utiliser un solveur compatible avec le paramètre `C`
+        'C': np.logspace(-3, 3, 7),
+        'solver': ['liblinear']
     }
 
     # Configuration de la recherche par grille avec validation croisée
@@ -67,8 +68,6 @@ if st.button("Entraîner le modèle avec Fine-Tuning"):
 
     # Visualisation des résultats de la recherche d'hyperparamètres
     results = pd.DataFrame(grid_search.cv_results_)
-
-    # Affichage graphique des scores d'accuracy en fonction de l'hyperparamètre `C`
     plt.figure(figsize=(10, 6))
     plt.plot(results['param_C'], results['mean_test_score'], marker='o')
     plt.xscale('log')
@@ -76,3 +75,14 @@ if st.button("Entraîner le modèle avec Fine-Tuning"):
     plt.ylabel('Accuracy moyenne')
     plt.title('Impact de la régularisation sur l’accuracy')
     st.pyplot(plt)
+
+    # Sérialisation du modèle avec pickle
+    model_data = pickle.dumps(best_model)
+
+    # Bouton de téléchargement
+    st.download_button(
+        label="Télécharger le modèle",
+        data=model_data,
+        file_name="best_logistic_regression_model.pkl",
+        mime="application/octet-stream"
+    )
