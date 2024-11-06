@@ -20,4 +20,6 @@ user_input = st.text_input("Entrez le texte à afficher dans le cœur :", "Essai
 
 # Génère le motif avec le texte fourni
 heart_text = generate_heart(user_input)
-print(heart_text)
+
+# Affiche le motif avec un bloc de code pour un alignement plus stable
+st.text(heart_text)
