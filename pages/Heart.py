@@ -22,4 +22,4 @@ user_input = st.text_input("Entrez le texte à afficher dans le cœur :", "YourN
 heart_text = generate_heart(user_input)
 
 # Affiche le motif
-st.text(heart_text)
+st.code(heart_text, language="plaintext")
