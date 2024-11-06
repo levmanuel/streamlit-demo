@@ -1,16 +1,22 @@
 import streamlit as st
 
-def generate_heart(text):
-    # Génère le motif en forme de cœur avec le texte fourni
-    heart_pattern = '\n'.join(
-        [(' ' * (30 - y // 2)) + ''.join(  # Ajout de l'espacement en fonction de y pour centrer chaque ligne
-            [(text[(x - y) % len(text)]
-              if ((x * 0.05) ** 2 + (y * 0.1) ** 2 - 1) ** 3 - (x * 0.05) ** 2 * (y * 0.1) ** 3 <= 0
-              else ' ')
-             for x in range(-30, 30)])
-         for y in range(15, -15, -1)]
-    )
-    return heart_pattern
+def heart_pattern(text):
+    # Répète le texte pour remplir le motif en cœur
+    text_repeated = (text * 100)[:100]
+    n = len(text_repeated)
+
+    for row in range(6):
+        for col in range(7 * n // 10):
+            # Conditions pour dessiner les parties du cœur
+            if ((row == 0 and col % 5 != 0) or 
+                (row == 1 and col % 5 == 0) or 
+                (row - col == 2) or 
+                (row + col == 8)):
+                # Affiche le caractère correspondant dans `text_repeated`
+                print(text_repeated[(row * 7 + col) % n], end="")
+            else:
+                print(" ", end="")
+        print()
 
 # Interface utilisateur Streamlit
 st.title("Motif en forme de cœur personnalisé")
@@ -19,7 +25,7 @@ st.title("Motif en forme de cœur personnalisé")
 user_input = st.text_input("Entrez le texte à afficher dans le cœur :", "Essai")
 
 # Génère le motif avec le texte fourni
-heart_text = generate_heart(user_input)
+heart_text = heart_pattern(user_input)
 
 # Affiche le motif avec un bloc de code pour un alignement plus stable
 st.text(heart_text)
