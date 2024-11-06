@@ -7,3 +7,4 @@ google-auth
 extract-msg
 scikit-learn
 mlflow
+tensorflow
