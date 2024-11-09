@@ -235,10 +235,10 @@ def visualize_results(image: np.ndarray, checkboxes: List[Checkbox]) -> np.ndarr
                      (checkbox.x + checkbox.w, checkbox.y + checkbox.h), 
                      color, 2)
         
-        # Afficher les scores
-        text = f"{checkbox.confidence:.2f}/{checkbox.check_confidence:.2f}"
-        cv2.putText(result, text, (checkbox.x, checkbox.y - 5),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+        # # Afficher les scores
+        # text = f"{checkbox.confidence:.2f}/{checkbox.check_confidence:.2f}"
+        # cv2.putText(result, text, (checkbox.x, checkbox.y - 5),
+        #            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
     
     return result
 
