@@ -23,3 +23,5 @@ heart_text = generate_heart(user_input)
 
 # Affiche le motif avec un bloc de code pour un alignement plus stable
 st.text(heart_text)
+
+print(generate_heart("Audit"))
