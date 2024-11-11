@@ -108,7 +108,7 @@ min_h = min_w #st.number_input("Hauteur minimum", min_value=10, max_value=200, v
 max_h = max_w #st.number_input("Hauteur maximum", min_value=10, max_value=200, value=50)
 iou_threshold = st.slider("Seuil IoU", 0, 100, 50, 1) / 100
 
-values = st.slider("Select a range of values", 0.0, 100.0, (25.0, 75.0))
+values = st.slider("Select a range of values", 0, 100, 1, (25.0, 75.0))
 st.write("Values:", values)
 
 # Chargement des images
