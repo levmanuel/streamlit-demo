@@ -42,7 +42,7 @@ st.write("Chargez une image pour détecter les cases à cocher.")
 
 # Création des sliders pour les dimensions min/max des cases
 min_w, max_w = st.slider("Largeur de la case", 10, 50, (15, 20))
-min_h, max_h = st.slider("Hauteur de la case", 10, 50, (15, 20))
+min_h, max_h = min_w, max_w
 
 # Chargement de l'image via drag and drop
 uploaded_file = st.file_uploader("Choisissez une image...", type=["png", "jpg", "jpeg"])
