@@ -15,7 +15,7 @@ res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
 loc = np.where( res >= threshold)
 points = zip(*loc[::-1])
 tot = len(points)
-st.text(f"Nb de points:{pt}")
+st.text(f"Nb de points:{tot}")
 for pt in points:
     st.text(pt)
     cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
