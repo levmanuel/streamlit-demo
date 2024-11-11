@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 st.title("Détection de cases à cocher")
 st.write("Chargez une image pour détecter les cases à cocher.")
 
-threshold = st.slider("thresold", 0, 100, 2) / 100
+threshold = st.slider("thresold", 0, 100, 25, 2) / 100
  
 img_rgb = cv.imread('./assets/CHECK_TEST.png')
 img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
