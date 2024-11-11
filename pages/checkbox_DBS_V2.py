@@ -102,14 +102,12 @@ st.write("Utilisation de deux méthodes de détection combinées")
 
 # Paramètres
 threshold = st.slider("Seuil de template matching", 0, 100, 50, 1) / 100
-min_w = st.number_input("Largeur minimum", min_value=10, max_value=200, value=20)
-max_w = st.number_input("Largeur maximum", min_value=10, max_value=200, value=50)
+# min_w = st.number_input("Largeur minimum", min_value=10, max_value=200, value=20)
+# max_w = st.number_input("Largeur maximum", min_value=10, max_value=200, value=50)
+min_w, max_w = st.slider("Largeur minimum / max", 0, 100, (25, 75), 1)
 min_h = min_w #st.number_input("Hauteur minimum", min_value=10, max_value=200, value=20)
 max_h = max_w #st.number_input("Hauteur maximum", min_value=10, max_value=200, value=50)
 iou_threshold = st.slider("Seuil IoU", 0, 100, 50, 1) / 100
-
-values = st.slider("Select a range of values", 0, 100, (25, 75), 1)
-st.write("Values:", values)
 
 # Chargement des images
 img_rgb = cv.imread('./assets/CHECK_TEST.png')
