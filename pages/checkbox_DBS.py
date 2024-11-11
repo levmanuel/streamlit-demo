@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.cluster import DBSCAN
 
-st.title("Détection de cases à cocher")
+st.title("Détection de cases à cocher avec matchTemplate et DBS Clustering")
 st.write("Chargez une image pour détecter les cases à cocher.")
 
 threshold = st.slider("thresold", 0, 100, 50, 1) / 100
