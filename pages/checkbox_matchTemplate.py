@@ -14,6 +14,7 @@ w, h = template.shape[::-1]
 res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
 loc = np.where( res >= threshold)
 points = zip(*loc[::-1])
+st.text(points)
 print(points)
 # st.text(len(points))
 # for pt in points:
