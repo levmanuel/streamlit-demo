@@ -15,22 +15,9 @@ res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
 loc = np.where( res >= threshold)
 points = list(zip(*loc[::-1]))
 tot = len(points)
-st.text(f"Nb de points:{tot}")
+st.text(f"Nb de points: {tot}")
 for pt in points:
     st.text(pt)
     cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
 
 st.image(img_rgb, channels="BGR", caption="Image traitée")
-
-# # Chargement de l'image via drag and drop
-# uploaded_file = st.file_uploader("Choisissez une image...", type=["png", "jpg", "jpeg"])
-
-# if uploaded_file is not None:
-#     # Lire l'image
-#     image = np.array(Image.open(uploaded_file))
-
-#     # Traitement de l'image avec les valeurs de taille dynamiques
-#     processed_image = process_image(image, min_w, max_w, min_h, max_h)
-
-#     # Afficher l'image traitée
-#     st.image(processed_image, channels="BGR", caption="Image traitée")
