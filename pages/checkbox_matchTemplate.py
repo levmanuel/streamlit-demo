@@ -15,6 +15,7 @@ res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
 loc = np.where( res >= threshold)
 points = zip(*loc[::-1])
 for pt in points:
+    print(pt)
     cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
 
 st.image(img_rgb, channels="BGR", caption="Image traitée")
