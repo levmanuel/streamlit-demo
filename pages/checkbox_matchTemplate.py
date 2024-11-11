@@ -13,7 +13,7 @@ template = cv.imread('./assets/CHECKED_ICON.png', cv.IMREAD_GRAYSCALE)
 w, h = template.shape[::-1]
 res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
 loc = np.where( res >= threshold)
-points = zip(*loc[::-1])
+points = list(zip(*loc[::-1]))
 tot = len(points)
 st.text(f"Nb de points:{tot}")
 for pt in points:
