@@ -29,7 +29,7 @@ for label in unique_labels:
         class_member_mask = (labels == label)
         xy = points_array[class_member_mask]
         for pt in xy:
-            cv.rectangle(img_rgb, tuple(pt), (pt[0] + w, pt[1] + h), (0,0,255), 2)
+            cv.rectangle(img_rgb, tuple(pt), (pt[0] + w, pt[1] + h), (0,0,255), 1)
 
 st.text(f"Nb de points: {len(unique_labels)}")
 st.image(img_rgb, channels="BGR", caption="Image traitée")
