@@ -18,7 +18,7 @@ df = load_data()
 st.title("Prévisions avec Prophet : Démonstration avec le dataset de Yosemite")
 
 # Sélection de la variable à prévoir
-target_column = st.selectbox("Sélectionnez la variable à prévoir", df.columns[1:])
+target_column = df['y']
 
 # Configuration des paramètres du modèle
 periods = st.slider("Nombre de périodes à prévoir", min_value=1, max_value=365, value=30)
