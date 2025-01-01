@@ -137,7 +137,7 @@ if st.button("Jouer la carte"):
         if deck and len(hand) < 6:
             hand.append(deck.pop())
         st.success(f"Carte {selected_card} jouée avec succès !")
-        st.experimental_rerun()
+        st.rerun()
     else:
         st.error("❌ Mouvement non valide. Essayez une autre combinaison.")
 
@@ -155,10 +155,10 @@ if not has_valid_moves(hand, piles):
     st.error("😔 Aucun mouvement possible. Partie terminée !")
     if st.button("Nouvelle partie"):
         del st.session_state.game_state
-        st.experimental_rerun()
+        st.rerun()
 
 if not deck and not hand:
     st.success("🎉 Félicitations, vous avez gagné !")
     if st.button("Nouvelle partie"):
         del st.session_state.game_state
-        st.experimental_rerun()
+        st.rerun()
