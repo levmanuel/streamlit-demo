@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from prophet import Prophet
 
 # Charger le dataset de Yosemite
-@st.cache
+@st.cache_data
 def load_data():
     url = "https://raw.githubusercontent.com/facebook/prophet/main/examples/example_yosemite_temps.csv"
     df = pd.read_csv(url)
