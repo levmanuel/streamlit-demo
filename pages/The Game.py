@@ -124,25 +124,18 @@ if "selected_card" not in st.session_state:
 if "selected_pile" not in st.session_state:
     st.session_state.selected_pile = None
 
-# Affichage des cartes en boutons
+# Affichage des cartes avec pills
 st.write("Choisissez une carte:")
-cols_cards = st.columns(len(hand))
-for i, card in enumerate(sorted(hand)):
-    with cols_cards[i]:
-        button_style = "background-color: #0066cc;" if st.session_state.selected_card == card else ""
-        if st.button(str(card), key=f"card_{card}", 
-                    help="Cliquez pour sélectionner cette carte"):
-            st.session_state.selected_card = card
+selected_card = st.pills("Cartes disponibles", options=[str(card) for card in sorted(hand)], key="card_pills")
+if selected_card:
+    st.session_state.selected_card = int(selected_card)
 
-# Affichage des piles en boutons
+# Affichage des piles avec pills
 st.write("Choisissez une pile:")
-cols_piles = st.columns(len(piles))
-for i, (pile_name, pile_values) in enumerate(piles.items()):
-    with cols_piles[i]:
-        button_style = "background-color: #0066cc;" if st.session_state.selected_pile == pile_name else ""
-        if st.button(f"{pile_name}\n{pile_values[-1]}", key=f"pile_{pile_name}", 
-                    help="Cliquez pour sélectionner cette pile"):
-            st.session_state.selected_pile = pile_name
+pile_options = [f"{pile_name} ({pile_values[-1]})" for pile_name, pile_values in piles.items()]
+selected_pile = st.pills("Piles disponibles", options=pile_options, key="pile_pills")
+if selected_pile:
+    st.session_state.selected_pile = selected_pile.split(" (")[0]
 
 # Bouton pour jouer la carte
 if st.session_state.selected_card and st.session_state.selected_pile:
@@ -158,7 +151,6 @@ if st.session_state.selected_card and st.session_state.selected_pile:
             # Réinitialiser les sélections
             st.session_state.selected_card = None
             st.session_state.selected_pile = None
-            st.rerun()
         else:
             st.error("❌ Mouvement non valide. Essayez une autre combinaison.")
 
