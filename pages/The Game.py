@@ -118,28 +118,49 @@ with col2:
 st.header("🃏 Votre main")
 st.write(f"Cartes: {', '.join(map(str, sorted(hand)))}")
 
-# Actions de jeu
-st.subheader("🎯 Jouer une carte")
-col3, col4 = st.columns(2)
+# Gestion de la sélection dans session_state
+if "selected_card" not in st.session_state:
+    st.session_state.selected_card = None
+if "selected_pile" not in st.session_state:
+    st.session_state.selected_pile = None
 
-with col3:
-    selected_card = st.selectbox("Choisissez une carte", sorted(hand))
+# Affichage des cartes en boutons
+st.write("Choisissez une carte:")
+cols_cards = st.columns(len(hand))
+for i, card in enumerate(sorted(hand)):
+    with cols_cards[i]:
+        button_style = "background-color: #0066cc;" if st.session_state.selected_card == card else ""
+        if st.button(str(card), key=f"card_{card}", 
+                    help="Cliquez pour sélectionner cette carte"):
+            st.session_state.selected_card = card
 
-with col4:
-    selected_pile = st.selectbox("Choisissez une pile", list(piles.keys()))
+# Affichage des piles en boutons
+st.write("Choisissez une pile:")
+cols_piles = st.columns(len(piles))
+for i, (pile_name, pile_values) in enumerate(piles.items()):
+    with cols_piles[i]:
+        button_style = "background-color: #0066cc;" if st.session_state.selected_pile == pile_name else ""
+        if st.button(f"{pile_name}\n{pile_values[-1]}", key=f"pile_{pile_name}", 
+                    help="Cliquez pour sélectionner cette pile"):
+            st.session_state.selected_pile = pile_name
 
-if st.button("Jouer la carte"):
-    ascending = "↗️" in selected_pile
-    if is_valid_move(selected_card, piles[selected_pile], ascending):
-        play_card(selected_card, selected_pile, piles)
-        hand.remove(selected_card)
-        # Recharger la main
-        if deck and len(hand) < 6:
-            hand.append(deck.pop())
-        st.success(f"Carte {selected_card} jouée avec succès !")
-        st.rerun()
-    else:
-        st.error("❌ Mouvement non valide. Essayez une autre combinaison.")
+# Bouton pour jouer la carte
+if st.session_state.selected_card and st.session_state.selected_pile:
+    if st.button("Jouer la carte sélectionnée"):
+        ascending = "↗️" in st.session_state.selected_pile
+        if is_valid_move(st.session_state.selected_card, piles[st.session_state.selected_pile], ascending):
+            play_card(st.session_state.selected_card, st.session_state.selected_pile, piles)
+            hand.remove(st.session_state.selected_card)
+            # Recharger la main
+            if deck and len(hand) < 6:
+                hand.append(deck.pop())
+            st.success(f"Carte {st.session_state.selected_card} jouée avec succès !")
+            # Réinitialiser les sélections
+            st.session_state.selected_card = None
+            st.session_state.selected_pile = None
+            st.experimental_rerun()
+        else:
+            st.error("❌ Mouvement non valide. Essayez une autre combinaison.")
 
 # Informations sur l'état du jeu
 col5, col6 = st.columns(2)
