@@ -116,7 +116,7 @@ with col2:
 
 # Main du joueur
 st.header("🃏 Votre main")
-st.write(f"Cartes: {', '.join(map(str, sorted(hand)))}")
+#st.write(f"Cartes: {', '.join(map(str, sorted(hand)))}")
 
 # Gestion de la sélection dans session_state
 if "selected_card" not in st.session_state:
@@ -126,15 +126,11 @@ if "selected_pile" not in st.session_state:
 
 carte_col, pile_col = st.columns(2)
 with carte_col:
-    # Affichage des cartes avec pills
-    st.write("Choisissez une carte:")
     selected_card = st.pills("Cartes disponibles", options=[str(card) for card in sorted(hand)], key="card_pills")
     if selected_card:
         st.session_state.selected_card = int(selected_card)
 
 with pile_col:
-    # Affichage des piles avec pills
-    st.write("Choisissez une pile:")
     pile_options = [f"{pile_name} ({pile_values[-1]})" for pile_name, pile_values in piles.items()]
     selected_pile = st.pills("Piles disponibles", options=pile_options, key="pile_pills")
     if selected_pile:
