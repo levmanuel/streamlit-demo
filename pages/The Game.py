@@ -124,18 +124,21 @@ if "selected_card" not in st.session_state:
 if "selected_pile" not in st.session_state:
     st.session_state.selected_pile = None
 
-# Affichage des cartes avec pills
-st.write("Choisissez une carte:")
-selected_card = st.pills("Cartes disponibles", options=[str(card) for card in sorted(hand)], key="card_pills")
-if selected_card:
-    st.session_state.selected_card = int(selected_card)
+carte_col, pile_col = st.columns(2)
+with carte_col:
+    # Affichage des cartes avec pills
+    st.write("Choisissez une carte:")
+    selected_card = st.pills("Cartes disponibles", options=[str(card) for card in sorted(hand)], key="card_pills")
+    if selected_card:
+        st.session_state.selected_card = int(selected_card)
 
-# Affichage des piles avec pills
-st.write("Choisissez une pile:")
-pile_options = [f"{pile_name} ({pile_values[-1]})" for pile_name, pile_values in piles.items()]
-selected_pile = st.pills("Piles disponibles", options=pile_options, key="pile_pills")
-if selected_pile:
-    st.session_state.selected_pile = selected_pile.split(" (")[0]
+with pile_col:
+    # Affichage des piles avec pills
+    st.write("Choisissez une pile:")
+    pile_options = [f"{pile_name} ({pile_values[-1]})" for pile_name, pile_values in piles.items()]
+    selected_pile = st.pills("Piles disponibles", options=pile_options, key="pile_pills")
+    if selected_pile:
+        st.session_state.selected_pile = selected_pile.split(" (")[0]
 
 # Bouton pour jouer la carte
 if st.session_state.selected_card and st.session_state.selected_pile:
