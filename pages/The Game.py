@@ -158,7 +158,7 @@ if st.session_state.selected_card and st.session_state.selected_pile:
             # Réinitialiser les sélections
             st.session_state.selected_card = None
             st.session_state.selected_pile = None
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("❌ Mouvement non valide. Essayez une autre combinaison.")
 
