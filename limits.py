@@ -1,13 +1,30 @@
 import pandas as pd
 import re
 
-def extract_all_lines_and_percentages(text):
-    # Pattern 1: Types de lignes spécifiques suivis de pourcentage
-    pattern1 = r'((?:Credit line|Delivery line|FX line)).*?([0-9]+)%'
+# Liste des types de lignes
+list_limits = [
+    'Delivery line',
+    'Credit line',
+    'FX line']
+
+def build_patterns(limit_types):
+    """
+    Construit les patterns regex à partir de la liste des types de lignes.
+    """
+    # Échapper les espaces dans les types de lignes pour la regex
+    escaped_types = [re.escape(t) for t in limit_types]
     
-    # Pattern 2: Pourcentage suivi de texte puis ligne
-    pattern2 = r'([0-9]+)%.*?((?:FX|Credit|Delivery)\s*line)'
+    # Joindre tous les types avec le OR (|)
+    types_pattern = '|'.join(escaped_types)
     
+    # Construire les deux patterns
+    pattern1 = f'({types_pattern}).*?([0-9]+)%'
+    pattern2 = f'([0-9]+)%.*?({types_pattern})'
+    
+    return pattern1, pattern2
+
+def extract_all_lines_and_percentages(text, patterns):
+    pattern1, pattern2 = patterns
     results = []
     remaining_text = text
     
@@ -41,19 +58,22 @@ def extract_all_lines_and_percentages(text):
             
     return results
 
-def expand_dataframe_with_patterns(df, text_column):
+def expand_dataframe_with_patterns(df, text_column, limit_types):
+    # Construire les patterns une seule fois
+    patterns = build_patterns(limit_types)
+    
     # Liste pour stocker toutes les nouvelles lignes
     new_rows = []
     
     # Pour chaque ligne du DataFrame original
     for idx, row in df.iterrows():
         text = row[text_column]
-        patterns = extract_all_lines_and_percentages(text)
+        matches = extract_all_lines_and_percentages(text, patterns)
         
-        if patterns:
+        if matches:
             # Créer une nouvelle ligne pour chaque pattern trouvé
-            for line_type, percentage in patterns:
-                new_row = row.copy()  # Copier toutes les colonnes
+            for line_type, percentage in matches:
+                new_row = row.copy()
                 new_row['line_type'] = line_type
                 new_row['percentage'] = percentage
                 new_rows.append(new_row)
@@ -76,13 +96,12 @@ def expand_dataframe_with_patterns(df, text_column):
 
 # Test avec un exemple de DataFrame
 test_df = pd.DataFrame({
-    'id': [1, 2, 3],
     'description': [
-        "Delivery line for CBIB of 100% \n Credit line of 5%",
+        "Delivery line for CBIB of 100% and Credit line of 5%",
         "Credit line of something else 5% with 50% of FX line",
         "Complex case with FX line 45% and 20% of Credit line"
     ]
 })
 
-# Appliquer la transformation
-result_df = expand_dataframe_with_patterns(test_df, 'description')
+# Appliquer la transformation avec la liste des types
+result_df = expand_dataframe_with_patterns(test_df, 'description', list_limits).reset_index(drop=True)
