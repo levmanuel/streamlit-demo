@@ -26,6 +26,11 @@ st.markdown("""
         .stButton>button {
             width: 100%;
         }
+        .turn-info {
+            color: #6c757d;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -53,23 +58,39 @@ def is_valid_move(card, pile, ascending=True):
 def has_valid_moves(hand, piles):
     """Vérifie si le joueur a encore des mouvements possibles"""
     for card in hand:
-        if any(is_valid_move(card, piles[key], ascending="↗️" in key) for key in piles):
-            return True
+        for pile_name in piles:
+            ascending = "↗️" in pile_name
+            if is_valid_move(card, piles[pile_name], ascending):
+                return True
     return False
 
 def update_game_state(card, pile_key):
     """Mise à jour de l'état du jeu après avoir joué une carte"""
     game_state = st.session_state.game_state
+    
     # Jouer la carte
     game_state["piles"][pile_key].append(card)
     game_state["hand"].remove(card)
+    
     # Piocher une nouvelle carte si possible
     if game_state["deck"] and len(game_state["hand"]) < 6:
         game_state["hand"].append(game_state["deck"].pop())
+    
     # Incrémenter le compteur de mouvements
     game_state["moves_this_turn"] += 1
-    # Mettre à jour l'état
     st.session_state.game_state = game_state
+
+def end_turn():
+    """Termine le tour en cours et vérifie les conditions"""
+    game_state = st.session_state.game_state
+    
+    # Réinitialiser les compteurs de tour
+    game_state["moves_this_turn"] = 0
+    game_state["turn_number"] += 1
+    
+    # Vérifier si le joueur a assez de cartes pour continuer
+    if len(game_state["hand"]) < 2 and not game_state["deck"]:
+        st.session_state.game_over = True
 
 # Initialisation de l'état du jeu
 if "game_state" not in st.session_state:
@@ -84,12 +105,15 @@ if "game_state" not in st.session_state:
         "moves_this_turn": 0,
         "turn_number": 1
     }
+    st.session_state.game_over = False
 
 # Chargement de l'état du jeu
 game_state = st.session_state.game_state
 piles = game_state["piles"]
 deck = game_state["deck"]
 hand = game_state["hand"]
+moves_this_turn = game_state["moves_this_turn"]
+turn_number = game_state["turn_number"]
 
 # Interface utilisateur
 st.title("🎮 The Game")
@@ -132,6 +156,7 @@ with col2:
 
 # Section de jeu
 st.subheader("🎯 Jouer une carte")
+st.markdown(f"<div class='turn-info'>Tour {turn_number} - Cartes jouées ce tour: {moves_this_turn}/2 minimum</div>", unsafe_allow_html=True)
 
 # Gestion de la sélection
 if "selected_card" not in st.session_state:
@@ -147,13 +172,13 @@ if selected_card:
 
 # Sélection de la pile avec pills
 st.write("Choisissez une pile:")
-pile_options = [f"{pile_name} ({pile_values[-1]})" for pile_name, pile_values in piles.items()]
+pile_options = [f"{pile_name} ({pile[-1]})" for pile_name, pile in piles.items()]
 selected_pile = st.pills("Piles disponibles", options=pile_options, key="pile_pills")
 if selected_pile:
     st.session_state.selected_pile = selected_pile.split(" (")[0]
 
 # Bouton pour jouer la carte
-if st.session_state.selected_card and st.session_state.selected_pile:
+if st.session_state.selected_card and st.session_state.selected_pile and not st.session_state.game_over:
     if st.button("Jouer la carte sélectionnée"):
         ascending = "↗️" in st.session_state.selected_pile
         if is_valid_move(st.session_state.selected_card, piles[st.session_state.selected_pile], ascending):
@@ -165,6 +190,14 @@ if st.session_state.selected_card and st.session_state.selected_pile:
         else:
             st.error("❌ Mouvement non valide. Essayez une autre combinaison.")
 
+# Bouton pour terminer le tour
+if moves_this_turn >= 2 and not st.session_state.game_over:
+    if st.button("Terminer le tour"):
+        end_turn()
+        st.rerun()
+elif not st.session_state.game_over:
+    st.warning(f"Vous devez jouer au moins {2 - moves_this_turn} carte(s) supplémentaire(s) ce tour.")
+
 # Informations sur l'état du jeu
 col3, col4 = st.columns(2)
 with col3:
@@ -173,14 +206,16 @@ with col4:
     st.info(f"✋ Cartes en main: {len(hand)}")
 
 # Vérification des conditions de fin
-if not has_valid_moves(hand, piles):
+if st.session_state.game_over or not has_valid_moves(hand, piles):
     st.error("😔 Aucun mouvement possible. Partie terminée !")
     if st.button("Nouvelle partie"):
         del st.session_state.game_state
+        st.session_state.game_over = False
         st.rerun()
 
 if not deck and not hand:
     st.success("🎉 Félicitations, vous avez gagné !")
     if st.button("Nouvelle partie"):
         del st.session_state.game_state
+        st.session_state.game_over = False
         st.rerun()
