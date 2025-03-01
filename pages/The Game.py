@@ -1,5 +1,7 @@
 import streamlit as st
 import random
+import time
+from streamlit.components.v1 import html
 
 # Configuration de la page Streamlit
 st.set_page_config(
@@ -26,9 +28,10 @@ st.markdown("""
         .stButton>button {
             width: 100%;
         }
-        .turn-info {
-            color: #6c757d;
-            font-size: 1.1em;
+        .auto-play-status {
+            color: #4a4a4a;
+            padding: 10px;
+            border-radius: 5px;
             margin: 10px 0;
         }
     </style>
@@ -67,37 +70,47 @@ def has_valid_moves(hand, piles):
 def update_game_state(card, pile_key):
     """Mise à jour de l'état du jeu après avoir joué une carte"""
     game_state = st.session_state.game_state
-    
-    # Jouer la carte
     game_state["piles"][pile_key].append(card)
     game_state["hand"].remove(card)
     
-    # Piocher une nouvelle carte si possible
     if game_state["deck"] and len(game_state["hand"]) < 6:
         game_state["hand"].append(game_state["deck"].pop())
     
-    # Incrémenter le compteur de mouvements
     game_state["moves_this_turn"] += 1
     st.session_state.game_state = game_state
 
 def end_turn():
-    """Termine le tour en cours et vérifie les conditions"""
+    """Termine le tour en cours"""
     game_state = st.session_state.game_state
-    
-    # Réinitialiser les compteurs de tour
     game_state["moves_this_turn"] = 0
     game_state["turn_number"] += 1
+
+def ai_make_move():
+    """Fait jouer l'IA automatiquement"""
+    game_state = st.session_state.game_state
+    hand = game_state["hand"]
+    piles = game_state["piles"]
     
-    # Vérifier si le joueur a assez de cartes pour continuer
-    if len(game_state["hand"]) < 2 and not game_state["deck"]:
-        st.session_state.game_over = True
+    # Trouver tous les mouvements valides
+    valid_moves = []
+    for card in hand:
+        for pile_name in piles:
+            ascending = "↗️" in pile_name
+            if is_valid_move(card, piles[pile_name], ascending):
+                valid_moves.append((card, pile_name))
+    
+    if valid_moves:
+        # Choisir un mouvement aléatoire
+        card, pile_name = random.choice(valid_moves)
+        update_game_state(card, pile_name)
+        return True
+    return False
 
 # Initialisation de l'état du jeu
 if "game_state" not in st.session_state:
     st.session_state.show_rules = True
     piles, deck = init_game()
-    hand_size = 6
-    hand = [deck.pop() for _ in range(hand_size)]
+    hand = [deck.pop() for _ in range(6)]
     st.session_state.game_state = {
         "piles": piles,
         "deck": deck,
@@ -106,116 +119,90 @@ if "game_state" not in st.session_state:
         "turn_number": 1
     }
     st.session_state.game_over = False
+    st.session_state.auto_play = False
 
-# Chargement de l'état du jeu
+# Chargement de l'état
 game_state = st.session_state.game_state
 piles = game_state["piles"]
 deck = game_state["deck"]
 hand = game_state["hand"]
-moves_this_turn = game_state["moves_this_turn"]
-turn_number = game_state["turn_number"]
 
 # Interface utilisateur
-st.title("🎮 The Game")
+st.title("🎮 The Game - Mode Auto-play")
 
-# Règles du jeu dans un expander
-with st.expander("📖 Règles du jeu", expanded=st.session_state.show_rules):
-    st.markdown("""
-    ### Comment jouer
-    1. Vous devez jouer au moins 2 cartes par tour
-    2. Sur les piles ascendantes (↗️), jouez des cartes plus grandes
-    3. Sur les piles descendantes (↙️), jouez des cartes plus petites
-    4. Vous pouvez jouer une carte 10 au-dessus ou en-dessous de la dernière carte
-    5. Gagnez en jouant toutes vos cartes !
-    """)
-    st.session_state.show_rules = False
-
-# Affichage des piles
-col1, col2 = st.columns(2)
+# Contrôles d'auto-play
+col1, col2, col3 = st.columns(3)
 with col1:
-    st.subheader("Piles ascendantes")
-    for pile_name, pile in piles.items():
-        if "↗️" in pile_name:
-            st.markdown(f"""
-                <div class='card pile-ascending'>
-                    <h3>{pile_name}</h3>
-                    <h2>{pile[-1]}</h2>
-                </div>
-            """, unsafe_allow_html=True)
-
+    auto_play = st.checkbox("Activer l'auto-play", key="auto_play")
 with col2:
-    st.subheader("Piles descendantes")
-    for pile_name, pile in piles.items():
-        if "↙️" in pile_name:
-            st.markdown(f"""
-                <div class='card pile-descending'>
-                    <h3>{pile_name}</h3>
-                    <h2>{pile[-1]}</h2>
-                </div>
-            """, unsafe_allow_html=True)
+    ai_speed = st.slider("Vitesse (s)", 0.1, 2.0, 0.5, key="ai_speed")
+with col3:
+    if st.button("Arrêter l'auto-play"):
+        st.session_state.auto_play = False
+        st.rerun()
 
-# Section de jeu
-st.subheader("🎯 Jouer une carte")
-st.markdown(f"<div class='turn-info'>Tour {turn_number} - Cartes jouées ce tour: {moves_this_turn}/2 minimum</div>", unsafe_allow_html=True)
-
-# Gestion de la sélection
-if "selected_card" not in st.session_state:
-    st.session_state.selected_card = None
-if "selected_pile" not in st.session_state:
-    st.session_state.selected_pile = None
-
-# Sélection de la carte avec pills
-st.write("Choisissez une carte:")
-selected_card = st.pills("Cartes disponibles", options=[str(card) for card in sorted(hand)], key="card_pills")
-if selected_card:
-    st.session_state.selected_card = int(selected_card)
-
-# Sélection de la pile avec pills
-st.write("Choisissez une pile:")
-pile_options = [f"{pile_name} ({pile[-1]})" for pile_name, pile in piles.items()]
-selected_pile = st.pills("Piles disponibles", options=pile_options, key="pile_pills")
-if selected_pile:
-    st.session_state.selected_pile = selected_pile.split(" (")[0]
-
-# Bouton pour jouer la carte
-if st.session_state.selected_card and st.session_state.selected_pile and not st.session_state.game_over:
-    if st.button("Jouer la carte sélectionnée"):
-        ascending = "↗️" in st.session_state.selected_pile
-        if is_valid_move(st.session_state.selected_card, piles[st.session_state.selected_pile], ascending):
-            update_game_state(st.session_state.selected_card, st.session_state.selected_pile)
-            st.success(f"Carte {st.session_state.selected_card} jouée avec succès !")
-            st.session_state.selected_card = None
-            st.session_state.selected_pile = None
+# Gestion de l'auto-play
+if st.session_state.auto_play and not st.session_state.game_over:
+    if has_valid_moves(hand, piles):
+        if ai_make_move():
+            # Rechargement automatique après délai
+            delay = int(st.session_state.ai_speed * 1000)
+            js = f"""
+            <script>
+                setTimeout(function(){{
+                    window.location.reload();
+                }}, {delay});
+            </script>
+            """
+            html(js)
+    else:
+        if game_state["moves_this_turn"] >= 2:
+            end_turn()
             st.rerun()
         else:
-            st.error("❌ Mouvement non valide. Essayez une autre combinaison.")
+            st.session_state.game_over = True
 
-# Bouton pour terminer le tour
-if moves_this_turn >= 2 and not st.session_state.game_over:
-    if st.button("Terminer le tour"):
-        end_turn()
-        st.rerun()
-elif not st.session_state.game_over:
-    st.warning(f"Vous devez jouer au moins {2 - moves_this_turn} carte(s) supplémentaire(s) ce tour.")
+# Affichage des piles
+col_left, col_right = st.columns(2)
+with col_left:
+    st.subheader("Piles ascendantes ↗️")
+    for name, pile in piles.items():
+        if "↗️" in name:
+            st.markdown(f"""
+                <div class='card pile-ascending'>
+                    <h3>{name}</h3>
+                    <h2>{pile[-1]}</h2>
+                </div>
+            """, unsafe_allow_html=True)
 
-# Informations sur l'état du jeu
-col3, col4 = st.columns(2)
-with col3:
-    st.info(f"🎴 Cartes dans le deck: {len(deck)}")
-with col4:
-    st.info(f"✋ Cartes en main: {len(hand)}")
+with col_right:
+    st.subheader("Piles descendantes ↙️")
+    for name, pile in piles.items():
+        if "↙️" in name:
+            st.markdown(f"""
+                <div class='card pile-descending'>
+                    <h3>{name}</h3>
+                    <h2>{pile[-1]}</h2>
+                </div>
+            """, unsafe_allow_html=True)
 
-# Vérification des conditions de fin
+# Informations de partie
+st.markdown(f"""
+    <div class='auto-play-status' style='background-color: {"#e6f4ff" if st.session_state.auto_play else "#ffe6e6"}'>
+        Tour {game_state['turn_number']} - Cartes jouées ce tour: {game_state['moves_this_turn']}/2
+        <br>Cartes restantes: {len(deck)} dans le deck • {len(hand)} en main
+    </div>
+""", unsafe_allow_html=True)
+
+# Gestion de fin de partie
 if st.session_state.game_over or not has_valid_moves(hand, piles):
-    st.error("😔 Aucun mouvement possible. Partie terminée !")
+    st.error("💀 Partie terminée - Aucun mouvement possible !")
     if st.button("Nouvelle partie"):
         del st.session_state.game_state
-        st.session_state.game_over = False
         st.rerun()
 
 if not deck and not hand:
     st.success("🎉 Félicitations, vous avez gagné !")
     if st.button("Nouvelle partie"):
         del st.session_state.game_state
-        st.session_state.game_over = False
         st.rerun()
