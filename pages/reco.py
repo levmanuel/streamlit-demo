@@ -68,12 +68,17 @@ def extract_score(response_text):
 # Interface Streamlit
 st.title("Évaluation de Recommandation d'Audit")
 
-constat = st.text_area("Constat", "Les contrôles d'accès aux données sensibles ne sont pas documentés...")
-recommandation = st.text_area("Recommandation", "Mettre en place une procédure formelle de documentation...")
-date_realisation = st.text_input("Date de réalisation", "2025-12-31")
+constat = st.text_area("Constat", "Les contrôles d'accès aux données sensibles ne sont pas documentés systématiquement, ce qui pourrait conduire à des accès non autorisés.")
+recommandation = st.text_area("Recommandation", "Mettre en place une procédure formelle de documentation et de revue périodique des droits d'accès aux données sensibles.")
+date_realisation = st.text_input("Date de réalisation", "2035-12-31")
 criticite = st.selectbox("Niveau de criticité", ["1 - Urgent", "2 - Moyen", "3 - Conseil"])
-responsable = st.text_input("Responsable", "Alice Dupont, Responsable IT")
-livrables = st.text_area("Livrables", "- Procédure documentée\n- Tableau de suivi")
+responsable = st.text_input("Responsable", "Alice Dupont, stagiaire IT")
+livrables = st.text_area("Livrables", 
+"""
+- Procédure documentée de gestion des droits d'accès
+- Tableau de suivi des revues trimestrielles
+- Rapport d'audit interne validant l'implémentation
+""")
 
 if st.button("Évaluer"):
     recommendation = {
