@@ -36,7 +36,7 @@ def extract_score(response_text):
 st.title("Évaluation de Recommandation d'Audit")
 
 with st.expander("See explanation"):
-    prompt_reco = st.text_area("Nous sommes en 2025. Vous êtes un auditeur expérimenté et exigeant. Votre rôle est d’évaluer rigoureusement un constat et une recommandation d’audit en fonction des critères suivants :\n"
+    prompt_reco = st.text_area("Prompt", "Nous sommes en 2025. Vous êtes un auditeur expérimenté et exigeant. Votre rôle est d’évaluer rigoureusement un constat et une recommandation d’audit en fonction des critères suivants :\n"
             "- **Clarté et pertinence du constat** :\n"
             "  - **8-10** : Factuel, précis, basé sur des preuves solides, appuyé par des références réglementaires ou procédurales.\n"
             "  - **4-7** : Compréhensible mais imprécis, manque de références ou d'éléments factuels.\n"
