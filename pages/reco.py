@@ -86,9 +86,8 @@ if st.button("Évaluer"):
         "livrables": livrables.split("\n"),
     }
     prompt = json.dumps(recommendation, indent=2, ensure_ascii=False)
-    response_text = call_mistral(prompt)
+    response_text = call_mistral(prompt, prompt_reco)    
     score = extract_score(response_text)
-    
     st.subheader("Résultats")
     st.write(f"**Score Global : {score}/10**")
     st.write("### Analyse détaillée")
