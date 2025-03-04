@@ -25,8 +25,9 @@ def call_mistral(prompt, prompt_reco):
 
 def extract_score(response_text):
     matches = re.findall(r"(\d+)/10", response_text)  # Trouver tous les scores
-    scores = [int(m) for m in matches] if matches else []
-    if scores:
+    scores = [int(m) for m in matches if m.isdigit()] if matches else []
+    
+    if len(scores) > 3:  # Vérification pour éviter un mauvais calcul
         return round(sum(scores) / len(scores), 1)  # Moyenne arrondie à 1 décimale
     return "N/A"
 
