@@ -8,16 +8,12 @@ MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
 MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
 MODEL = "mistral-medium"
 
-# Prompt système
-def get_system_prompt(prompt_reco):
-    return (prompt_reco)
-
 # Fonction pour appeler l'API Mistral
-def call_mistral(prompt):
+def call_mistral(prompt, prompt_reco):
     headers = {"Authorization": f"Bearer {MISTRAL_API_KEY}"}
     payload = {
         "model": MODEL,
-        "messages": [{"role": "system", "content": get_system_prompt()}, {"role": "user", "content": prompt}],
+        "messages": [{"role": "system", "content": prompt_reco}, {"role": "user", "content": prompt}],
         "temperature": 0.7,
     }
     try:
