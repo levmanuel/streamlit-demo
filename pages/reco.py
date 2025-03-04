@@ -10,8 +10,33 @@ MODEL = "mistral-medium"
 
 # Prompt système
 def get_system_prompt():
-    return (
-            "Nous sommes en 2025. Vous êtes un auditeur expérimenté et exigeant. Votre rôle est d’évaluer rigoureusement un constat et une recommandation d’audit en fonction des critères suivants :\n"
+    return (prompt_reco)
+
+# Fonction pour appeler l'API Mistral
+def call_mistral(prompt):
+    headers = {"Authorization": f"Bearer {MISTRAL_API_KEY}"}
+    payload = {
+        "model": MODEL,
+        "messages": [{"role": "system", "content": get_system_prompt()}, {"role": "user", "content": prompt}],
+        "temperature": 0.7,
+    }
+    try:
+        response = requests.post(MISTRAL_API_URL, headers=headers, json=payload)
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"]
+    except requests.exceptions.RequestException as e:
+        return f"Erreur API: {e}"
+
+# Fonction pour extraire le score
+def extract_score(response_text):
+    match = re.search(r"(\d+)/10", response_text)
+    return int(match.group(1)) if match else "N/A"
+
+# Interface Streamlit
+st.title("Évaluation de Recommandation d'Audit")
+
+with st.expander("See explanation"):
+    prompt_reco = st.text_area("Nous sommes en 2025. Vous êtes un auditeur expérimenté et exigeant. Votre rôle est d’évaluer rigoureusement un constat et une recommandation d’audit en fonction des critères suivants :\n"
             "- **Clarté et pertinence du constat** :\n"
             "  - **8-10** : Factuel, précis, basé sur des preuves solides, appuyé par des références réglementaires ou procédurales.\n"
             "  - **4-7** : Compréhensible mais imprécis, manque de références ou d'éléments factuels.\n"
@@ -42,31 +67,7 @@ def get_system_prompt():
             "  - **4-7** : Livrables présents mais imprécis ou difficilement mesurables.\n"
             "  - **0-3** : Livrables absents ou inutilisables.\n"
             "\n"
-            "Fournissez une **analyse détaillée** et un **score global de 0 à 10**, avec une justification précise pour chaque critère."
-    )
-
-# Fonction pour appeler l'API Mistral
-def call_mistral(prompt):
-    headers = {"Authorization": f"Bearer {MISTRAL_API_KEY}"}
-    payload = {
-        "model": MODEL,
-        "messages": [{"role": "system", "content": get_system_prompt()}, {"role": "user", "content": prompt}],
-        "temperature": 0.7,
-    }
-    try:
-        response = requests.post(MISTRAL_API_URL, headers=headers, json=payload)
-        response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
-    except requests.exceptions.RequestException as e:
-        return f"Erreur API: {e}"
-
-# Fonction pour extraire le score
-def extract_score(response_text):
-    match = re.search(r"(\d+)/10", response_text)
-    return int(match.group(1)) if match else "N/A"
-
-# Interface Streamlit
-st.title("Évaluation de Recommandation d'Audit")
+            "Fournissez une **analyse détaillée** et un **score global de 0 à 10**, avec une justification précise pour chaque critère.")
 
 constat = st.text_area("Constat", "Les contrôles d'accès aux données sensibles ne sont pas documentés systématiquement, ce qui pourrait conduire à des accès non autorisés.")
 recommandation = st.text_area("Recommandation", "Mettre en place une procédure formelle de documentation et de revue périodique des droits d'accès aux données sensibles.")
@@ -74,8 +75,7 @@ date_realisation = st.text_input("Date de réalisation", "2035-12-31")
 criticite = st.selectbox("Niveau de criticité", ["1 - Urgent", "2 - Moyen", "3 - Conseil"])
 responsable = st.text_input("Responsable", "Alice Dupont, stagiaire IT")
 livrables = st.text_area("Livrables", 
-"""
-- Procédure documentée de gestion des droits d'accès
+"""- Procédure documentée de gestion des droits d'accès
 - Tableau de suivi des revues trimestrielles
 - Rapport d'audit interne validant l'implémentation
 """)
