@@ -9,7 +9,7 @@ MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
 MODEL = "mistral-medium"
 
 # Prompt système
-def get_system_prompt():
+def get_system_prompt(prompt_reco):
     return (prompt_reco)
 
 # Fonction pour appeler l'API Mistral
