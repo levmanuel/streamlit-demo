@@ -23,10 +23,12 @@ def call_mistral(prompt, prompt_reco):
     except requests.exceptions.RequestException as e:
         return f"Erreur API: {e}"
 
-# Fonction pour extraire le score
 def extract_score(response_text):
-    match = re.search(r"(\d+)/10", response_text)
-    return int(match.group(1)) if match else "N/A"
+    matches = re.findall(r"(\d+)/10", response_text)  # Trouver tous les scores
+    scores = [int(m) for m in matches] if matches else []
+    if scores:
+        return round(sum(scores) / len(scores), 1)  # Moyenne arrondie à 1 décimale
+    return "N/A"
 
 # Interface Streamlit
 st.title("Évaluation de Recommandation d'Audit")
