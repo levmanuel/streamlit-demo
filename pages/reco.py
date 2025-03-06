@@ -66,7 +66,7 @@ with st.expander("Prompt Detail"):
             "  - 4-7 : Livrables présents mais imprécis ou difficilement mesurables.\n"
             "  - 0-3 : Livrables absents ou inutilisables.\n"
             "\n"
-            "Fournissez une analyse détaillée et un score global de 0 à 10, avec une justification précise pour chaque critère.")
+            "Fournissez une analyse détaillée, avec une justification précise pour chaque critère.")
 
 constat = st.text_area("Constat", "Les contrôles d'accès aux données sensibles ne sont pas documentés systématiquement, ce qui pourrait conduire à des accès non autorisés.")
 recommandation = st.text_area("Recommandation", "Mettre en place une procédure formelle de documentation et de revue périodique des droits d'accès aux données sensibles.")
