@@ -48,7 +48,6 @@ fig.add_trace(go.Scatter(
 fig.update_layout(title="Prévisions pour y", xaxis_title="Date", yaxis_title='y')
 st.plotly_chart(fig)
 
-# Affichage des composantes du modèle (corrigé pour matplotlib)
-fig2, axes = plt.subplots(3, 1, figsize=(10, 8))
-m.plot_components(forecast, ax=axes)
-st.pyplot(fig2)
+# Correction : récupération correcte de la figure Prophet
+fig2 = m.plot_components(forecast)
+st.pyplot(fig2)  # Affiche correctement les composantes
