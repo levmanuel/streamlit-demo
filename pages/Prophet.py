@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 from prophet import Prophet
+import matplotlib.pyplot as plt
 
 # Charger le dataset de Yosemite
 @st.cache_data
@@ -11,7 +12,9 @@ def load_data():
     df['ds'] = pd.to_datetime(df['ds'])
     return df
 
-df = load_data()
+# Ajout d'un spinner pour indiquer le chargement des données
+with st.spinner("Chargement des données..."):
+    df = load_data()
 
 # Interface utilisateur
 st.title("Prévisions avec Prophet : Démonstration avec le dataset de Yosemite")
@@ -28,13 +31,24 @@ forecast = m.predict(future)
 
 # Visualisation des résultats
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=df['ds'], y=df['y'], name='Données réelles'))
-fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='Prévisions'))
-#fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], name='Intervalle de confiance supérieur', mode='lines', line=dict(color='rgba(0, 0, 255, 0.2)', dash='dash')))
-#fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], name='Intervalle de confiance inférieur', mode='lines', line=dict(color='rgba(0, 0, 255, 0.2)', dash='dash')))
-fig.update_layout(title="Prévisions pour {}".format('y'), xaxis_title="Date", yaxis_title='y')
+fig.add_trace(go.Scatter(x=df['ds'], y=df['y'], name='Données réelles', mode='lines', line=dict(color='blue')))
+fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='Prévisions', mode='lines', line=dict(color='red')))
+
+# Ajout de l'intervalle de confiance
+fig.add_trace(go.Scatter(
+    x=forecast['ds'], y=forecast['yhat_upper'], name='Intervalle de confiance supérieur',
+    line=dict(color='rgba(0, 0, 255, 0)'), fill=None
+))
+fig.add_trace(go.Scatter(
+    x=forecast['ds'], y=forecast['yhat_lower'], name='Intervalle de confiance inférieur',
+    line=dict(color='rgba(0, 0, 255, 0)'), fill='tonexty',
+    fillcolor='rgba(0, 0, 255, 0.2)'
+))
+
+fig.update_layout(title="Prévisions pour y", xaxis_title="Date", yaxis_title='y')
 st.plotly_chart(fig)
 
-# Composantes du modèle
-fig2 = m.plot_components(forecast)
-st.plotly_chart(fig2)
+# Affichage des composantes du modèle (corrigé pour matplotlib)
+fig2, axes = plt.subplots(3, 1, figsize=(10, 8))
+m.plot_components(forecast, ax=axes)
+st.pyplot(fig2)
