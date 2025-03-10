@@ -47,10 +47,11 @@ if texts:
     processed_texts = [preprocess(text) for text in texts]
     processed_query = preprocess(query)
     
-    # Vectorisation
+    # CountVectorizer
     count_vec = CountVectorizer(max_features=max_features, analyzer=analyzer)
     count_matrix = count_vec.fit_transform(processed_texts)
     
+    # TF-IDF
     tfidf_vec = TfidfVectorizer(max_features=max_features, analyzer=analyzer)
     tfidf_matrix = tfidf_vec.fit_transform(processed_texts)
     
