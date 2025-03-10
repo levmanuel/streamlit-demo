@@ -31,7 +31,7 @@ La cybersécurité est devenue une priorité pour protéger les données sensibl
 # Interface utilisateur
 st.header("Entrée des données")
 
-sample_texts = st.text_area("Phrases d'exemple (une par ligne)", DEFAULT_TEXT, height=200)
+sample_texts = st.text_area("Phrases d'exemple (une par ligne)", DEFAULT_TEXT, height=200k)
 query = st.text_input("Requête de recherche", "IA éthique santé médicale")
 
 # Prétraitement
