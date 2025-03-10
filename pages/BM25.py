@@ -106,15 +106,6 @@ if texts:
     for i, doc in enumerate(top_n_docs):
         st.markdown(f"{i+1}. {doc}")
     
-    # Comparaison matricielle
-    st.header("📊 Comparaison matricielle")
-    
-    with st.expander("Matrice des termes (CountVectorizer)"):
-        plot_heatmap(count_matrix.toarray()[:5], count_vec.get_feature_names_out(), "Term Frequency Matrix")
-    
-    with st.expander("Matrice TF-IDF"):
-        plot_heatmap(tfidf_matrix.toarray()[:5], tfidf_vec.get_feature_names_out(), "TF-IDF Matrix")
-    
     # Explications techniques
     st.header("📚 Explications des métriques")
     
