@@ -31,13 +31,6 @@ Les cyberattaques sophistiquées ciblent les infrastructures critiques mondialem
 # Interface utilisateur
 st.header("Entrée des données")
 
-def plot_heatmap(matrix, features, title):
-    plt.figure(figsize=(12, 8))
-    sns.heatmap(matrix[:5], annot=True, fmt=".2f", cmap="YlGnBu",
-                xticklabels=features, yticklabels=[f"Doc {i+1}" for i in range(len(matrix[:5]))])
-    plt.title(title)
-    st.pyplot(plt)
-
 sample_texts = st.text_area("Phrases d'exemple (une par ligne)", DEFAULT_TEXT, height=150)
 query = st.text_input("Requête de recherche", "modèles climatiques éthiques données")
 
