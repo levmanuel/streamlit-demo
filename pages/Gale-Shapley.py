@@ -110,12 +110,8 @@ if st.button("🔍 Lancer le Matching"):
         st.subheader("Récapitulatif par Équipe")
         for team, members in team_matches.items():
             st.markdown(f"**{team}**: {', '.join(members)}")
-        
-        # Détails des matches
-        st.subheader("Détails des Affectations")
-        df = pd.DataFrame.from_dict(player_matches, orient='index', columns=['Équipe'])
-        st.dataframe(df.style.highlight_max(axis=0, color='#ecffc4'))
 
         # Bouton de téléchargement
+        df = pd.DataFrame.from_dict(player_matches, orient='index', columns=['Équipe'])
         csv = df.to_csv().encode('utf-8')
         st.download_button("📥 Télécharger les résultats", csv, "matching_results.csv", "text/csv")
