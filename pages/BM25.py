@@ -20,17 +20,19 @@ k1 = st.sidebar.slider("Paramètre BM25 k1", 1.0, 2.0, 1.5)
 b = st.sidebar.slider("Paramètre BM25 b", 0.0, 1.0, 0.75)
 
 # Exemples de phrases plus complexes
-DEFAULT_TEXT = """L'apprentissage profond révolutionne l'analyse des données médicales grâce à sa capacité à traiter des images radiologiques complexes.
-Les modèles de langage à grande échelle, comme GPT-4, posent des défis éthiques importants, notamment en matière de biais et de confidentialité.
-Le réchauffement climatique entraîne des phénomènes météorologiques extrêmes, tels que des ouragans plus intenses et des sécheresses prolongées.
-L'économie circulaire, qui vise à réduire les déchets et à réutiliser les ressources, promet une croissance durable mais nécessite des investissements initiaux importants.
-Les cyberattaques sophistiquées, souvent soutenues par des États, ciblent les infrastructures critiques mondialement, menaçant la sécurité nationale et économique."""
+DEFAULT_TEXT = """L'intelligence artificielle transforme l'industrie médicale en automatisant le diagnostic des maladies.
+Les algorithmes d'apprentissage profond permettent d'analyser des images médicales avec une précision inégalée.
+L'IA éthique est un domaine en pleine croissance, visant à réduire les biais dans les modèles prédictifs.
+Les modèles de langage comme GPT-4 soulèvent des questions éthiques sur la confidentialité des données.
+Le réchauffement climatique impacte la santé publique en augmentant les maladies respiratoires.
+Les énergies renouvelables sont essentielles pour lutter contre le changement climatique.
+La cybersécurité est devenue une priorité pour protéger les données sensibles dans le secteur médical."""
 
 # Interface utilisateur
 st.header("Entrée des données")
 
-sample_texts = st.text_area("Phrases d'exemple (une par ligne)", DEFAULT_TEXT, height=150)
-query = st.text_input("Requête de recherche", "modèle de langage")
+sample_texts = st.text_area("Phrases d'exemple (une par ligne)", DEFAULT_TEXT, height=200)
+query = st.text_input("Requête de recherche", "IA éthique santé médicale")
 
 # Prétraitement
 texts = [text.strip() for text in sample_texts.split("\n") if text.strip()]
