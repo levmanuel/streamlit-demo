@@ -20,17 +20,17 @@ k1 = st.sidebar.slider("Paramètre BM25 k1", 1.0, 2.0, 1.5)
 b = st.sidebar.slider("Paramètre BM25 b", 0.0, 1.0, 0.75)
 
 # Exemples de phrases plus complexes
-DEFAULT_TEXT = """L'apprentissage profond révolutionne l'analyse des données médicales.
-Les modèles de langage à grande échelle posent des défis éthiques importants.
-Le réchauffement climatique entraîne des phénomènes météorologiques extrêmes.
-L'économie circulaire promet une croissance durable mais nécessite des investissements initiaux.
-Les cyberattaques sophistiquées ciblent les infrastructures critiques mondialement."""
+DEFAULT_TEXT = """L'apprentissage profond révolutionne l'analyse des données médicales grâce à sa capacité à traiter des images radiologiques complexes.
+Les modèles de langage à grande échelle, comme GPT-4, posent des défis éthiques importants, notamment en matière de biais et de confidentialité.
+Le réchauffement climatique entraîne des phénomènes météorologiques extrêmes, tels que des ouragans plus intenses et des sécheresses prolongées.
+L'économie circulaire, qui vise à réduire les déchets et à réutiliser les ressources, promet une croissance durable mais nécessite des investissements initiaux importants.
+Les cyberattaques sophistiquées, souvent soutenues par des États, ciblent les infrastructures critiques mondialement, menaçant la sécurité nationale et économique."""
 
 # Interface utilisateur
 st.header("Entrée des données")
 
 sample_texts = st.text_area("Phrases d'exemple (une par ligne)", DEFAULT_TEXT, height=150)
-query = st.text_input("Requête de recherche", "modèles climatiques éthiques données")
+query = st.text_input("Requête de recherche", "modèle de langage")
 
 # Prétraitement
 texts = [text.strip() for text in sample_texts.split("\n") if text.strip()]
