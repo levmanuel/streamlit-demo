@@ -40,7 +40,7 @@ with st.expander("🎮 Configurer les préférences", expanded=True):
         for j, team in enumerate(team_group):
             with cols[j]:
                 team_prefs[team] = st.multiselect(
-                    f"{team} - Classement des joueurs",
+                    f"{team}",
                     players,
                     key=f"team_{team}"
                 )
@@ -55,7 +55,7 @@ with st.expander("🎮 Configurer les préférences", expanded=True):
     for i, player in enumerate(players):
         with player_cols[i % 4]:
             player_prefs[player] = st.multiselect(
-                f"{player} - Classement des équipes",
+                f"{player}",
                 teams,
                 key=f"player_{player}"
             )
