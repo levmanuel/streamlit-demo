@@ -15,16 +15,3 @@ nltk
 pandas
 scipy
 matplotlib
-jupyter
-jupyterlab
-jupyterlab-git
-jupyterlab-lsp
-jupyterlab-plotly
-jupyterlab-widgets
-jupyter-resource-usage
-jupyter-server-proxy
-jupyter-server-proxy-jupyterlab
-jupyter-server-proxy-server
-jupyter-server-proxy-voila
-jupyter-server-proxy-voila-gridstack
-jupyter-server-proxy-voila-gridstack-jupyterlab  
