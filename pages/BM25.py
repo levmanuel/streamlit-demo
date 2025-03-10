@@ -12,7 +12,7 @@ from nltk.corpus import stopwords
 nltk.download('stopwords')
 
 st.set_page_config(layout="wide")
-st.title("🕵️♂️ Analyse Comparative de Méthodes de Vectorisation Texte")
+st.title("🕵️ Analyse des Méthodes de Vectorisation de Texte")
 
 # Configuration avancée
 st.sidebar.header("Configuration")
