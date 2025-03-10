@@ -17,7 +17,6 @@ st.title("🕵️ Analyse des Méthodes de Vectorisation de Texte")
 # Configuration avancée
 st.sidebar.header("Configuration")
 max_features = st.sidebar.slider("Nombre maximal de features", 10, 1000, 200)
-analyzer = st.sidebar.selectbox("Analyzer", ["word", "char", "char_wb"])
 k1 = st.sidebar.slider("Paramètre BM25 k1", 1.0, 2.0, 1.5)
 b = st.sidebar.slider("Paramètre BM25 b", 0.0, 1.0, 0.75)
 
@@ -48,11 +47,11 @@ if texts:
     processed_query = preprocess(query)
     
     # CountVectorizer
-    count_vec = CountVectorizer(max_features=max_features, analyzer=analyzer)
+    count_vec = CountVectorizer(max_features=max_features)
     count_matrix = count_vec.fit_transform(processed_texts)
     
     # TF-IDF
-    tfidf_vec = TfidfVectorizer(max_features=max_features, analyzer=analyzer)
+    tfidf_vec = TfidfVectorizer(max_features=max_features)
     tfidf_matrix = tfidf_vec.fit_transform(processed_texts)
     
     # BM25
