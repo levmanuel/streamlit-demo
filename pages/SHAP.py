@@ -99,6 +99,24 @@ individual = X_sample.iloc[[index]]
 st.write("Observation sélectionnée :")
 st.write(individual)
 
+st.markdown("""
+#### 📘 Comment lire ce graphique ?
+
+Ce graphique explique la **prédiction d'une seule observation** (ex. une maison spécifique).
+
+- **`f(x)`** est la prédiction finale du modèle pour cette observation (ex: `0.509`).
+- Le point de départ est la **valeur moyenne des prédictions du modèle** (appelée *base value*).
+- Ensuite, **chaque variable** **ajoute** (en rouge) ou **retire** (en bleu) une contribution.
+- Ces contributions s’additionnent pour arriver à la prédiction finale.
+
+Par exemple :
+- Ici, le **revenu médian (`MedInc`)** a **fortement diminué** la prédiction.
+- La **latitude**, **l'occupation moyenne**, et **la longitude** ont également un effet réducteur.
+- Seule une variable (**HouseAge**) a un très léger effet positif.
+
+> Ce graphique donne une **explication locale** : il répond à la question *"Pourquoi le modèle a prédit cette valeur pour CE cas précis ?"*
+""")
+
 st.subheader("📈 Waterfall plot de la prédiction")
 fig_local, ax_local = plt.subplots()
 shap.plots.waterfall(shap.Explanation(
