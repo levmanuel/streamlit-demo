@@ -16,6 +16,7 @@ Cette application explore les concepts d’**explicabilité globale et locale** 
 Nous utilisons un modèle de **Random Forest** sur le dataset *California Housing* pour prédire le prix moyen d’une maison.
 """)
 
+# ------------------------------------
 st.header("📦 1. Chargement et préparation des données")
 @st.cache_data
 def load_data():
@@ -26,6 +27,7 @@ X, y = load_data()
 st.write("Aperçu des données :")
 st.dataframe(X.head())
 
+# ------------------------------------
 st.header("🧠 2. Modèle utilisé")
 st.markdown("""
 Nous utilisons un modèle **Random Forest Regressor** de Scikit-learn :
@@ -38,6 +40,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model.fit(X_train, y_train)
 st.success("✅ Modèle entraîné avec succès !")
 
+# ------------------------------------
 st.header("📊 3. Performance du modèle")
 y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
@@ -56,26 +59,28 @@ ax_perf.set_ylabel("Prix prédit")
 ax_perf.set_title("Prédictions vs Valeurs réelles")
 st.pyplot(fig_perf)
 
+# ------------------------------------
 st.header("🌐 4. Explicabilité Globale")
 st.write("Analyse de l'influence moyenne des variables à l'aide de SHAP.")
 
 @st.cache_resource
-def compute_shap_values(model, X_sample):
-    explainer = shap.TreeExplainer(model)
-    return explainer.shap_values(X_sample), explainer
+def get_explainer():
+    return shap.TreeExplainer(model)
 
-# ⚠️ Limiter à 100 pour éviter les lenteurs sur Streamlit Cloud
-sample_size = min(100, X_test.shape[0])
-X_sample = X_test.iloc[:sample_size]
-shap_values, explainer = compute_shap_values(model, X_sample)
+explainer = get_explainer()
+
+# Réduire la taille pour éviter lenteurs
+X_sample = X_test.iloc[:min(100, len(X_test))]
+shap_values = explainer.shap_values(X_sample)
 
 st.subheader("🔍 Graphique des importances moyennes (SHAP)")
 fig_global, ax_global = plt.subplots()
 shap.summary_plot(shap_values, X_sample, plot_type="bar", show=False)
 st.pyplot(fig_global)
 
+# ------------------------------------
 st.header("🔎 5. Explicabilité Locale")
-index = st.slider("Sélectionnez une observation à expliquer :", 0, sample_size - 1, 0)
+index = st.slider("Sélectionnez une observation à expliquer :", 0, len(X_sample) - 1, 0)
 individual = X_sample.iloc[[index]]
 
 st.write("Observation sélectionnée :")
@@ -83,8 +88,9 @@ st.write(individual)
 
 st.subheader("📈 Waterfall plot de la prédiction")
 fig_local, ax_local = plt.subplots()
-shap.plots.waterfall(shap.Explanation(values=shap_values[index],
-                                      base_values=explainer.expected_value,
-                                      data=individual.values[0],
-                                      feature_names=individual.columns.tolist()), show=False)
+shap.plots.waterfall(shap.Explanation(
+    values=shap_values[index],
+    base_values=explainer.expected_value,
+    data=individual.values[0],
+    feature_names=individual.columns.tolist()), show=False)
 st.pyplot(fig_local)
