@@ -16,7 +16,6 @@ Cette application explore les concepts d’**explicabilité globale et locale** 
 Nous utilisons un modèle de **Random Forest** sur le dataset *California Housing* pour prédire le prix moyen d’une maison.
 """)
 
-# ------------------------------------
 st.header("📦 1. Chargement et préparation des données")
 @st.cache_data
 def load_data():
@@ -27,7 +26,6 @@ X, y = load_data()
 st.write("Aperçu des données :")
 st.dataframe(X.head())
 
-# ------------------------------------
 st.header("🧠 2. Modèle utilisé")
 st.markdown("""
 Nous utilisons un modèle **Random Forest Regressor** de Scikit-learn :
@@ -40,7 +38,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model.fit(X_train, y_train)
 st.success("✅ Modèle entraîné avec succès !")
 
-# ------------------------------------
 st.header("📊 3. Performance du modèle")
 y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
