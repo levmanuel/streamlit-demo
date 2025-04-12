@@ -63,6 +63,22 @@ st.pyplot(fig_perf)
 st.header("🌐 4. Explicabilité Globale")
 st.write("Analyse de l'influence moyenne des variables à l'aide de SHAP.")
 
+st.markdown("""
+#### 📘 Comment lire ce graphique ?
+
+Ce graphique montre l'**importance moyenne** de chaque variable dans les prédictions du modèle.
+
+- **Chaque barre bleue** représente une variable.
+- **Plus la barre est longue**, plus la variable influence fortement les prédictions.
+- L'importance est mesurée par la **valeur absolue moyenne des SHAP values** pour chaque variable.
+
+Par exemple :
+- `MedInc` (revenu médian) a l’impact moyen le plus fort sur le prix prédictif.
+- `Latitude`, `AveOccup` (occupation moyenne) et `Longitude` suivent.
+
+> Ce graphique donne une **vue globale** du fonctionnement du modèle : quelles variables il utilise le plus en moyenne.
+""")
+
 @st.cache_resource
 def get_explainer():
     return shap.TreeExplainer(model)
