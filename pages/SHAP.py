@@ -2,78 +2,89 @@ import streamlit as st
 import pandas as pd
 import shap
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.datasets import fetch_california_housing
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
 
-st.set_page_config(page_title="Explicabilité IA avec SHAP", layout="wide")
+st.set_page_config(page_title="SHAP & IA - Explicabilité", layout="wide")
 
-st.title("🧠 Explicabilité des modèles d'IA avec SHAP")
+st.title("🧠 Explicabilité locale et globale avec SHAP")
 st.write("""
-Bienvenue ! Cette application a pour objectif de vous expliquer les notions **d'explicabilité globale** et **locale**
-des modèles d'intelligence artificielle, à l'aide de **SHAP (SHapley Additive exPlanations)**.
+Cette application explore les concepts d’**explicabilité globale et locale** à l’aide de **SHAP**.
+Nous utilisons un modèle de **Random Forest** sur le dataset *California Housing* pour prédire le prix moyen d’une maison.
 """)
 
-st.header("📦 1. Chargement des données")
+st.header("📦 1. Chargement et préparation des données")
 @st.cache_data
 def load_data():
     data = fetch_california_housing(as_frame=True)
-    X = data.data
-    y = data.target
-    return X, y
+    return data.data, data.target
 
 X, y = load_data()
-st.write("Voici un aperçu des données :")
+st.write("Aperçu des données :")
 st.dataframe(X.head())
 
-st.header("🤖 2. Entraînement du modèle")
+st.header("🧠 2. Modèle utilisé")
+st.markdown("""
+Nous utilisons un modèle **Random Forest Regressor** de Scikit-learn :
+- `n_estimators = 100`
+- `random_state = 42`
+""")
+
 model = RandomForestRegressor(n_estimators=100, random_state=42)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 model.fit(X_train, y_train)
-st.success("Modèle Random Forest entraîné !")
+st.success("✅ Modèle entraîné avec succès !")
 
-st.header("🌐 3. Explicabilité Globale")
-st.write("""
-L'explicabilité **globale** nous aide à comprendre **quelles caractéristiques influencent le plus le modèle** en général.
-""")
+st.header("📊 3. Performance du modèle")
+y_pred = model.predict(X_test)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
 
-explainer = shap.Explainer(model, X_train)
-shap_values = explainer(X_test)
+col1, col2 = st.columns(2)
+col1.metric("📈 R² score", f"{r2:.3f}")
+col2.metric("📉 Erreur absolue moyenne", f"{mae:.3f}")
 
-st.subheader("📊 Importance moyenne des variables (globales)")
-fig1, ax1 = plt.subplots()
-shap.plots.bar(shap_values, max_display=10, show=False)
-st.pyplot(fig1)
+st.subheader("Comparaison Prédictions vs Réel (échantillon)")
+fig_perf, ax_perf = plt.subplots()
+ax_perf.scatter(y_test[:100], y_pred[:100], alpha=0.6)
+ax_perf.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+ax_perf.set_xlabel("Vrai prix")
+ax_perf.set_ylabel("Prix prédit")
+ax_perf.set_title("Prédictions vs Valeurs réelles")
+st.pyplot(fig_perf)
 
-st.markdown("""
-✅ **Interprétation** : plus une variable a une valeur SHAP moyenne élevée (en valeur absolue), plus elle contribue aux prédictions du modèle.
-""")
+st.header("🌐 4. Explicabilité Globale")
+st.write("Analyse de l'influence moyenne des variables à l'aide de SHAP.")
 
-st.header("🔎 4. Explicabilité Locale")
-st.write("""
-L'explicabilité **locale** s'intéresse à **une prédiction particulière** : pourquoi le modèle a-t-il prédit cette valeur pour cet individu ?
-""")
+@st.cache_resource
+def compute_shap_values(model, X_sample):
+    explainer = shap.TreeExplainer(model)
+    return explainer.shap_values(X_sample), explainer
 
-index = st.slider("Choisissez l'observation à expliquer (entre 0 et 100)", 0, 100, 0)
-individual_data = X_test.iloc[[index]]
+# ⚠️ Limiter à 100 pour éviter les lenteurs sur Streamlit Cloud
+sample_size = min(100, X_test.shape[0])
+X_sample = X_test.iloc[:sample_size]
+shap_values, explainer = compute_shap_values(model, X_sample)
 
-st.write("🔍 Caractéristiques de l'observation sélectionnée :")
-st.write(individual_data)
+st.subheader("🔍 Graphique des importances moyennes (SHAP)")
+fig_global, ax_global = plt.subplots()
+shap.summary_plot(shap_values, X_sample, plot_type="bar", show=False)
+st.pyplot(fig_global)
 
-st.subheader("📈 Valeurs SHAP pour cette observation")
-fig2, ax2 = plt.subplots()
-shap.plots.waterfall(shap_values[index], show=False)
-st.pyplot(fig2)
+st.header("🔎 5. Explicabilité Locale")
+index = st.slider("Sélectionnez une observation à expliquer :", 0, sample_size - 1, 0)
+individual = X_sample.iloc[[index]]
 
-st.markdown("""
-✅ **Interprétation** : le graphique en cascade montre comment chaque caractéristique influence la prédiction finale par rapport à la moyenne.
-""")
+st.write("Observation sélectionnée :")
+st.write(individual)
 
-st.info("""
-💡 **Rappel** :
-- Les **valeurs SHAP positives** poussent la prédiction **vers le haut**.
-- Les **valeurs SHAP négatives** la poussent **vers le bas**.
-""")
-
-st.markdown("---")
-st.caption("App créée avec ❤️ par ChatGPT - SHAP + Streamlit Demo")
+st.subheader("📈 Waterfall plot de la prédiction")
+fig_local, ax_local = plt.subplots()
+shap.plots.waterfall(shap.Explanation(values=shap_values[index],
+                                      base_values=explainer.expected_value,
+                                      data=individual.values[0],
+                                      feature_names=individual.columns.tolist()), show=False)
+st.pyplot(fig_local)
