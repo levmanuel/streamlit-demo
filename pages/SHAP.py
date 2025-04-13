@@ -129,23 +129,24 @@ st.write(f"**Prix prédit:** {pred_value:.3f}")
 st.write(f"**Valeur de base (moyenne du modèle):** {float(base_value):.3f}")
 st.write(f"**Différence:** {pred_value - float(base_value):.3f}")
 
-st.markdown("""
-#### 📘 Comment lire ce graphique ?
+with st.expander("ℹ️ Comment lire ce graphique ?", expanded=False):
+    st.markdown("""
+    #### 📘 Comment lire ce graphique ?
 
-Le waterfall plot explique la **prédiction pour une observation individuelle** en détaillant la contribution de chaque variable.
+    Le waterfall plot explique la **prédiction pour une observation individuelle** en détaillant la contribution de chaque variable.
 
-- **La base value (valeur de base)** est la moyenne des prédictions sur tout le dataset - c'est ce que prédirait le modèle sans aucune information sur cette observation spécifique
-- **Chaque ligne** montre comment une variable particulière pousse la prédiction:
-  - **En rouge**: la variable augmente la prédiction par rapport à la moyenne
-  - **En bleu**: la variable diminue la prédiction par rapport à la moyenne
-- **La taille** de chaque barre correspond à l'ampleur de l'impact
-- **`f(x)`** est la prédiction finale pour cette observation, résultat de toutes ces contributions combinées
+    - **La base value (valeur de base)** est la moyenne des prédictions sur tout le dataset - c'est ce que prédirait le modèle sans aucune information sur cette observation spécifique
+    - **Chaque ligne** montre comment une variable particulière pousse la prédiction:
+      - **En rouge**: la variable augmente la prédiction par rapport à la moyenne
+      - **En bleu**: la variable diminue la prédiction par rapport à la moyenne
+    - **La taille** de chaque barre correspond à l'ampleur de l'impact
+    - **`f(x)`** est la prédiction finale pour cette observation, résultat de toutes ces contributions combinées
 
-**Comment utiliser cette explication:**
-- Pour les professionnels immobiliers: comprendre les facteurs qui valorisent ou dévalorisent un bien spécifique
-- Pour les data scientists: détecter des anomalies ou biais potentiels dans le modèle
-- Pour les décideurs: expliquer de manière transparente pourquoi une prédiction particulière a été faite
-""")
+    **Comment utiliser cette explication:**
+    - Pour les professionnels immobiliers: comprendre les facteurs qui valorisent ou dévalorisent un bien spécifique
+    - Pour les data scientists: détecter des anomalies ou biais potentiels dans le modèle
+    - Pour les décideurs: expliquer de manière transparente pourquoi une prédiction particulière a été faite
+    """)
 
 st.subheader("📈 Waterfall plot de la prédiction")
 fig_local, ax_local = plt.subplots(figsize=(10, 8))
