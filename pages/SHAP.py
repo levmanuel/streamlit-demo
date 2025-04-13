@@ -28,9 +28,9 @@ st.dataframe(X.head())
 
 st.header("🧠 2. Modèle utilisé")
 st.markdown("""
-Nous utilisons un modèle **Random Forest Regressor** de Scikit-learn :
-- `n_estimators = 100`
-- `random_state = 42`
+Nous utilisons un modèle **Random Forest Regressor** de Scikit-learn pour prédire le prix des maisons.
+- **Random Forest**: un ensemble d'arbres de décision qui améliore la précision et réduit le sur-apprentissage
+- **Hyperparamètres**: nous utilisons 100 arbres (`n_estimators=100`) et un état aléatoire fixe pour la reproductibilité
 """)
 
 model = RandomForestRegressor(n_estimators=100, random_state=42)
@@ -46,7 +46,7 @@ r2 = r2_score(y_test, y_pred)
 col1, col2, col3 = st.columns(3)
 col1.metric("📈 R² score", f"{r2:.3f}")
 col2.metric("📉 Erreur absolue moyenne", f"{mae:.3f}")
-col3.metric("📊 moyenne de prediction du modèle ", f"{y_pred.mean():.3f}")
+col3.metric("📊 Moy. des prédictions du modèle", f"{y_pred.mean():.3f}")
  
 st.subheader("Comparaison Prédictions vs Réel (échantillon)")
 fig_perf, ax_perf = plt.subplots()
@@ -62,24 +62,23 @@ st.pyplot(fig_perf)
 st.header("🌐 4. Explicabilité Globale")
 st.write("Analyse de l'influence moyenne des variables à l'aide de SHAP.")
 
-st.markdown("""
-#### 📘 Comment lire ce graphique ?
+with st.expander("ℹ️ Comment lire ce graphique ?", expanded=False):
+    st.markdown("""
+    Ce graphique montre l'**importance moyenne** de chaque variable dans les prédictions du modèle, mais d'une manière plus riche que les importances classiques de Random Forest.
 
-Ce graphique montre l'**importance moyenne** de chaque variable dans les prédictions du modèle, mais d'une manière plus riche que les importances classiques de Random Forest.
+    - **Chaque barre** représente une variable du modèle
+    - **Plus la barre est longue**, plus cette variable a d'impact sur les prédictions en moyenne
+    - L'importance est mesurée par la **valeur absolue moyenne des SHAP values** pour chaque variable
+    - Contrairement aux mesures d'importance classiques, SHAP:
+      - Est cohérent mathématiquement (basé sur la théorie des jeux)
+      - Tient compte des interactions entre variables
+      - Considère l'impact réel sur chaque prédiction individuelle
 
-- **Chaque barre** représente une variable du modèle
-- **Plus la barre est longue**, plus cette variable a d'impact sur les prédictions en moyenne
-- L'importance est mesurée par la **valeur absolue moyenne des SHAP values** pour chaque variable
-- Contrairement aux mesures d'importance classiques, SHAP:
-  - Est cohérent mathématiquement (basé sur la théorie des jeux)
-  - Tient compte des interactions entre variables
-  - Considère l'impact réel sur chaque prédiction individuelle
-
-**Interprétation pour ce modèle:**
-- `MedInc` (revenu médian) est le facteur le plus déterminant pour prédire le prix des logements
-- `Latitude`, `AveOccup` (occupation moyenne) et `Longitude` jouent également un rôle important
-- Les variables avec des barres plus courtes comme `HouseAge` ont un impact global plus limité
-""")
+    **Interprétation pour ce modèle:**
+    - `MedInc` (revenu médian) est le facteur le plus déterminant pour prédire le prix des logements
+    - `Latitude`, `AveOccup` (occupation moyenne) et `Longitude` jouent également un rôle important
+    - Les variables avec des barres plus courtes comme `HouseAge` ont un impact global plus limité
+    """)
 
 @st.cache_resource
 def get_explainer():
