@@ -204,36 +204,3 @@ fig_summary, ax_summary = plt.subplots(figsize=(10, 8))
 shap.summary_plot(shap_values, X_sample, show=False)
 plt.tight_layout()
 st.pyplot(fig_summary)
-
-# Ajout d'une visualisation alternative pour une observation unique
-st.subheader("Visualisation des contributions pour l'observation sélectionnée")
-st.markdown("""
-Ce graphique montre comment chaque variable contribue à la prédiction pour l'observation sélectionnée:
-- Les barres rouges montrent les variables qui augmentent la prédiction
-- Les barres bleues montrent les variables qui diminuent la prédiction
-- La longueur de chaque barre correspond à l'ampleur de l'impact
-""")
-
-# Créons un graphique à barres personnalisé qui montre les contributions
-feature_names = individual.columns.tolist()
-feature_values = individual.values[0]
-shap_values_idx = shap_values[index]
-
-# Trier les valeurs par importance absolue
-indices = np.argsort(np.abs(shap_values_idx))
-sorted_names = [feature_names[i] for i in indices]
-sorted_values = [shap_values_idx[i] for i in indices]
-sorted_feature_values = [feature_values[i] for i in indices]
-
-# Créer un graphique à barres des contributions
-fig_contrib, ax_contrib = plt.subplots(figsize=(10, 8))
-colors = ['#2171b5' if v < 0 else '#cb181d' for v in sorted_values]
-y_pos = np.arange(len(sorted_names))
-ax_contrib.barh(y_pos, sorted_values, color=colors)
-ax_contrib.set_yticks(y_pos)
-ax_contrib.set_yticklabels([f"{name} = {value:.2f}" for name, value in zip(sorted_names, sorted_feature_values)])
-ax_contrib.set_xlabel("Contribution SHAP à la prédiction")
-ax_contrib.set_title("Impact des variables sur la prédiction")
-ax_contrib.axvline(x=0, color='k', linestyle='-', alpha=0.3)
-plt.tight_layout()
-st.pyplot(fig_contrib)
