@@ -125,5 +125,3 @@ shap.plots.waterfall(shap.Explanation(
     data=individual.values[0],
     feature_names=individual.columns.tolist()), show=False)
 st.pyplot(fig_local)
-
-st.write("### Valeurs SHAP pour l'observation sélectionnée :")
