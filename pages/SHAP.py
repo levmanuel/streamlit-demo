@@ -43,10 +43,11 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 col1.metric("📈 R² score", f"{r2:.3f}")
 col2.metric("📉 Erreur absolue moyenne", f"{mae:.3f}")
-
+col3.metric("📊 moyenne de prediction du modèle ", f"{y_pred.mean():.3f}")
+ 
 st.subheader("Comparaison Prédictions vs Réel (échantillon)")
 fig_perf, ax_perf = plt.subplots()
 ax_perf.scatter(y_test[:100], y_pred[:100], alpha=0.6)
