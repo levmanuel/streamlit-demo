@@ -181,25 +181,39 @@ Ne capture pas les comportements complexes | Ne révèle pas nécessairement les
 - Présentez toujours les limites de ces interprétations (corrélation ≠ causalité)
 """)
 
-# Nouvelle section: force plot pour visualiser les interactions entre variables
-st.header("🧩 7. Interactions entre variables (Force Plot)")
+# Nouvelle section: visualisation avancée des interactions
+st.header("🧩 7. Visualisation avancée des interactions")
 st.markdown("""
 ### Visualisation des interactions complexes
 
-Le force plot ci-dessous montre comment toutes les variables interagissent pour produire chaque prédiction:
+La visualisation de type "SHAP Summary Plot" ci-dessous montre la distribution des valeurs SHAP pour chaque variable:
 - Chaque point représente une observation (une maison)
 - La position sur l'axe horizontal indique la valeur SHAP (impact sur la prédiction)
 - Les couleurs indiquent si la valeur de la variable est élevée (rouge) ou basse (bleu)
-- On peut ainsi repérer des motifs récurrents et des interactions entre variables
+- On peut ainsi repérer des motifs et des interactions entre variables
 
 **Comment l'interpréter:**
-Cherchez des motifs de couleur qui se répètent. Par exemple, si des points avec revenu élevé (rouge) et âge faible (bleu) sont systématiquement à droite, cela suggère une interaction entre ces variables.
+- Un gradient de couleur (bleu à rouge) qui va de gauche à droite indique une relation positive
+- Un gradient inversé (rouge à gauche, bleu à droite) indique une relation négative
+- Des motifs non-linéaires suggèrent des interactions complexes ou des effets de seuil
 """)
 
-st.subheader("Force Plot pour les 50 premières observations")
-fig_force, ax_force = plt.subplots(figsize=(10, 3))
-shap_values_subset = shap_values[:50]
-X_sample_subset = X_sample.iloc[:50]
-shap.force_plot(explainer.expected_value, shap_values_subset, X_sample_subset, matplotlib=True, show=False, plot_cmap=['#FF4B4B', '#4B4BFF'])
+st.subheader("Summary Plot des impacts variables")
+fig_summary, ax_summary = plt.subplots(figsize=(10, 8))
+shap.summary_plot(shap_values, X_sample, show=False)
 plt.tight_layout()
-st.pyplot(fig_force)
+st.pyplot(fig_summary)
+
+# Ajout d'une visualisation pour une observation unique
+st.subheader("Force Plot pour l'observation sélectionnée")
+st.markdown("""
+Ce graphique montre comment chaque variable contribue à la prédiction pour l'observation sélectionnée:
+- Les variables rouges poussent la prédiction vers le haut
+- Les variables bleues poussent la prédiction vers le bas
+- La largeur de chaque segment correspond à l'ampleur de l'impact
+""")
+fig_force_single, ax_force_single = plt.subplots(figsize=(10, 3))
+shap.force_plot(explainer.expected_value, shap_values[index], individual.values[0], 
+               feature_names=individual.columns.tolist(), matplotlib=True, show=False)
+plt.tight_layout()
+st.pyplot(fig_force_single)
