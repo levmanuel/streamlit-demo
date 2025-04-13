@@ -124,7 +124,10 @@ base_value = explainer.expected_value
 
 st.write("Observation sélectionnée :")
 st.write(individual)
-st.metric("Prix prédit", f"{pred_value:.3f}", f"{pred_value - base_value:.3f} par rapport à la moyenne")
+# Afficher la prédiction de façon plus sûre
+st.write(f"**Prix prédit:** {pred_value:.3f}")
+st.write(f"**Valeur de base (moyenne du modèle):** {float(base_value):.3f}")
+st.write(f"**Différence:** {pred_value - float(base_value):.3f}")
 
 st.markdown("""
 #### 📘 Comment lire ce graphique ?
