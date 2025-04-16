@@ -3,9 +3,7 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
 st.title("📄 Données Google Sheet")
-st.write(
-    "Cette page affiche les données d'une feuille Google Sheets et permet d'ajouter une nouvelle ligne."
-)
+st.write("Cette page affiche les données d'une feuille Google Sheets et permet d'ajouter une nouvelle ligne.")
 # Create a connection object.
 conn = st.connection("gsheets", type=GSheetsConnection)
 df = conn.read()
