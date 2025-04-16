@@ -13,6 +13,11 @@ df = conn.read()
 st.write("Data from Google Sheets:")
 st.dataframe(df)
 
+if st.button("🔄 Mettre à jour les données"):
+    df = conn.read()
+    st.success("Tableau mis à jour avec succès ✅")
+    st.dataframe(df)
+
 # Ajouter une ligne via un formulaire
 with st.form("add_row_form"):
     name = st.text_input("Nom")
