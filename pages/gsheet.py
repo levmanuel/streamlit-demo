@@ -25,6 +25,6 @@ with st.form("add_row_form"):
         updated_df = pd.concat([df, new_row], ignore_index=True)
 
         # Écrire les données mises à jour dans la feuille
-        conn.update(worksheet="Sheet1", data=updated_df)
+        conn.update(worksheet="Feuille 1", data=updated_df)
 
         st.success("Ligne ajoutée avec succès ✅")
