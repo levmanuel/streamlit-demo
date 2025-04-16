@@ -21,11 +21,7 @@ with st.form("add_row_form"):
     submitted = st.form_submit_button("Ajouter")
 
     if submitted:
-        # Ajouter la nouvelle ligne
         new_row = pd.DataFrame([{"name": name, "pet": pet}])
-        updated_df = pd.concat([df, new_row], ignore_index=True)
-
-        # Écrire les données mises à jour dans la feuille
-        conn.update(worksheet="Feuille 1", data=updated_df)
-
+        df = pd.concat([df, new_row], ignore_index=True)
+        conn.update(worksheet="Feuille 1", data=df)
         st.success("Ligne ajoutée avec succès ✅")
