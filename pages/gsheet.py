@@ -27,6 +27,3 @@ with st.form("add_row_form"):
         conn.update(worksheet="Sheet1", data=updated_df)
 
         st.success("Ligne ajoutée avec succès ✅")
-
-st.write("Updated Data from Google Sheets:")
-st.dataframe(updated_df)
