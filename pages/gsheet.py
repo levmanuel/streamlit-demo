@@ -11,8 +11,10 @@ if "df" not in st.session_state:
 
 st.write("Data from Google Sheets:")
 if st.button("🔄 Mettre à jour les données"):
-    st.session_state.df = conn.read(worksheet="Feuille 1")
-    st.success("Tableau mis à jour avec succès ✅")
+    updated_df = conn.read(worksheet="Feuille 1")
+    st.session_state.df = updated_df
+    st.success("Tableau mis à jour depuis la Google Sheet ✅")
+    st.experimental_rerun()
 
 st.dataframe(st.session_state.df)
 
