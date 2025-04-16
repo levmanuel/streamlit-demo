@@ -11,8 +11,6 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 df = conn.read()
 
 st.write("Data from Google Sheets:")
-st.dataframe(df)
-
 if st.button("🔄 Mettre à jour les données"):
     df = conn.read()
     st.success("Tableau mis à jour avec succès ✅")
