@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 st.title("📄 Données Google Sheet")
 st.write("Cette page affiche les données d'une feuille Google Sheets et permet d'ajouter une nouvelle ligne.")
@@ -18,14 +19,22 @@ if st.button("🔄 Mettre à jour les données"):
     st.session_state.df = conn.read(worksheet="Feuille 1", ttl=0)
     st.success("Tableau mis à jour depuis la Google Sheet ✅")
 
+# Nettoyage de données : conversion des dates
+df = st.session_state.df.copy()
+df["date"] = pd.to_datetime(df["date"])
+df["price"] = pd.to_numeric(df["price"], errors='coerce')
+
 # Afficher les données
 col = st.columns(2)
 with col[0]:
     st.subheader("Données Google Sheet")
-    st.dataframe(st.session_state.df)
+    st.dataframe(df)
 with col[1]:
-    st.subheader("Graphiques du cours TSLA")
-    sns.barplot(data=st.session_state.df, x="date", y="price")  
+    st.subheader("Graphique du cours TSLA")
+    fig, ax = plt.subplots(figsize=(8, 4))
+    sns.barplot(data=df, x="date", y="price", ax=ax)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+    st.pyplot(fig)
 
 # # Ajouter une ligne via un formulaire
 # with st.form("add_row_form"):
