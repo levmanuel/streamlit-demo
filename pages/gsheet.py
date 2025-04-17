@@ -29,28 +29,17 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-          # 1. Create the interactive Plotly line chart
     fig_plotly = px.line(
         df,
         x='Date',           # Column for X-axis (should be datetime)
         y='Close',          # Column for Y-axis (should be numeric)
         title="Évolution du Prix de Clôture", # Chart title
         markers=True,       # Show markers on data points (like marker='.')
-        labels={            # Customize axis labels shown to user
-            "Date": "Date",
-            "Close": "Prix de Clôture ($)"
-            }
-        # template="plotly_white" # Optional: Apply a visual theme
+        labels={"Date": "Date","Close": "Prix de Clôture ($)"}
     )
 
-    # 2. Customize hover information (shows details when mouse is over points)
     fig_plotly.update_traces(
-        hovertemplate="<b>Date</b>: %{x|%Y-%m-%d}<br><b>Prix</b>: %{y:$.2f}<extra></extra>"
-        # %{x|%Y-%m-%d} formats the date in hover
-        # %{y:$.2f} formats the price as currency
-        # <extra></extra> removes the trace name box
-    )
-
+        hovertemplate="<b>Date</b>: %{x|%Y-%m-%d}<br><b>Prix</b>: %{y:$.2f}<extra></extra>")
     # 3. Update layout (optional refinements)
     fig_plotly.update_layout(
         xaxis_title="Date", # Set explicit axis titles
