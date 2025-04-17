@@ -35,22 +35,8 @@ with col[1]:
         y='Close',          # Column for Y-axis (should be numeric)
         title="Évolution du Prix de Clôture", # Chart title
         markers=True,       # Show markers on data points (like marker='.')
-        labels={"Date": "Date","Close": "Prix de Clôture ($)"}
-    )
+        labels={"Date": "Date","Close": "Prix de Clôture ($)"})
 
-    fig_plotly.update_traces(
-        hovertemplate="<b>Date</b>: %{x|%Y-%m-%d}<br><b>Prix</b>: %{y:$.2f}<extra></extra>")
-    # 3. Update layout (optional refinements)
-    fig_plotly.update_layout(
-        xaxis_title="Date", # Set explicit axis titles
-        yaxis_title="Prix de Clôture ($)",
-        hovermode="x unified", # Show hover for closest X value across traces (if multiple lines)
-        margin=dict(l=30, r=30, t=50, b=30) # Adjust plot margins
-    )
-    # Plotly handles date tick formatting and rotation automatically quite well.
-    # If needed, customize x-axis further with fig_plotly.update_xaxes(...)
-
-    # 4. Display the Plotly chart in Streamlit
     st.plotly_chart(fig_plotly, use_container_width=True)
 
 
