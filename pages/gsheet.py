@@ -30,8 +30,8 @@ with col[1]:
     fig, ax = plt.subplots(figsize=(10, 6)) # Légèrement plus grand
     sns.lineplot(data=df, x="Date", y="Close", ax=ax, marker='.', markersize=5, color='dodgerblue')
     fig.autofmt_xdate()
-    plt.xlabel("Date")
-    plt.ylabel("Prix")
+    fig.tight_layout()
+
     st.pyplot(plt)
 
 
