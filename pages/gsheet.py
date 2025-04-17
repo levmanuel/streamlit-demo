@@ -29,14 +29,40 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    fig, ax = plt.subplots(figsize=(10, 6)) # Légèrement plus grand
-    sns.lineplot(data=df, x="Date", y="Close", ax=ax, marker='.', markersize=5, color='dodgerblue')
-    # Formatage de l'axe des x
-    ax.xaxis.set_major_locator(plt.MaxNLocator(10))  # Limiter le nombre de ticks
-    plt.xticks(rotation=90)  # Rotation des labels pour éviter le chevauchement
-    plt.xlabel("Date")
+          # 1. Create the interactive Plotly line chart
+    fig_plotly = px.line(
+        df_plot,
+        x='Date',           # Column for X-axis (should be datetime)
+        y='Close',          # Column for Y-axis (should be numeric)
+        title="Évolution du Prix de Clôture", # Chart title
+        markers=True,       # Show markers on data points (like marker='.')
+        labels={            # Customize axis labels shown to user
+            "Date": "Date",
+            "Close": "Prix de Clôture ($)"
+            }
+        # template="plotly_white" # Optional: Apply a visual theme
+    )
 
-    st.pyplot(plt)
+    # 2. Customize hover information (shows details when mouse is over points)
+    fig_plotly.update_traces(
+        hovertemplate="<b>Date</b>: %{x|%Y-%m-%d}<br><b>Prix</b>: %{y:$.2f}<extra></extra>"
+        # %{x|%Y-%m-%d} formats the date in hover
+        # %{y:$.2f} formats the price as currency
+        # <extra></extra> removes the trace name box
+    )
+
+    # 3. Update layout (optional refinements)
+    fig_plotly.update_layout(
+        xaxis_title="Date", # Set explicit axis titles
+        yaxis_title="Prix de Clôture ($)",
+        hovermode="x unified", # Show hover for closest X value across traces (if multiple lines)
+        margin=dict(l=30, r=30, t=50, b=30) # Adjust plot margins
+    )
+    # Plotly handles date tick formatting and rotation automatically quite well.
+    # If needed, customize x-axis further with fig_plotly.update_xaxes(...)
+
+    # 4. Display the Plotly chart in Streamlit
+    st.plotly_chart(fig_plotly, use_container_width=True)
 
 
 
