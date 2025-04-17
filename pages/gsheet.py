@@ -28,13 +28,18 @@ df["price"] = pd.to_numeric(df["price"], errors='coerce')
 col = st.columns(2)
 with col[0]:
     st.subheader("Données Google Sheet")
-    st.dataframe(df)
+    st.dataframe(
+        df.style.format({
+            "date": "{:%Y-%m-%d}", # Format date
+            "price": "{:.2f} $"    # Format prix avec 2 décimales et symbole
+        }),
+        hide_index=True # Cacher l'index pandas
+    )
 with col[1]:
     st.subheader("Graphique du cours TSLA")
     fig, ax = plt.subplots(figsize=(8, 4))
-    sns.barplot(data=df, x="date", y="price", ax=ax)
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-    st.pyplot(fig)
+    sns.lineplot(data=df, x="date", y="price", ax=ax, marker='o', markersize=4)
+
 
 # # Ajouter une ligne via un formulaire
 # with st.form("add_row_form"):
