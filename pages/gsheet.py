@@ -15,7 +15,7 @@ if "df" not in st.session_state:
 # Bouton de mise à jour
 if st.button("🔄 Mettre à jour les données"):
     # Lecture directe des données mises à jour depuis Google Sheets
-    st.session_state.df = conn.read(worksheet="Feuille 1")
+    st.session_state.df = conn.read(worksheet="Feuille 1", ttl=0)
     st.success("Tableau mis à jour depuis la Google Sheet ✅")
     # Ne pas utiliser st.experimental_rerun() ici
 
