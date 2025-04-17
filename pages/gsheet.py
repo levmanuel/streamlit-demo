@@ -21,13 +21,14 @@ if st.button("🔄 Mettre à jour les données"):
 df = st.session_state.df.copy()
 
 # Afficher les données
-col = st.columns(2)
+col = st.columns([0.4, 0.6]) # Donner un peu plus de largeur au graphique
 with col[0]:
     st.subheader("Données Google Sheet")
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    sns.lineplot(data=df, x="Date", y="Close")
+    fig, ax = plt.subplots(figsize=(10, 6)) # Légèrement plus grand
+    sns.lineplot(data=df, x="Date", y="Close", ax=ax, marker='.', markersize=5, color='dodgerblue')
     plt.xticks(rotation=90)
     plt.xlabel("Date")
     plt.ylabel("Prix")
