@@ -19,7 +19,6 @@ if st.button("🔄 Mettre à jour les données"):
     st.success("Tableau mis à jour depuis la Google Sheet ✅")
 # Nettoyage de données : conversion des dates
 df = st.session_state.df.copy()
-df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d", errors="coerce")
 
 # Afficher les données
 col = st.columns([0.3, 0.7]) # Donner un peu plus de largeur au graphique
@@ -32,7 +31,6 @@ with col[1]:
     sns.lineplot(data=df, x="Date", y="Close", ax=ax, marker='.', markersize=5, color='dodgerblue')
     # Formatage de l'axe des x
     ax.xaxis.set_major_locator(plt.MaxNLocator(10))  # Limiter le nombre de ticks
-    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: pd.to_datetime(x).strftime('%Y-%m-%d')))
     plt.xticks(rotation=90)  # Rotation des labels pour éviter le chevauchement
     plt.xlabel("Date")
 
