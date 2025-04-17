@@ -31,7 +31,7 @@ with col[1]:
     st.subheader("Chart")
           # 1. Create the interactive Plotly line chart
     fig_plotly = px.line(
-        df_plot,
+        df,
         x='Date',           # Column for X-axis (should be datetime)
         y='Close',          # Column for Y-axis (should be numeric)
         title="Évolution du Prix de Clôture", # Chart title
