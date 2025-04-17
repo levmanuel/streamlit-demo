@@ -1,10 +1,8 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 import plotly.express as px
-from datetime import datetime, timedelta
+
 
 st.title("📄 Données Google Sheet")
 st.write("Cette page affiche les données d'une feuille Google Sheets.")
@@ -19,7 +17,7 @@ if "df" not in st.session_state:
 if st.button("🔄 Mettre à jour les données"):
     st.session_state.df = conn.read(worksheet="Feuille 1", ttl=0)
     st.success("Tableau mis à jour depuis la Google Sheet ✅")
-# Nettoyage de données : conversion des dates
+
 df = st.session_state.df.copy()
 
 # Afficher les données
@@ -38,11 +36,6 @@ with col[1]:
         labels={"Date": "Date","Close": "Prix de Clôture ($)"})
 
     st.plotly_chart(fig_plotly, use_container_width=True)
-
-
-
-
-
 
 
 
