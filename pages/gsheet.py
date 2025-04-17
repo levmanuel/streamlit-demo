@@ -21,14 +21,14 @@ if st.button("🔄 Mettre à jour les données"):
 st.write("Data from Google Sheets:")
 st.dataframe(st.session_state.df)
 
-# Ajouter une ligne via un formulaire
-with st.form("add_row_form"):
-    name = st.text_input("Nom")
-    pet = st.text_input("Animal")
-    submitted = st.form_submit_button("Ajouter")
+# # Ajouter une ligne via un formulaire
+# with st.form("add_row_form"):
+#     name = st.text_input("Nom")
+#     pet = st.text_input("Animal")
+#     submitted = st.form_submit_button("Ajouter")
 
-if submitted:
-    new_row = pd.DataFrame([{"name": name, "pet": pet}])
-    st.session_state.df = pd.concat([st.session_state.df, new_row], ignore_index=True)
-    conn.update(worksheet="Feuille 1", data=st.session_state.df)
-    st.success("Ligne ajoutée avec succès ✅")
+# if submitted:
+#     new_row = pd.DataFrame([{"name": name, "pet": pet}])
+#     st.session_state.df = pd.concat([st.session_state.df, new_row], ignore_index=True)
+#     conn.update(worksheet="Feuille 1", data=st.session_state.df)
+#     st.success("Ligne ajoutée avec succès ✅")
