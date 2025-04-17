@@ -27,7 +27,7 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Graphique du cours TSLA")
-    sns.lineplot(data=df, x="Date", y="Close");
+    sns.lineplot(data=df, x="Date", y="Close")
 
 
 # # Ajouter une ligne via un formulaire
