@@ -28,6 +28,7 @@ with col[0]:
 with col[1]:
     st.subheader("Graphique du cours TSLA")
     sns.lineplot(data=df, x="Date", y="Close")
+    plt.xticks(rotation=90)
     plt.xlabel("Date")
     plt.ylabel("Prix")
     plt.title("Prix de l'action TSLA")
