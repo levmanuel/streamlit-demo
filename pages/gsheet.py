@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 st.title("📄 Données Google Sheet")
 st.write("Cette page affiche les données d'une feuille Google Sheets et permet d'ajouter une nouvelle ligne.")
-st.markdown('`GOOGLEFINANCE("TSLA"; "price";TODAY()-90;TODAY())"price";0)`')
+st.markdown('`GOOGLEFINANCE("TSLA"; "price";TODAY()-90;TODAY())`')
 # Create a connection object.
 conn = st.connection("gsheets", type=GSheetsConnection)
 
