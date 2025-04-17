@@ -13,12 +13,10 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 # Initialiser le dataframe dans session_state si pas déjà présent
 if "df" not in st.session_state:
     st.session_state.df = conn.read(worksheet="Feuille 1")
-
 # Bouton de mise à jour
 if st.button("🔄 Mettre à jour les données"):
     st.session_state.df = conn.read(worksheet="Feuille 1", ttl=0)
     st.success("Tableau mis à jour depuis la Google Sheet ✅")
-
 # Nettoyage de données : conversion des dates
 df = st.session_state.df.copy()
 
@@ -26,13 +24,7 @@ df = st.session_state.df.copy()
 col = st.columns(2)
 with col[0]:
     st.subheader("Données Google Sheet")
-    st.dataframe(
-        df.style.format({
-            "date": "{:%Y-%m-%d}", # Format date
-            "price": "{:.2f} $"    # Format prix avec 2 décimales et symbole
-        }),
-        hide_index=True # Cacher l'index pandas
-    )
+    st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Graphique du cours TSLA")
     fig, ax = plt.subplots(figsize=(8, 4))
