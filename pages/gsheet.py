@@ -26,12 +26,11 @@ with col[0]:
     st.subheader("Données Google Sheet")
     st.dataframe(df, use_container_width=True)
 with col[1]:
-    st.subheader("Graphique du cours TSLA")
+    st.subheader("Chart")
     sns.lineplot(data=df, x="Date", y="Close")
     plt.xticks(rotation=90)
     plt.xlabel("Date")
     plt.ylabel("Prix")
-    plt.title("Prix de l'action TSLA")
     st.pyplot(plt)
 
 
