@@ -29,7 +29,7 @@ with col[1]:
     st.subheader("Chart")
     fig, ax = plt.subplots(figsize=(10, 6)) # Légèrement plus grand
     sns.lineplot(data=df, x="Date", y="Close", ax=ax, marker='.', markersize=5, color='dodgerblue')
-    plt.xticks(rotation=90)
+    fig.autofmt_xdate()
     plt.xlabel("Date")
     plt.ylabel("Prix")
     st.pyplot(plt)
