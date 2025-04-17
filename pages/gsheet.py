@@ -3,6 +3,8 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import plotly.express as px
+from datetime import datetime, timedelta
 
 st.title("📄 Données Google Sheet")
 st.write("Cette page affiche les données d'une feuille Google Sheets.")
