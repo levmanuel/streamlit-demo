@@ -29,15 +29,7 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    fig_plotly = px.line(
-        df,
-        x='Date',           # Column for X-axis (should be datetime)
-        y='Close',          # Column for Y-axis (should be numeric)
-        title="Évolution du Prix de Clôture", # Chart title
-        markers=True,       # Show markers on data points (like marker='.')
-        labels={"Date": "Date","Close": "Prix de Clôture ($)"})
-
-    st.plotly_chart(fig_plotly, use_container_width=True)
+    st.plotly_chart(px.line(df, x="Date", y="Close", title="Prix de l'action Tesla"))
 
 
 
