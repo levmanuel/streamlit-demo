@@ -21,8 +21,6 @@ if st.button("🔄 Mettre à jour les données"):
 
 # Nettoyage de données : conversion des dates
 df = st.session_state.df.copy()
-df["date"] = pd.to_datetime(df["date"])
-df["price"] = pd.to_numeric(df["price"], errors='coerce')
 
 # Afficher les données
 col = st.columns(2)
