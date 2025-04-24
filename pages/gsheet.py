@@ -20,7 +20,7 @@ if st.button("🔄 Mettre à jour les données"):
 
 df = st.session_state.df.copy()
 
-st.write(df.info)
+st.write(df.info())
 st.write(df['Date'].dtype)
 
 # Afficher les données
