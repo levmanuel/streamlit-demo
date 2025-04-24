@@ -19,11 +19,8 @@ if st.button("🔄 Mettre à jour les données"):
     st.success("Tableau mis à jour depuis la Google Sheet ✅")
 
 df = st.session_state.df.copy()
-
-st.write(df.info())
-st.write(df['Date'].dtype)
 df['Date_new'] = pd.to_datetime(df['Date'], format='%d/%m/%Y')
-st.write(df['Date'].dtype)
+
 
 # Afficher les données
 col = st.columns([0.3, 0.7]) # Donner un peu plus de largeur au graphique
