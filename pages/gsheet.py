@@ -32,7 +32,7 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    st.plotly_chart(px.line(df, x="Date", y="Close", title="Prix de l'action Tesla"))
+    st.plotly_chart(px.line(df, x="Date_checked", y="Close", title="Prix de l'action Tesla"))
 
 
 
