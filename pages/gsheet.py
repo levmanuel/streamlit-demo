@@ -1,7 +1,6 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
-import plotly.express as px
 
 st.title("📄 Données Google Sheet")
 st.write("Cette page affiche les données d'une feuille Google Sheets.")
@@ -19,16 +18,14 @@ if st.button("🔄 Mettre à jour les données"):
 
 df = st.session_state.df.copy()
 df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y %H:%M:%S', errors='coerce')
-df["Close_new"] = df["Close"].astype(float)
 
 # Afficher les données
-col = st.columns([0.3, 0.7]) # Donner un peu plus de largeur au graphique
+col = st.columns([0.4, 0.6]) # Donner un peu plus de largeur au graphique
 with col[0]:
     st.subheader("Données Google Sheet")
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    # st.plotly_chart(px.line(df, x="Date", y="Close_new", title="Prix de l'action Tesla"))
     st.line_chart(df, x="Date", y="Close")
 
 
