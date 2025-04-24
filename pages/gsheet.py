@@ -20,7 +20,7 @@ if st.button("🔄 Mettre à jour les données"):
 
 df = st.session_state.df.copy()
 df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y %H:%M:%S', errors='coerce')
-df["Close"] = df["Close"].astype(float)
+df["Close_new"] = df["Close"].astype(float)
 
 # Afficher les données
 col = st.columns([0.3, 0.7]) # Donner un peu plus de largeur au graphique
@@ -29,7 +29,7 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    st.plotly_chart(px.line(df, x="Date", y="Close", title="Prix de l'action Tesla"))
+    st.plotly_chart(px.line(df, x="Date", y="Close_new", title="Prix de l'action Tesla"))
 
 # # Ajouter une ligne via un formulaire
 # with st.form("add_row_form"):
