@@ -22,7 +22,7 @@ df = st.session_state.df.copy()
 
 st.write(df.info())
 st.write(df['Date'].dtype)
-df['Date_checked'] = pd.to_datetime(df['Date'], errors='coerce')
+df['Date_new'] = pd.to_datetime(df['Date'], format='%d/%m/%Y', errors='coerce')
 st.write(df['Date'].dtype)
 
 # Afficher les données
@@ -32,7 +32,7 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    st.plotly_chart(px.line(df, x="Date_checked", y="Close", title="Prix de l'action Tesla"))
+    st.plotly_chart(px.line(df, x="Date_new", y="Close", title="Prix de l'action Tesla"))
 
 
 
