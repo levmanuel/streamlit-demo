@@ -31,8 +31,6 @@ with col[1]:
     st.subheader("Chart")
     st.plotly_chart(px.line(df, x="Date_new", y="Close", title="Prix de l'action Tesla"))
 
-
-
 # # Ajouter une ligne via un formulaire
 # with st.form("add_row_form"):
 #     name = st.text_input("Nom")
