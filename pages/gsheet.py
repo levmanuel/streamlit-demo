@@ -3,7 +3,6 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import plotly.express as px
 
-
 st.title("📄 Données Google Sheet")
 st.write("Cette page affiche les données d'une feuille Google Sheets.")
 st.markdown('`GOOGLEFINANCE("TSLA"; "price";TODAY()-90;TODAY())`')
@@ -29,7 +28,9 @@ with col[0]:
     st.dataframe(df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    st.plotly_chart(px.line(df, x="Date", y="Close_new", title="Prix de l'action Tesla"))
+    # st.plotly_chart(px.line(df, x="Date", y="Close_new", title="Prix de l'action Tesla"))
+    st.line_chart(df, x="Date", y="Close")
+
 
 # # Ajouter une ligne via un formulaire
 # with st.form("add_row_form"):
