@@ -20,7 +20,7 @@ if st.button("🔄 Mettre à jour les données"):
 
 df = st.session_state.df.copy()
 df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y %H:%M:%S', errors='coerce')
-df["Close"] = df["Close"].float()
+df["Close"] = df["Close"].astype(float)
 
 # Afficher les données
 col = st.columns([0.3, 0.7]) # Donner un peu plus de largeur au graphique
