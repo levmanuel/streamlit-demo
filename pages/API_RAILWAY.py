@@ -47,6 +47,7 @@ st.header("🤖 POST /predict")
 
 with st.form("predict_form"):
     st.write("**Saisissez les variables d'entrée**")
+    
 
     sepal_length = st.sidebar.number_input("Longueur du sépale", min_value=0.0, max_value=10.0, value=5.1)
     sepal_width = st.sidebar.number_input("Largeur du sépale", min_value=0.0, max_value=10.0, value=3.5)
