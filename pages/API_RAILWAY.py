@@ -5,7 +5,7 @@ import pandas as pd
 # Configuration
 st.set_page_config(page_title="RAILWAY API", layout="wide")
 
-st.title("🔬 Breast Cancer Predictor — API Client")
+st.title("🔬 RAILWAY API Client")
 
 # API URL
 API_URL = st.text_input("🌐 API Base URL", "https://web-production-72fc.up.railway.app").strip("/")
