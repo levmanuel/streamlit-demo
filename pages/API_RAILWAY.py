@@ -54,41 +54,64 @@ with st.form("predict_form"):
     mean_perimeter = st.number_input("mean_perimeter", value=92.5)
     mean_area = st.number_input("mean_area", value=600.0)
     mean_smoothness = st.number_input("mean_smoothness", value=0.1)
+    mean_compactness = st.number_input("mean_compactness", value=0.15)
+    mean_concavity = st.number_input("mean_concavity", value=0.12)
+    mean_concave_points = st.number_input("mean_concave_points", value=0.08)
+    mean_symmetry = st.number_input("mean_symmetry", value=0.2)
+    mean_fractal_dimension = st.number_input("mean_fractal_dimension", value=0.06)
+    radius_error = st.number_input("radius_error", value=0.5)
+    texture_error = st.number_input("texture_error", value=1.0)
+    perimeter_error = st.number_input("perimeter_error", value=3.0)
+    area_error = st.number_input("area_error", value=40.0)
+    smoothness_error = st.number_input("smoothness_error", value=0.005)
+    compactness_error = st.number_input("compactness_error", value=0.02)
+    concavity_error = st.number_input("concavity_error", value=0.015)
+    concave_points_error = st.number_input("concave_points_error", value=0.01)
+    symmetry_error = st.number_input("symmetry_error", value=0.02)
+    fractal_dimension_error = st.number_input("fractal_dimension_error", value=0.003)
+    worst_radius = st.number_input("worst_radius", value=17.0)
+    worst_texture = st.number_input("worst_texture", value=27.0)
+    worst_perimeter = st.number_input("worst_perimeter", value=115.0)
+    worst_area = st.number_input("worst_area", value=950.0)
+    worst_smoothness = st.number_input("worst_smoothness", value=0.13)
+    worst_compactness = st.number_input("worst_compactness", value=0.3)
+    worst_concavity = st.number_input("worst_concavity", value=0.2)
+    worst_concave_points = st.number_input("worst_concave_points", value=0.15)
+    worst_symmetry = st.number_input("worst_symmetry", value=0.28)
     worst_fractal_dimension = st.number_input("worst_fractal_dimension", value=0.08)
 
     submitted = st.form_submit_button("Envoyer la prédiction")
     if submitted:
-        # Construire les données à envoyer
         input_data = {
             "mean_radius": mean_radius,
             "mean_texture": mean_texture,
             "mean_perimeter": mean_perimeter,
             "mean_area": mean_area,
             "mean_smoothness": mean_smoothness,
-            "mean_compactness": 0.15,
-            "mean_concavity": 0.12,
-            "mean_concave_points": 0.08,
-            "mean_symmetry": 0.2,
-            "mean_fractal_dimension": 0.06,
-            "radius_error": 0.5,
-            "texture_error": 1.0,
-            "perimeter_error": 3.0,
-            "area_error": 40.0,
-            "smoothness_error": 0.005,
-            "compactness_error": 0.02,
-            "concavity_error": 0.015,
-            "concave_points_error": 0.01,
-            "symmetry_error": 0.02,
-            "fractal_dimension_error": 0.003,
-            "worst_radius": 17.0,
-            "worst_texture": 27.0,
-            "worst_perimeter": 115.0,
-            "worst_area": 950.0,
-            "worst_smoothness": 0.13,
-            "worst_compactness": 0.3,
-            "worst_concavity": 0.2,
-            "worst_concave_points": 0.15,
-            "worst_symmetry": 0.28,
+            "mean_compactness": mean_compactness,
+            "mean_concavity": mean_concavity,
+            "mean_concave_points": mean_concave_points,
+            "mean_symmetry": mean_symmetry,
+            "mean_fractal_dimension": mean_fractal_dimension,
+            "radius_error": radius_error,
+            "texture_error": texture_error,
+            "perimeter_error": perimeter_error,
+            "area_error": area_error,
+            "smoothness_error": smoothness_error,
+            "compactness_error": compactness_error,
+            "concavity_error": concavity_error,
+            "concave_points_error": concave_points_error,
+            "symmetry_error": symmetry_error,
+            "fractal_dimension_error": fractal_dimension_error,
+            "worst_radius": worst_radius,
+            "worst_texture": worst_texture,
+            "worst_perimeter": worst_perimeter,
+            "worst_area": worst_area,
+            "worst_smoothness": worst_smoothness,
+            "worst_compactness": worst_compactness,
+            "worst_concavity": worst_concavity,
+            "worst_concave_points": worst_concave_points,
+            "worst_symmetry": worst_symmetry,
             "worst_fractal_dimension": worst_fractal_dimension
         }
 
