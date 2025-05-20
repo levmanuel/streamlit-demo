@@ -54,9 +54,6 @@ with st.form("predict_form"):
     mean_perimeter = st.number_input("mean_perimeter", value=92.5)
     mean_area = st.number_input("mean_area", value=600.0)
     mean_smoothness = st.number_input("mean_smoothness", value=0.1)
-
-    # Ajoutez ici les autres champs si besoin...
-
     worst_fractal_dimension = st.number_input("worst_fractal_dimension", value=0.08)
 
     submitted = st.form_submit_button("Envoyer la prédiction")
@@ -68,7 +65,6 @@ with st.form("predict_form"):
             "mean_perimeter": mean_perimeter,
             "mean_area": mean_area,
             "mean_smoothness": mean_smoothness,
-            # ... les autres champs ici (exemple raccourci)
             "mean_compactness": 0.15,
             "mean_concavity": 0.12,
             "mean_concave_points": 0.08,
