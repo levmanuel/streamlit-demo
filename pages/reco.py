@@ -6,7 +6,7 @@ import re
 # Configuration Mistral
 MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
 MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
-MODEL = "mistral-medium"
+MODEL = "mistral-medium-latest"
 
 # Fonction pour appeler l'API Mistral
 def call_mistral(prompt, prompt_reco):
