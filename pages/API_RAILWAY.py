@@ -1,65 +1,183 @@
 import streamlit as st
 import requests
 import pandas as pd
+import plotly.graph_objects as go
+from datetime import date, timedelta
 
-# Configuration
-st.set_page_config(page_title="RAILWAY API", layout="wide")
+st.set_page_config(page_title="Open-Meteo API", layout="wide")
+st.title("🌤️ Open-Meteo API Explorer")
+st.write("Exploration d'une API météo publique et gratuite — aucune clé requise.")
+st.caption("Documentation : https://open-meteo.com/en/docs")
 
-st.title("🔬 RAILWAY API Client")
+BASE_URL = "https://api.open-meteo.com/v1"
 
-# API URL
-API_URL = st.text_input("🌐 API Base URL", "https://web-production-72fc.up.railway.app").strip("/")
-API_KEY = st.text_input("🔑 API Key", "0000", type="password")
+CITIES = {
+    "Paris": (48.8566, 2.3522),
+    "London": (51.5074, -0.1278),
+    "New York": (40.7128, -74.0060),
+    "Tokyo": (35.6762, 139.6503),
+    "Sydney": (-33.8688, 151.2093),
+    "Dubaï": (25.2048, 55.2708),
+    "São Paulo": (-23.5505, -46.6333),
+}
 
-headers = {"x-api-key": API_KEY}
+# --- Sidebar ---
+st.sidebar.header("Paramètres")
+city = st.sidebar.selectbox("Ville", list(CITIES.keys()))
+lat, lon = CITIES[city]
+st.sidebar.caption(f"Lat: {lat} / Lon: {lon}")
+
+# --- Tabs ---
+tab1, tab2, tab3 = st.tabs(["📡 Météo actuelle", "📈 Prévisions 7 jours", "🕰️ Historique 30 jours"])
 
 
-# --- Endpoint: / (root)
-st.header("📡 GET /")
-if st.button("Ping Root"):
-    try:
-        r = requests.get(f"{API_URL}/", timeout=10)
-        st.json(r.json())
-    except Exception as e:
-        st.error(f"Erreur : {e}")
+# ── Tab 1 : Météo actuelle ──────────────────────────────────────────────────
+with tab1:
+    st.subheader(f"Conditions actuelles — {city}")
+    st.code(f"GET {BASE_URL}/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,precipitation,weathercode", language="bash")
 
-# --- Endpoint: /auth
-st.header("🔐 GET /auth")
-if st.button("Test Auth"):
-    try:
-        r = requests.get(f"{API_URL}/auth", headers=headers, timeout=10)
-        st.json(r.json())
-    except Exception as e:
-        st.error(f"Erreur : {e}")
-
-# --- Endpoint: /load_data
-st.header("📂 GET /load_data")
-if st.button("Charger les données CSV (head)"):
-    try:
-        r = requests.get(f"{API_URL}/load_data", headers=headers, timeout=10)
-        df = pd.DataFrame(r.json())
-        st.dataframe(df)
-    except Exception as e:
-        st.error(f"Erreur : {e}")
-
-# --- Endpoint: /predict
-st.header("🤖 POST /predict")
-
-with st.form("predict_form"):
-    st.write("**Saisissez les variables d'entrée**")
-    
-
-    sepal_length = st.sidebar.number_input("Longueur du sépale", min_value=0.0, max_value=10.0, value=5.1)
-    sepal_width = st.sidebar.number_input("Largeur du sépale", min_value=0.0, max_value=10.0, value=3.5)
-    petal_length = st.sidebar.number_input("Longueur du pétale", min_value=0.0, max_value=10.0, value=1.4)
-    petal_width = st.sidebar.number_input("Largeur du pétale", min_value=0.0, max_value=10.0, value=0.2)
-
-    submitted = st.form_submit_button("Envoyer la prédiction")
-    if submitted:
-        data = {"features": [[sepal_length, sepal_width, petal_length, petal_width]]}
+    if st.button("Appeler l'API", key="btn_current"):
+        params = {
+            "latitude": lat,
+            "longitude": lon,
+            "current": "temperature_2m,wind_speed_10m,relative_humidity_2m,precipitation,weathercode",
+            "timezone": "auto",
+        }
         try:
-            r = requests.post(f"{API_URL}/predict", headers=headers, json=data, timeout=15)
-            st.success("Réponse :")
-            st.json(r.json())
+            r = requests.get(f"{BASE_URL}/forecast", params=params, timeout=10)
+            r.raise_for_status()
+            data = r.json()
+            current = data.get("current", {})
+            units = data.get("current_units", {})
+
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("🌡️ Température", f"{current.get('temperature_2m')} {units.get('temperature_2m')}")
+            col2.metric("💨 Vent", f"{current.get('wind_speed_10m')} {units.get('wind_speed_10m')}")
+            col3.metric("💧 Humidité", f"{current.get('relative_humidity_2m')} {units.get('relative_humidity_2m')}")
+            col4.metric("🌧️ Précipitations", f"{current.get('precipitation')} {units.get('precipitation')}")
+
+            with st.expander("Réponse JSON brute"):
+                st.json(data)
+        except requests.exceptions.Timeout:
+            st.error("L'API n'a pas répondu dans les 10 secondes.")
+        except Exception as e:
+            st.error(f"Erreur : {e}")
+
+
+# ── Tab 2 : Prévisions 7 jours ─────────────────────────────────────────────
+with tab2:
+    st.subheader(f"Prévisions sur 7 jours — {city}")
+    st.code(f"GET {BASE_URL}/forecast?latitude={lat}&longitude={lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max", language="bash")
+
+    if st.button("Appeler l'API", key="btn_forecast"):
+        params = {
+            "latitude": lat,
+            "longitude": lon,
+            "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max",
+            "timezone": "auto",
+            "forecast_days": 7,
+        }
+        try:
+            r = requests.get(f"{BASE_URL}/forecast", params=params, timeout=10)
+            r.raise_for_status()
+            daily = r.json().get("daily", {})
+            df = pd.DataFrame(daily)
+            df["time"] = pd.to_datetime(df["time"])
+
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=df["time"], y=df["temperature_2m_max"],
+                name="T° max", line=dict(color="#e74c3c", width=2),
+                fill=None,
+            ))
+            fig.add_trace(go.Scatter(
+                x=df["time"], y=df["temperature_2m_min"],
+                name="T° min", line=dict(color="#3498db", width=2),
+                fill="tonexty", fillcolor="rgba(52,152,219,0.1)",
+            ))
+            fig.update_layout(
+                yaxis_title="Température (°C)",
+                xaxis_title=None,
+                hovermode="x unified",
+                plot_bgcolor="white",
+                yaxis=dict(gridcolor="#f0f0f0"),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                margin=dict(t=30, b=0),
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.bar_chart(df.set_index("time")["precipitation_sum"], color="#3498db")
+                st.caption("Précipitations (mm/jour)")
+            with col2:
+                st.bar_chart(df.set_index("time")["windspeed_10m_max"], color="#95a5a6")
+                st.caption("Vent max (km/h)")
+
+            with st.expander("Données brutes"):
+                st.dataframe(df, use_container_width=True, hide_index=True)
+        except requests.exceptions.Timeout:
+            st.error("L'API n'a pas répondu dans les 10 secondes.")
+        except Exception as e:
+            st.error(f"Erreur : {e}")
+
+
+# ── Tab 3 : Historique 30 jours ────────────────────────────────────────────
+with tab3:
+    st.subheader(f"Données historiques — {city}")
+    end = date.today() - timedelta(days=1)
+    start = end - timedelta(days=29)
+    st.code(f"GET {BASE_URL}/archive?latitude={lat}&longitude={lon}&start_date={start}&end_date={end}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum", language="bash")
+
+    if st.button("Appeler l'API", key="btn_historical"):
+        params = {
+            "latitude": lat,
+            "longitude": lon,
+            "start_date": str(start),
+            "end_date": str(end),
+            "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum",
+            "timezone": "auto",
+        }
+        try:
+            r = requests.get(f"{BASE_URL}/archive", params=params, timeout=10)
+            r.raise_for_status()
+            daily = r.json().get("daily", {})
+            df = pd.DataFrame(daily)
+            df["time"] = pd.to_datetime(df["time"])
+
+            t_mean = ((df["temperature_2m_max"] + df["temperature_2m_min"]) / 2)
+            col1, col2, col3 = st.columns(3)
+            col1.metric("T° moyenne", f"{t_mean.mean():.1f} °C")
+            col2.metric("T° max sur la période", f"{df['temperature_2m_max'].max():.1f} °C")
+            col3.metric("Précipitations totales", f"{df['precipitation_sum'].sum():.1f} mm")
+
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=df["time"], y=df["temperature_2m_max"],
+                name="T° max", line=dict(color="#e74c3c", width=1.5),
+            ))
+            fig.add_trace(go.Scatter(
+                x=df["time"], y=df["temperature_2m_min"],
+                name="T° min", line=dict(color="#3498db", width=1.5),
+                fill="tonexty", fillcolor="rgba(52,152,219,0.08)",
+            ))
+            fig.add_trace(go.Scatter(
+                x=df["time"], y=t_mean,
+                name="T° moyenne", line=dict(color="#f39c12", width=2, dash="dot"),
+            ))
+            fig.update_layout(
+                yaxis_title="Température (°C)",
+                hovermode="x unified",
+                plot_bgcolor="white",
+                yaxis=dict(gridcolor="#f0f0f0"),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                margin=dict(t=30, b=0),
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+            with st.expander("Données brutes"):
+                st.dataframe(df, use_container_width=True, hide_index=True)
+        except requests.exceptions.Timeout:
+            st.error("L'API n'a pas répondu dans les 10 secondes.")
         except Exception as e:
             st.error(f"Erreur : {e}")
