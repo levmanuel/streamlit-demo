@@ -120,6 +120,11 @@ def reset_game():
         st.session_state.pop(key, None)
 
 
+# Garantit la présence de toutes les clés même après un redéploiement à chaud
+st.session_state.setdefault("game_over", False)
+st.session_state.setdefault("auto_play", False)
+st.session_state.setdefault("selected_card", None)
+
 gs = st.session_state.game_state
 piles = gs["piles"]
 deck = gs["deck"]
