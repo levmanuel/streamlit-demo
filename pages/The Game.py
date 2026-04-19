@@ -1,16 +1,13 @@
 import streamlit as st
 import random
 import time
-from streamlit.components.v1 import html
 
-# Configuration de la page Streamlit
 st.set_page_config(
     page_title="The Game",
     page_icon="🎮",
     layout="centered"
 )
 
-# Styles CSS personnalisés
 st.markdown("""
     <style>
         .card {
@@ -19,16 +16,10 @@ st.markdown("""
             padding: 20px;
             margin: 10px 0;
         }
-        .pile-ascending {
-            color: #28a745;
-        }
-        .pile-descending {
-            color: #dc3545;
-        }
-        .stButton>button {
-            width: 100%;
-        }
-        .auto-play-status {
+        .pile-ascending { color: #28a745; }
+        .pile-descending { color: #dc3545; }
+        .stButton>button { width: 100%; }
+        .game-status {
             color: #4a4a4a;
             padding: 10px;
             border-radius: 5px;
@@ -37,9 +28,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Fonctions du jeu
+
 def init_game():
-    """Initialise une nouvelle partie"""
     piles = {
         "↗️ Pile ascendante 1": [1],
         "↗️ Pile ascendante 2": [1],
@@ -50,65 +40,67 @@ def init_game():
     random.shuffle(deck)
     return piles, deck
 
+
 def is_valid_move(card, pile, ascending=True):
-    """Vérifie si une carte peut être jouée sur une pile"""
-    top_card = pile[-1]
+    top = pile[-1]
     if ascending:
-        return card > top_card or card == top_card - 10
+        return card > top or card == top - 10
     else:
-        return card < top_card or card == top_card + 10
+        return card < top or card == top + 10
+
 
 def has_valid_moves(hand, piles):
-    """Vérifie si le joueur a encore des mouvements possibles"""
     for card in hand:
-        for pile_name in piles:
-            ascending = "↗️" in pile_name
-            if is_valid_move(card, piles[pile_name], ascending):
+        for pile_name, pile in piles.items():
+            if is_valid_move(card, pile, ascending="↗️" in pile_name):
                 return True
     return False
 
+
 def update_game_state(card, pile_key):
-    """Mise à jour de l'état du jeu après avoir joué une carte"""
-    game_state = st.session_state.game_state
-    game_state["piles"][pile_key].append(card)
-    game_state["hand"].remove(card)
-    
-    if game_state["deck"] and len(game_state["hand"]) < 6:
-        game_state["hand"].append(game_state["deck"].pop())
-    
-    game_state["moves_this_turn"] += 1
-    st.session_state.game_state = game_state
+    gs = st.session_state.game_state
+    gs["piles"][pile_key].append(card)
+    gs["hand"].remove(card)
+    if gs["deck"] and len(gs["hand"]) < 6:
+        gs["hand"].append(gs["deck"].pop())
+    gs["moves_this_turn"] += 1
+    st.session_state.game_state = gs
+
 
 def end_turn():
-    """Termine le tour en cours"""
-    game_state = st.session_state.game_state
-    game_state["moves_this_turn"] = 0
-    game_state["turn_number"] += 1
+    gs = st.session_state.game_state
+    gs["moves_this_turn"] = 0
+    gs["turn_number"] += 1
+    st.session_state.game_state = gs  # FIX: persist state back
+
 
 def ai_make_move():
-    """Fait jouer l'IA automatiquement"""
-    game_state = st.session_state.game_state
-    hand = game_state["hand"]
-    piles = game_state["piles"]
-    
-    # Trouver tous les mouvements valides
-    valid_moves = []
+    gs = st.session_state.game_state
+    hand, piles = gs["hand"], gs["piles"]
+
+    # Score moves: prefer smallest gap (jump-back = 0 = highest priority)
+    scored = []
     for card in hand:
-        for pile_name in piles:
+        for pile_name, pile in piles.items():
             ascending = "↗️" in pile_name
-            if is_valid_move(card, piles[pile_name], ascending):
-                valid_moves.append((card, pile_name))
-    
-    if valid_moves:
-        # Choisir un mouvement aléatoire
-        card, pile_name = random.choice(valid_moves)
+            if is_valid_move(card, pile, ascending):
+                top = pile[-1]
+                if ascending:
+                    gap = card - top if card > top else 0
+                else:
+                    gap = top - card if card < top else 0
+                scored.append((gap, card, pile_name))
+
+    if scored:
+        scored.sort(key=lambda x: x[0])
+        _, card, pile_name = scored[0]
         update_game_state(card, pile_name)
         return True
     return False
 
-# Initialisation de l'état du jeu
+
+# --- Initialization ---
 if "game_state" not in st.session_state:
-    st.session_state.show_rules = True
     piles, deck = init_game()
     hand = [deck.pop() for _ in range(6)]
     st.session_state.game_state = {
@@ -116,93 +108,124 @@ if "game_state" not in st.session_state:
         "deck": deck,
         "hand": hand,
         "moves_this_turn": 0,
-        "turn_number": 1
+        "turn_number": 1,
     }
     st.session_state.game_over = False
     st.session_state.auto_play = False
+    st.session_state.selected_card = None
 
-# Chargement de l'état
-game_state = st.session_state.game_state
-piles = game_state["piles"]
-deck = game_state["deck"]
-hand = game_state["hand"]
 
-# Interface utilisateur
-st.title("🎮 The Game - Mode Auto-play")
+def reset_game():
+    for key in ["game_state", "game_over", "auto_play", "selected_card"]:
+        st.session_state.pop(key, None)
 
-# Contrôles d'auto-play
-col1, col2, col3 = st.columns(3)
+
+gs = st.session_state.game_state
+piles = gs["piles"]
+deck = gs["deck"]
+hand = gs["hand"]
+moves = gs["moves_this_turn"]
+min_moves = 1 if not deck else 2
+
+# Compute once per render
+can_move = has_valid_moves(hand, piles)
+
+st.title("🎮 The Game")
+
+# --- Auto-play controls ---
+col1, col2 = st.columns([1, 1])
 with col1:
-    auto_play = st.checkbox("Activer l'auto-play", key="auto_play")
+    auto_play = st.checkbox("Auto-play (IA)", key="auto_play")
 with col2:
-    ai_speed = st.slider("Vitesse (s)", 0.1, 2.0, 0.5, key="ai_speed")
-with col3:
-    if st.button("Arrêter l'auto-play"):
-        st.session_state.auto_play = False
-        st.rerun()
+    if auto_play:
+        st.slider("Vitesse (s)", 0.1, 2.0, 0.5, key="ai_speed")
 
-# Gestion de l'auto-play
+# --- Auto-play loop ---
 if st.session_state.auto_play and not st.session_state.game_over:
-    if has_valid_moves(hand, piles):
-        if ai_make_move():
-            # Rechargement automatique après délai
-            delay = int(st.session_state.ai_speed * 1000)
-            js = f"""
-            <script>
-                setTimeout(function(){{
-                    window.location.reload();
-                }}, {delay});
-            </script>
-            """
-            html(js)
+    if can_move:
+        ai_make_move()
+        time.sleep(st.session_state.get("ai_speed", 0.5))
+        st.rerun()
+    elif moves >= min_moves:
+        end_turn()
+        st.rerun()
     else:
-        if game_state["moves_this_turn"] >= 2:
-            end_turn()
-            st.rerun()
-        else:
-            st.session_state.game_over = True
+        st.session_state.game_over = True
 
-# Affichage des piles
+# --- Piles display ---
 col_left, col_right = st.columns(2)
 with col_left:
     st.subheader("Piles ascendantes ↗️")
     for name, pile in piles.items():
-        if "↗️" in name:
-            st.markdown(f"""
-                <div class='card pile-ascending'>
-                    <h3>{name}</h3>
-                    <h2>{pile[-1]}</h2>
-                </div>
-            """, unsafe_allow_html=True)
+        if "↗️" not in name:
+            continue
+        st.markdown(f"""
+            <div class='card pile-ascending'>
+                <h3>{name}</h3>
+                <h2>{pile[-1]}</h2>
+            </div>
+        """, unsafe_allow_html=True)
+        sel = st.session_state.selected_card
+        if not auto_play and sel is not None and is_valid_move(sel, pile, ascending=True):
+            if st.button(f"Jouer {sel} ici", key=f"play_{name}"):
+                update_game_state(sel, name)
+                st.session_state.selected_card = None
+                st.rerun()
 
 with col_right:
     st.subheader("Piles descendantes ↙️")
     for name, pile in piles.items():
-        if "↙️" in name:
-            st.markdown(f"""
-                <div class='card pile-descending'>
-                    <h3>{name}</h3>
-                    <h2>{pile[-1]}</h2>
-                </div>
-            """, unsafe_allow_html=True)
+        if "↙️" not in name:
+            continue
+        st.markdown(f"""
+            <div class='card pile-descending'>
+                <h3>{name}</h3>
+                <h2>{pile[-1]}</h2>
+            </div>
+        """, unsafe_allow_html=True)
+        sel = st.session_state.selected_card
+        if not auto_play and sel is not None and is_valid_move(sel, pile, ascending=False):
+            if st.button(f"Jouer {sel} ici", key=f"play_{name}"):
+                update_game_state(sel, name)
+                st.session_state.selected_card = None
+                st.rerun()
 
-# Informations de partie
+# --- Status bar ---
 st.markdown(f"""
-    <div class='auto-play-status' style='background-color: {"#e6f4ff" if st.session_state.auto_play else "#ffe6e6"}'>
-        Tour {game_state['turn_number']} - Cartes jouées ce tour: {game_state['moves_this_turn']}/2
-        <br>Cartes restantes: {len(deck)} dans le deck • {len(hand)} en main
+    <div class='game-status' style='background-color: {"#e6f4ff" if auto_play else "#f0f2f6"}'>
+        Tour {gs['turn_number']} — Cartes jouées ce tour : {moves}/{min_moves} minimum
+        <br>Cartes restantes : {len(deck)} dans le deck • {len(hand)} en main
     </div>
 """, unsafe_allow_html=True)
 
-# Gestion de fin de partie
-if st.session_state.game_over or not has_valid_moves(hand, piles):
-    st.error("💀 Partie terminée - Aucun mouvement possible !")
-    if st.button("Nouvelle partie"):
-        del st.session_state.game_state
+# --- Manual play: hand + end turn ---
+if not auto_play and not st.session_state.game_over:
+    st.subheader("Votre main")
+    if hand:
+        cols = st.columns(len(hand))
+        for i, card in enumerate(sorted(hand)):
+            with cols[i]:
+                is_selected = st.session_state.selected_card == card
+                label = f"**[{card}]**" if is_selected else str(card)
+                if st.button(label, key=f"card_{i}_{card}"):
+                    st.session_state.selected_card = None if is_selected else card
+                    st.rerun()
+
+    if st.button("Fin de tour ✅", disabled=(moves < min_moves)):
+        end_turn()
+        st.session_state.selected_card = None
         st.rerun()
 
+# --- Win condition ---
 if not deck and not hand:
     st.success("🎉 Félicitations, vous avez gagné !")
-    if st.button("Nouvelle partie"):
-        del st.session_state.game_state
+    if st.button("Nouvelle partie", key="btn_win"):
+        reset_game()
+        st.rerun()
+
+# --- Game over condition ---
+elif st.session_state.game_over or (not can_move and moves < min_moves):
+    st.error("💀 Partie terminée — Aucun mouvement possible !")
+    if st.button("Nouvelle partie", key="btn_loss"):
+        reset_game()
         st.rerun()
