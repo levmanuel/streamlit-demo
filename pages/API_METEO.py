@@ -10,6 +10,7 @@ st.write("Exploration d'une API météo publique et gratuite — aucune clé req
 st.caption("Documentation : https://open-meteo.com/en/docs")
 
 BASE_URL = "https://api.open-meteo.com/v1"
+ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive"
 
 CITIES = {
     "Paris": (48.8566, 2.3522),
@@ -127,7 +128,7 @@ with tab3:
     st.subheader(f"Données historiques — {city}")
     end = date.today() - timedelta(days=1)
     start = end - timedelta(days=29)
-    st.code(f"GET {BASE_URL}/archive?latitude={lat}&longitude={lon}&start_date={start}&end_date={end}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum", language="bash")
+    st.code(f"GET {ARCHIVE_URL}?latitude={lat}&longitude={lon}&start_date={start}&end_date={end}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum", language="bash")
 
     if st.button("Appeler l'API", key="btn_historical"):
         params = {
@@ -139,7 +140,7 @@ with tab3:
             "timezone": "auto",
         }
         try:
-            r = requests.get(f"{BASE_URL}/archive", params=params, timeout=10)
+            r = requests.get(ARCHIVE_URL, params=params, timeout=10)
             r.raise_for_status()
             daily = r.json().get("daily", {})
             df = pd.DataFrame(daily)
