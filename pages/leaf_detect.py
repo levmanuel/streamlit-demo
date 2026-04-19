@@ -1,6 +1,6 @@
 import streamlit as st
-import tensorflow as tf
-from tensorflow.keras.preprocessing import image # type: ignore
+import tf_keras
+from tf_keras.preprocessing import image
 import numpy as np
 from PIL import Image
 import json
@@ -11,7 +11,7 @@ class_mapping_path = "./models/class_mapping.json"
 species_names_path = "./models/noms_francais.json" 
 test_image_path = "./assets/test_image.jpg"
 
-model = tf.keras.models.load_model(model_path)
+model = tf_keras.models.load_model(model_path)
 with open(class_mapping_path, "r") as f:
     class_mapping = json.load(f)
 
