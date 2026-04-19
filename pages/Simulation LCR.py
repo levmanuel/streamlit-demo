@@ -1,90 +1,137 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import plotly.graph_objects as go
 
 st.set_page_config(page_title="LCR Simulation Demo", page_icon="📈")
 
 st.title("LCR Simulation Tool")
-st.write("Selon cette norme, l’encours d’actifs liquides de haute qualité doit au moins être égal aux sorties nettes de trésorerie pendant les 30 jours qui suivent la date d’arrêté du calcul du ratio.")
+st.write(
+    "Selon cette norme, l'encours d'actifs liquides de haute qualité doit au moins être égal "
+    "aux sorties nettes de trésorerie pendant les 30 jours qui suivent la date d'arrêté du calcul du ratio."
+)
 
-st.latex(r'''
-     LCR  = \frac{HQLA}{outflows-min(0,75outflows, inflows)}
-     ''')
+st.latex(r"LCR = \frac{HQLA}{Outflows - \min(0{,}75 \times Outflows,\ Inflows)}")
 
-factor_hqla = st.slider('HQLA Factor %', -100, 100, 0)
-factor_out = st.slider('Outflows Factor %', -100, 100, 0)
-factor_in = st.slider('Inflows Factor %', -100, 100, 0)
+# --- Valeurs de base ---
+st.subheader("Valeurs de base")
+col1, col2, col3 = st.columns(3)
+with col1:
+    hqla_base = st.number_input("HQLA", min_value=0.0, value=20.0, step=1.0)
+with col2:
+    outflow_base = st.number_input("Outflows", min_value=0.1, value=45.0, step=1.0)
+with col3:
+    inflow_base = st.number_input("Inflows", min_value=0.0, value=25.0, step=1.0)
 
-df = pd.DataFrame({
-"Name": ["HQLA","Outflow","Inflow", "LCR"],
-"start": [20, 45, 25, 0],
-"updated": [20, 45, 25, 0],
-"delta": [0, 0, 0, 0],
-"delta_pct": [0, 0, 0, 0]})
+# --- Facteurs de stress ---
+st.subheader("Facteurs de stress (%)")
+col1, col2, col3 = st.columns(3)
+with col1:
+    factor_hqla = st.slider("HQLA Factor %", -100, 100, 0)
+with col2:
+    factor_out = st.slider("Outflows Factor %", -100, 100, 0)
+with col3:
+    factor_in = st.slider("Inflows Factor %", -100, 100, 0)
 
-df.iloc[0, 2] = (1+factor_hqla/100) * df.iloc[0, 1]
-df.iloc[1, 2] = (1+factor_out/100) * df.iloc[1, 1]
-df.iloc[2, 2] = (1+factor_in/100) * df.iloc[2, 1]
-df.iloc[3, 1] = 100*df.iloc[0, 1] / (df.iloc[1, 1] - min( 0.75*df.iloc[1, 1] ,df.iloc[2, 1]))
-df.iloc[3, 2] = round(100*df.iloc[0, 2] / (df.iloc[1, 2] - min( 0.75*df.iloc[1, 1] ,df.iloc[2, 2])),2)
+# --- Calcul des valeurs stressées ---
+hqla = hqla_base * (1 + factor_hqla / 100)
+outflow = outflow_base * (1 + factor_out / 100)
+inflow = inflow_base * (1 + factor_in / 100)
 
-df.iloc[0, 3] = round(df.iloc[0, 2] - df.iloc[0, 1], 2)
-df.iloc[0, 4] = round(df.iloc[0, 2] / df.iloc[0, 1] - 1,2)
+inflow_cap = 0.75 * outflow
+inflow_capped = min(inflow_cap, inflow)
+net_outflow_base = outflow_base - min(0.75 * outflow_base, inflow_base)
+net_outflow = outflow - inflow_capped
 
-df.iloc[1, 3] = df.iloc[1, 2] - df.iloc[1, 1]
-df.iloc[1, 4] = df.iloc[1, 2] / df.iloc[1, 1] - 1
+lcr_base = round(100 * hqla_base / net_outflow_base, 2) if net_outflow_base > 0 else float("inf")
+lcr = round(100 * hqla / net_outflow, 2) if net_outflow > 0 else float("inf")
 
-df.iloc[2, 3] = df.iloc[2, 2] - df.iloc[2, 1]
-df.iloc[2, 4] = df.iloc[2, 2] / df.iloc[2, 1] - 1
-
-df.iloc[3, 3] = df.iloc[3, 2] - df.iloc[3, 1]
-df.iloc[3, 4] = df.iloc[3, 2] / df.iloc[3, 1] - 1
-
-#st.dataframe(df)
-
-nof = pd.DataFrame({
-"Name": ["Outflow", "75cpt_Outflow", "Inflow", "Min(0.75 OF, IF)", "Net_Ouflow"],
-"start": [45, 0.75*45, 25, min(0.75*45, 25), 20],
-"updated": [45, 0.75*45, 25, min(0.75*45, 25), 20]})
-
-nof.iloc[0, 2] = (1+factor_out/100) * nof.iloc[0, 1]
-nof.iloc[1, 2] = 0.75*((1+factor_out/100) * nof.iloc[0, 1])
-nof.iloc[2, 2] = (1+factor_in/100) * nof.iloc[2, 1]
-nof.iloc[3, 2] = min(nof.iloc[1, 2] , nof.iloc[2, 2])
-nof.iloc[4, 2] = nof.iloc[0, 2] - nof.iloc[3, 2]
-
+# --- Tableaux de détail ---
 col1, col2 = st.columns(2)
-col1.write("LCR calculation detail")
-col1.dataframe(df)
-col2.write("Net Outflow calculation detail")
-col2.dataframe(nof)
 
-if nof.iloc[1, 2] > nof.iloc[2, 2]:
-    st.write("case: Inflows NOT capped")
+with col1:
+    st.write("**Détail LCR**")
+    df_lcr = pd.DataFrame({
+        "": ["HQLA", "Outflows", "Inflows", "LCR (%)"],
+        "Base": [hqla_base, outflow_base, inflow_base, lcr_base],
+        "Stressé": [round(hqla, 2), round(outflow, 2), round(inflow, 2), lcr],
+        "Delta": [
+            round(hqla - hqla_base, 2),
+            round(outflow - outflow_base, 2),
+            round(inflow - inflow_base, 2),
+            round(lcr - lcr_base, 2),
+        ],
+    })
+    st.dataframe(df_lcr, hide_index=True)
+
+with col2:
+    st.write("**Détail Net Outflow**")
+    df_nof = pd.DataFrame({
+        "": ["Outflows", "75% Outflows", "Inflows", "Min(75% OF, IF)", "Net Outflow"],
+        "Base": [
+            outflow_base,
+            round(0.75 * outflow_base, 2),
+            inflow_base,
+            round(min(0.75 * outflow_base, inflow_base), 2),
+            round(net_outflow_base, 2),
+        ],
+        "Stressé": [
+            round(outflow, 2),
+            round(0.75 * outflow, 2),
+            round(inflow, 2),
+            round(inflow_capped, 2),
+            round(net_outflow, 2),
+        ],
+    })
+    st.dataframe(df_nof, hide_index=True)
+
+if inflow_cap < inflow:
+    st.warning("⚠️ Cas Inflows cappés : les entrées dépassent 75 % des sorties.")
 else:
-     st.write("WARNING CASE: Inflows capped")
+    st.info("Cas normal : Inflows non cappés.")
 
+lcr_color = "green" if lcr >= 100 else "red"
+st.markdown(
+    f"**LCR stressé : <span style='color:{lcr_color}'>{lcr}%</span>** "
+    f"(seuil réglementaire Bâle III : 100 %)",
+    unsafe_allow_html=True,
+)
 
-st.title("Simulation of LCR in case of change of x pct of Outflows during 30 days")
+# --- Simulation 30 jours ---
+st.subheader("Simulation : hausse quotidienne des Outflows sur 30 jours")
+of_factor = st.slider("Taux de hausse journalier des Outflows (%)", 0, 100, 1)
 
-OF_factor = st.slider('Outflow rate increase', 0, 100, 1)
+days, lcr_sim, outflow_sim = [], [], []
+current_outflow = outflow  # part de l'état stressé
 
-days = []
-lcr_list = []
-outflows_list = []
+for i in range(30):
+    current_outflow = round((1 + of_factor / 100) * current_outflow, 2)
+    current_inflow_capped = min(0.75 * current_outflow, inflow)
+    current_net = current_outflow - current_inflow_capped
+    current_lcr = round(100 * hqla / current_net, 1) if current_net > 0 else float("inf")
+    days.append(i + 1)
+    outflow_sim.append(current_outflow)
+    lcr_sim.append(current_lcr)
 
+fig = go.Figure()
+fig.add_trace(go.Bar(x=days, y=lcr_sim, name="LCR (%)", marker_color=[
+    "#28a745" if v >= 100 else "#dc3545" for v in lcr_sim
+]))
+fig.add_hline(
+    y=100,
+    line_dash="dash",
+    line_color="black",
+    annotation_text="Seuil Bâle III (100 %)",
+    annotation_position="top right",
+)
+fig.update_layout(
+    xaxis_title="Jour",
+    yaxis_title="LCR (%)",
+    showlegend=False,
+)
+st.plotly_chart(fig, use_container_width=True)
 
-for i in range(0,30):
-     if i == 0:
-          outflows = round((1+OF_factor/100)*df.iloc[1, 2],1)
-     else:
-          outflows = round((1+OF_factor/100)*outflows_list[-1],1)
-
-     outflows_list.append(outflows)
-     lcr = round(100*df.iloc[0, 2] / (outflows - min( 0.75*outflows ,df.iloc[2, 2])),1)
-     lcr_list.append(lcr)
-     days.append(i+1)
-
-chart_data = pd.DataFrame(data=lcr_list, index=days, columns=['LCR'])
-
-st.bar_chart(chart_data)
+breach_day = next((d for d, v in zip(days, lcr_sim) if v < 100), None)
+if breach_day:
+    st.error(f"Le LCR passe sous 100 % au jour {breach_day}.")
+else:
+    st.success("Le LCR reste au-dessus de 100 % sur les 30 jours.")
