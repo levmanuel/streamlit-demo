@@ -1,42 +1,30 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
-import pandas as pd
 
 st.title("📄 Données Google Sheet")
 st.write("Cette page affiche les données d'une feuille Google Sheets.")
 st.markdown('`GOOGLEFINANCE("TSLA"; "price";TODAY()-90;TODAY())`')
-# Create a connection object.
+
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# Initialiser le dataframe dans session_state si pas déjà présent
 if "df" not in st.session_state:
-    st.session_state.df = conn.read(worksheet="Feuille 1")
-# Bouton de mise à jour
+    try:
+        st.session_state.df = conn.read(worksheet="Feuille 1", ttl=600)
+    except Exception as e:
+        st.error(f"Impossible de charger la Google Sheet : {e}")
+        st.stop()
+
 if st.button("🔄 Mettre à jour les données"):
-    st.session_state.df = conn.read(worksheet="Feuille 1", ttl=0)
-    st.success("Tableau mis à jour depuis la Google Sheet ✅")
+    try:
+        st.session_state.df = conn.read(worksheet="Feuille 1", ttl=0)
+        st.success("Tableau mis à jour depuis la Google Sheet ✅")
+    except Exception as e:
+        st.error(f"Erreur lors de la mise à jour : {e}")
 
-df = st.session_state.df.copy()
-# df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y %H:%M:%S', errors='coerce')
-
-# Afficher les données
-col = st.columns([0.4, 0.6]) # Donner un peu plus de largeur au graphique
+col = st.columns([0.4, 0.6])
 with col[0]:
     st.subheader("Données Google Sheet")
-    st.dataframe(df, use_container_width=True)
+    st.dataframe(st.session_state.df, use_container_width=True)
 with col[1]:
     st.subheader("Chart")
-    st.line_chart(df, x="Date", y="Close")
-
-
-# # Ajouter une ligne via un formulaire
-# with st.form("add_row_form"):
-#     name = st.text_input("Nom")
-#     pet = st.text_input("Animal")
-#     submitted = st.form_submit_button("Ajouter")
-
-# if submitted:
-#     new_row = pd.DataFrame([{"name": name, "pet": pet}])
-#     st.session_state.df = pd.concat([st.session_state.df, new_row], ignore_index=True)
-#     conn.update(worksheet="Feuille 1", data=st.session_state.df)
-#     st.success("Ligne ajoutée avec succès ✅")
+    st.line_chart(st.session_state.df, x="Date", y="Close")
