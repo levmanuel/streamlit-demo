@@ -1,74 +1,60 @@
 import streamlit as st
 import string
 
-def isin_check(x):
-    try:
-        code = str(x)
+# Constante définie une fois : A=10, B=11, ..., Z=35
+LETTER_VALUES = {c: str(ord(c) - ord('A') + 10) for c in string.ascii_uppercase}
 
-        def transco_isin(x):
-            x = str(x)
-            AZ = string.ascii_uppercase
-            AZ = [i for i in AZ]
-            if x in AZ:    
-                for i, y in enumerate(AZ, 10):
-                    if y == x:
-                        return i
-            else:
-                return int(x)
 
-        def func(x):
-            a = []
-            for i in range(len(x)):
-                if i % 2 == 0:
-                    a.append(2)
-                else:
-                    a.append(1)
-            return a
+def _transcode(isin):
+    return ''.join(LETTER_VALUES.get(c, c) for c in isin)
 
-        def boarder(x):
-            for i in range(x, x + 11):
-                if i % 10 == 0:
-                    return i
 
-        code_transco = [str(transco_isin(i)) for i in code]
-        code_transco = ''.join(code_transco)
-        end_code = code_transco[-1]
-        start_code = code_transco[:-1]
+def _validate_format(code):
+    if len(code) != 12:
+        return f"Un code ISIN doit contenir exactement 12 caractères (reçu : {len(code)})."
+    if not code[:2].isalpha():
+        return "Les 2 premiers caractères doivent être des lettres (code pays ISO)."
+    if not code[2:11].isalnum():
+        return "Les caractères 3 à 11 doivent être alphanumériques (NSIN)."
+    if not code[11].isdigit():
+        return "Le dernier caractère doit être un chiffre (clé de contrôle)."
+    return None
 
-        IP = func(start_code)
-        start_code = [int(i) for i in start_code]
-        matrix = [a * b for a, b in zip(start_code, IP)]
-        matrix = [str(i) for i in matrix]
-        matrix = ''.join(matrix)
-        matrix = [int(i) for i in matrix]
 
-        sum_isin = sum(matrix)
+def isin_check(code):
+    code = code.strip().upper()
 
-        if int(boarder(sum_isin)) - int(sum_isin) - int(end_code) == 0:
-            return True
-        else:
-            return False
+    error = _validate_format(code)
+    if error:
+        return False, error
 
-    except ValueError:
-        return False
+    digits = _transcode(code)
 
-# Streamlit app
+    # Luhn mod 10 depuis la droite (check digit inclus)
+    total = 0
+    for i, d in enumerate(reversed(digits)):
+        n = int(d)
+        if i % 2 == 1:  # doubler un chiffre sur deux depuis la droite
+            n *= 2
+            if n > 9:
+                n -= 9
+        total += n
+
+    if total % 10 != 0:
+        return False, "La clé de contrôle est invalide."
+    return True, None
+
+
+# --- UI ---
 st.title("ISIN Code Validator")
-st.write("Enter an ISIN code to check if it's valid.")
+st.write("Entrez un code ISIN pour vérifier sa validité.")
+st.caption("Format : 2 lettres (pays ISO) + 9 caractères alphanumériques (NSIN) + 1 chiffre (clé)")
 
-# User input for ISIN code
-user_input = st.text_input("Enter ISIN code:", "")
+user_input = st.text_input("Code ISIN :", "US0378331005", max_chars=12)
 
-# Validate the ISIN code when the button is clicked
-if st.button("Validate"):
-    if user_input:
-        # Perform the ISIN check
-        is_valid = isin_check(user_input)
-        
-        # Display the result
-        if is_valid:
-            st.success(f"The ISIN code '{user_input}' is valid.")
-        else:
-            st.error(f"The ISIN code '{user_input}' is not valid.")
+if user_input:
+    is_valid, message = isin_check(user_input)
+    if is_valid:
+        st.success(f"✅ Le code ISIN **{user_input.upper()}** est valide.")
     else:
-        st.warning("Please enter an ISIN code.")
+        st.error(f"❌ Code invalide — {message}")
