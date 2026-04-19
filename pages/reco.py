@@ -17,7 +17,7 @@ CRITERES_LABELS = {
 }
 
 DEFAULT_SYSTEM_PROMPT = (
-    "Nous sommes en 2025. Vous êtes un auditeur expérimenté et exigeant. "
+    "Vous êtes un auditeur interne dans une banque expérimenté et exigeant."
     "Votre rôle est d'évaluer rigoureusement un constat et une recommandation d'audit "
     "en fonction des critères suivants :\n"
     "\n"
