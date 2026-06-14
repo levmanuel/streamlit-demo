@@ -4,22 +4,77 @@ from sqlalchemy import text
 
 st.set_page_config(page_title="Mon Bar à Cocktails", page_icon="🍸")
 
+# Source : liste officielle IBA (International Bartenders Association)
 _COCKTAILS_DEFAUT = {
-    'Vodka Orange': ["vodka", "orange(jus)"],
-    'Vodka Martini': ["vodka", "martini"],
-    'Mojito': ['menthe', 'rhum', 'sucre'],
-    'Acapulco': ['tequila', 'rhum', 'ananas', 'pamplemouse'],
-    'American Beauty': ['cognac', 'vermouth', 'orange', 'grenadine', 'creme menthe blanche', 'porto'],
-    'Americano': ['vermouth rouge', 'campari', 'eau gazeuze'],
-    'Bacardi': ['rhum doux', 'jus de citron', 'grenadine (sirop)'],
-    'Bahamas': ['rhum doux', 'Southern Confort', 'jus de citron', 'banane (creme)'],
-    'Bellini': ['pêche', 'champagne'],
-    'Bloody Mary': ['vodka', 'jus de tomate', 'sauce worcestershire', 'tabasco', 'sel de céleri', 'branche de céleri'],
-    'Blue Lagon': ['vodka', 'curaçao bleu', 'citron (jus)'],
-    'Between the sheets': ['cognac', 'rhum', 'cointreau', 'orange(jus)'],
+    # ── The Unforgettables ────────────────────────────────────────────
+    "Alexander":          ["cognac", "crème de cacao brune", "crème fraîche"],
+    "Americano":          ["campari", "vermouth rouge", "eau gazeuse"],
+    "Angel Face":         ["gin", "apricot brandy", "calvados"],
+    "Aviation":           ["gin", "maraschino", "crème de violette", "jus de citron"],
+    "Between the Sheets": ["cognac", "rhum blanc", "triple sec", "jus de citron"],
+    "Boulevardier":       ["whisky bourbon", "campari", "vermouth rouge"],
+    "Clover Club":        ["gin", "jus de citron", "sirop de grenadine", "blanc d'oeuf"],
+    "Daiquiri":           ["rhum blanc", "jus de citron vert", "sirop de sucre"],
+    "Dry Martini":        ["gin", "vermouth sec"],
+    "Gimlet":             ["gin", "jus de citron vert"],
+    "Gin Fizz":           ["gin", "jus de citron", "sirop de sucre", "eau gazeuse"],
+    "Hanky Panky":        ["gin", "vermouth rouge", "fernet branca"],
+    "John Collins":       ["gin", "jus de citron", "sirop de sucre", "eau gazeuse"],
+    "Last Word":          ["gin", "chartreuse verte", "maraschino", "jus de citron vert"],
+    "Manhattan":          ["whisky seigle", "vermouth rouge", "angostura"],
+    "Mary Pickford":      ["rhum blanc", "jus d'ananas", "maraschino", "grenadine"],
+    "Monkey Gland":       ["gin", "jus d'orange", "grenadine", "absinthe"],
+    "Negroni":            ["gin", "campari", "vermouth rouge"],
+    "Old Fashioned":      ["whisky bourbon", "sucre", "angostura"],
+    "Paradise":           ["gin", "apricot brandy", "jus d'orange"],
+    "Rob Roy":            ["scotch whisky", "vermouth rouge", "angostura"],
+    "Rose":               ["gin", "vermouth sec", "cherry brandy"],
+    "Rusty Nail":         ["scotch whisky", "drambuie"],
+    "Sazerac":            ["whisky seigle", "absinthe", "sucre", "peychaud bitters"],
+    "Sidecar":            ["cognac", "triple sec", "jus de citron"],
+    "Stinger":            ["cognac", "crème de menthe blanche"],
+    "Tuxedo":             ["gin", "vermouth sec", "maraschino", "absinthe", "angostura"],
+    "Whisky Sour":        ["whisky bourbon", "jus de citron", "sirop de sucre", "blanc d'oeuf"],
+    "White Lady":         ["gin", "triple sec", "jus de citron"],
+    # ── Contemporary Classics ─────────────────────────────────────────
+    "Bellini":            ["prosecco", "purée de pêche"],
+    "Black Russian":      ["vodka", "kahlua"],
+    "Bloody Mary":        ["vodka", "jus de tomate", "sauce worcestershire", "tabasco", "sel de céleri"],
+    "Caipirinha":         ["cachaça", "citron vert", "sucre"],
+    "Cosmopolitan":       ["vodka citron", "triple sec", "jus de citron vert", "jus de cranberry"],
+    "Cuba Libre":         ["rhum blanc", "coca-cola", "jus de citron vert"],
+    "Dark 'n' Stormy":    ["rhum brun", "ginger beer", "jus de citron vert"],
+    "French Martini":     ["vodka", "chambord", "jus d'ananas"],
+    "Grasshopper":        ["crème de menthe verte", "crème de cacao blanche", "crème fraîche"],
+    "Harvey Wallbanger":  ["vodka", "jus d'orange", "galliano"],
+    "Hemingway Special":  ["rhum blanc", "maraschino", "jus de citron vert", "jus de pamplemousse"],
+    "Horse's Neck":       ["brandy", "ginger ale", "angostura"],
+    "Kamikaze":           ["vodka", "triple sec", "jus de citron vert"],
+    "Kir":                ["vin blanc", "crème de cassis"],
+    "Kir Royal":          ["champagne", "crème de cassis"],
+    "Long Island Iced Tea": ["vodka", "gin", "rhum blanc", "tequila", "triple sec", "jus de citron", "cola"],
+    "Mai Tai":            ["rhum ambré", "rhum brun", "curaçao orange", "orgeat", "jus de citron vert"],
+    "Margarita":          ["tequila", "triple sec", "jus de citron vert"],
+    "Mimosa":             ["champagne", "jus d'orange"],
+    "Mint Julep":         ["whisky bourbon", "menthe", "sucre"],
+    "Mojito":             ["rhum blanc", "menthe", "sucre", "jus de citron vert", "eau gazeuse"],
+    "Moscow Mule":        ["vodka", "ginger beer", "jus de citron vert"],
+    "Pina Colada":        ["rhum blanc", "crème de coco", "jus d'ananas"],
+    "Planters Punch":     ["rhum brun", "jus d'orange", "jus d'ananas", "grenadine"],
+    "Sex on the Beach":   ["vodka", "schnapps pêche", "jus d'orange", "jus de cranberry"],
+    "Singapore Sling":    ["gin", "cherry brandy", "bénédictine", "cointreau", "grenadine", "jus d'ananas", "jus de citron", "angostura"],
+    "Spritz Veneziano":   ["prosecco", "aperol", "eau gazeuse"],
+    "Tequila Sunrise":    ["tequila", "jus d'orange", "grenadine"],
+    "White Russian":      ["vodka", "kahlua", "crème fraîche"],
+    # ── New Era Drinks ────────────────────────────────────────────────
+    "Bramble":            ["gin", "crème de mûre", "jus de citron", "sirop de sucre"],
+    "Espresso Martini":   ["vodka", "kahlua", "expresso", "sirop de sucre"],
+    "Naked and Famous":   ["mezcal", "chartreuse jaune", "aperol", "jus de citron vert"],
+    "Pornstar Martini":   ["vodka vanille", "passoa", "jus de fruit de la passion", "prosecco"],
+    "Spicy Fifty":        ["vodka", "elderflower cordial", "jus de citron vert", "vanille", "piment"],
 }
 
-_BAR_DEFAUT = ["vodka", "orange(jus)", "coca", "menthe", "martini", "rhum"]
+_BAR_DEFAUT = ["vodka", "gin", "rhum blanc", "jus de citron", "jus d'orange", "sirop de sucre", "menthe", "angostura"]
 
 
 def _init_db(conn) -> None:
@@ -41,17 +96,21 @@ def _init_db(conn) -> None:
                 PRIMARY KEY (cocktail_name, ingredient)
             )
         """))
-        count = session.execute(text("SELECT COUNT(*) FROM cocktails")).scalar()
-        if count == 0:
+        # Bar : seed seulement si le bar est vide (respecte les choix utilisateur)
+        bar_count = session.execute(text("SELECT COUNT(*) FROM bar_ingredients")).scalar()
+        if bar_count == 0:
             for ing in _BAR_DEFAUT:
                 session.execute(text("INSERT OR IGNORE INTO bar_ingredients VALUES (:ing)"), {"ing": ing})
-            for name, ingredients in _COCKTAILS_DEFAUT.items():
-                session.execute(text("INSERT OR IGNORE INTO cocktails VALUES (:name)"), {"name": name})
-                for ing in ingredients:
-                    session.execute(
-                        text("INSERT OR IGNORE INTO cocktail_ingredients VALUES (:name, :ing)"),
-                        {"name": name, "ing": ing},
-                    )
+
+        # Cocktails : seed incrémental — INSERT OR IGNORE permet d'ajouter de nouvelles
+        # recettes sans écraser celles ajoutées par l'utilisateur
+        for name, ingredients in _COCKTAILS_DEFAUT.items():
+            session.execute(text("INSERT OR IGNORE INTO cocktails VALUES (:name)"), {"name": name})
+            for ing in ingredients:
+                session.execute(
+                    text("INSERT OR IGNORE INTO cocktail_ingredients VALUES (:name, :ing)"),
+                    {"name": name, "ing": ing},
+                )
         session.commit()
 
 
