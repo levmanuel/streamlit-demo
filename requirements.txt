@@ -18,3 +18,4 @@ scipy
 matplotlib
 shap==0.44.1
 st-gsheets-connection
+sqlalchemy

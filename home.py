@@ -53,7 +53,7 @@ DEMOS = [
         "items": [
             ("API METEO", "Exploration de l'API Open-Meteo : météo, prévisions, historique"),
             ("The Game", "Jeu de cartes The Game — mode joueur & auto-play IA"),
-            ("Cocktail", "Suggestions de cocktails selon les ingrédients disponibles"),
+            ("Cocktail", "Suggestions de cocktails — st.connection SQLite (ajout/suppression persistant)"),
         ],
     },
     {
