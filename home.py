@@ -56,6 +56,13 @@ DEMOS = [
             ("Cocktail", "Suggestions de cocktails selon les ingrédients disponibles"),
         ],
     },
+    {
+        "category": "LLM & RAG",
+        "icon": "💬",
+        "items": [
+            ("Chat RAG", "Assistant conversationnel sur le portfolio — RAG (Mistral Embeddings + streaming)"),
+        ],
+    },
 ]
 
 cols = st.columns(2)
