@@ -5,7 +5,7 @@ from datetime import date, timedelta
 
 MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
 MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
-MODEL = "mistral-large-latest"
+MODEL = "mistral-small-latest"
 
 CRITERES_LABELS = {
     "clarte_constat": "Clarté et pertinence du constat",
