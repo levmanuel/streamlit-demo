@@ -13,7 +13,7 @@ st.set_page_config(
 MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
 MISTRAL_CHAT_URL = "https://api.mistral.ai/v1/chat/completions"
 MISTRAL_EMBED_URL = "https://api.mistral.ai/v1/embeddings"
-CHAT_MODEL = "mistral-large-latest"
+CHAT_MODEL = "mistral-small-latest"
 EMBED_MODEL = "mistral-embed"
 
 KNOWLEDGE_BASE = [
