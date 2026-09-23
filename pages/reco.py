@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import json
+import time
 from datetime import date, timedelta
 
 MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
@@ -67,7 +68,7 @@ DEFAULT_SYSTEM_PROMPT = (
 )
 
 
-def call_mistral(prompt, system_prompt):
+def call_mistral(prompt, system_prompt, max_retries=5):
     headers = {"Authorization": f"Bearer {MISTRAL_API_KEY}"}
     payload = {
         "model": MODEL,
@@ -78,9 +79,15 @@ def call_mistral(prompt, system_prompt):
         "temperature": 0.7,
         "response_format": {"type": "json_object"},
     }
-    response = requests.post(MISTRAL_API_URL, headers=headers, json=payload, timeout=30)
-    response.raise_for_status()
-    return response.json()["choices"][0]["message"]["content"]
+    delay = 1.0
+    for attempt in range(max_retries):
+        response = requests.post(MISTRAL_API_URL, headers=headers, json=payload, timeout=30)
+        if response.status_code != 429 or attempt == max_retries - 1:
+            response.raise_for_status()
+            return response.json()["choices"][0]["message"]["content"]
+        wait = float(response.headers.get("Retry-After", delay))
+        time.sleep(wait)
+        delay *= 2
 
 
 def parse_response(raw):
