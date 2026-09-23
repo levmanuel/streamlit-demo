@@ -1,4 +1,5 @@
 import json
+import time
 
 import numpy as np
 import requests
@@ -75,7 +76,7 @@ KNOWLEDGE_BASE = [
         "text": (
             "Page Reco (Machine Learning & IA) : Évaluation de recommandations d'audit par LLM Mistral. "
             "L'utilisateur saisit une recommandation d'audit dans un text_area. "
-            "Le LLM Mistral (mistral-large-latest) évalue la recommandation sur plusieurs critères "
+            "Le LLM Mistral (mistral-small-latest) évalue la recommandation sur plusieurs critères "
             "et renvoie un scoring structuré en JSON. "
             "Utilise l'API Mistral AI avec la clé stockée dans st.secrets. "
             "Bibliothèques : requests, json."
@@ -220,20 +221,37 @@ SYSTEM_PROMPT = (
 )
 
 
+def _post_with_retry(url: str, payload: dict, *, stream: bool = False, timeout: int = 30, max_retries: int = 5):
+    """POST vers l'API Mistral avec retry + backoff exponentiel sur 429 (rate limit)."""
+    delay = 1.0
+    for attempt in range(max_retries):
+        resp = requests.post(
+            url,
+            headers={"Authorization": f"Bearer {MISTRAL_API_KEY}"},
+            json=payload,
+            timeout=timeout,
+            stream=stream,
+        )
+        if resp.status_code != 429 or attempt == max_retries - 1:
+            resp.raise_for_status()
+            return resp
+        wait = float(resp.headers.get("Retry-After", delay))
+        time.sleep(wait)
+        delay *= 2
+    return resp  # pragma: no cover — inatteignable, la boucle retourne ou lève avant
+
+
 def get_embedding(text: str) -> list[float]:
-    resp = requests.post(
-        MISTRAL_EMBED_URL,
-        headers={"Authorization": f"Bearer {MISTRAL_API_KEY}"},
-        json={"model": EMBED_MODEL, "input": [text]},
-        timeout=30,
-    )
-    resp.raise_for_status()
+    resp = _post_with_retry(MISTRAL_EMBED_URL, {"model": EMBED_MODEL, "input": [text]})
     return resp.json()["data"][0]["embedding"]
 
 
 @st.cache_resource(show_spinner="Construction de l'index de connaissance…")
 def build_index() -> np.ndarray:
-    embeddings = [get_embedding(chunk["text"]) for chunk in KNOWLEDGE_BASE]
+    embeddings = []
+    for chunk in KNOWLEDGE_BASE:
+        embeddings.append(get_embedding(chunk["text"]))
+        time.sleep(0.2)  # espace les appels pour rester sous la limite de débit du tier gratuit
     return np.array(embeddings)
 
 
@@ -247,14 +265,12 @@ def retrieve(query: str, index: np.ndarray, k: int = 3) -> list[str]:
 
 def stream_mistral(messages: list[dict]):
     """Générateur de tokens compatible avec st.write_stream."""
-    resp = requests.post(
+    resp = _post_with_retry(
         MISTRAL_CHAT_URL,
-        headers={"Authorization": f"Bearer {MISTRAL_API_KEY}"},
-        json={"model": CHAT_MODEL, "messages": messages, "stream": True},
+        {"model": CHAT_MODEL, "messages": messages, "stream": True},
         stream=True,
         timeout=60,
     )
-    resp.raise_for_status()
     for line in resp.iter_lines():
         if line and line.startswith(b"data: ") and line != b"data: [DONE]":
             data = json.loads(line[6:])
@@ -277,7 +293,7 @@ with st.expander("Comment ça fonctionne ?"):
 **Pipeline RAG :**
 1. **Indexation** — au démarrage, chaque page du portfolio est encodée en vecteur via l'**API Mistral Embeddings** (`mistral-embed`) — mis en cache avec `@st.cache_resource`.
 2. **Récupération** — votre question est encodée, puis les 3 chunks les plus proches sont trouvés par **similarité cosinus** (numpy).
-3. **Génération streamée** — le contexte récupéré est injecté dans le prompt système, et la réponse est générée par **Mistral** (`mistral-large-latest`) en streaming SSE, affichée token par token via `st.write_stream`.
+3. **Génération streamée** — le contexte récupéré est injecté dans le prompt système, et la réponse est générée par **Mistral** (`mistral-small-latest`) en streaming SSE, affichée token par token via `st.write_stream`.
 
 **Features Streamlit démontrées :** `st.chat_input`, `st.chat_message`, `st.write_stream`, `@st.cache_resource`, `st.session_state`.
         """
