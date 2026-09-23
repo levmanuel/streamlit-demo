@@ -64,17 +64,35 @@ if st.button("Lancer le test 1"):
 
 st.divider()
 st.subheader("Test 2 — POST /v1/chat/completions")
-st.caption("Un seul appel minimal (5 tokens max) sur mistral-small-latest, sans retry.")
+st.caption(
+    "Un seul appel minimal (5 tokens max), sans retry. Différents modèles peuvent avoir des "
+    "limites très différentes sur le tier gratuit — teste plusieurs valeurs si besoin."
+)
+chat_model = st.text_input("Modèle à tester", value="ministral-3b-latest", key="chat_model")
 if st.button("Lancer le test 2"):
     start = time.time()
     resp = requests.post(
         "https://api.mistral.ai/v1/chat/completions",
         headers=HEADERS,
         json={
-            "model": "mistral-small-latest",
+            "model": chat_model,
             "messages": [{"role": "user", "content": "Réponds juste 'ok'."}],
             "max_tokens": 5,
         },
+        timeout=15,
+    )
+    _show_response(resp, time.time() - start)
+
+st.divider()
+st.subheader("Test 3 — POST /v1/embeddings")
+st.caption("Un seul appel minimal, sans retry, sur mistral-embed (utilisé par la page Chat RAG).")
+embed_model = st.text_input("Modèle à tester", value="mistral-embed", key="embed_model")
+if st.button("Lancer le test 3"):
+    start = time.time()
+    resp = requests.post(
+        "https://api.mistral.ai/v1/embeddings",
+        headers=HEADERS,
+        json={"model": embed_model, "input": ["test"]},
         timeout=15,
     )
     _show_response(resp, time.time() - start)
