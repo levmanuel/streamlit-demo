@@ -14,7 +14,7 @@ st.set_page_config(
 MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
 MISTRAL_CHAT_URL = "https://api.mistral.ai/v1/chat/completions"
 MISTRAL_EMBED_URL = "https://api.mistral.ai/v1/embeddings"
-CHAT_MODEL = "mistral-small-latest"
+CHAT_MODEL = "ministral-3b-latest"
 EMBED_MODEL = "mistral-embed"
 
 KNOWLEDGE_BASE = [
@@ -76,7 +76,7 @@ KNOWLEDGE_BASE = [
         "text": (
             "Page Reco (Machine Learning & IA) : Évaluation de recommandations d'audit par LLM Mistral. "
             "L'utilisateur saisit une recommandation d'audit dans un text_area. "
-            "Le LLM Mistral (mistral-small-latest) évalue la recommandation sur plusieurs critères "
+            "Le LLM Mistral (ministral-3b-latest) évalue la recommandation sur plusieurs critères "
             "et renvoie un scoring structuré en JSON. "
             "Utilise l'API Mistral AI avec la clé stockée dans st.secrets. "
             "Bibliothèques : requests, json."
@@ -293,7 +293,7 @@ with st.expander("Comment ça fonctionne ?"):
 **Pipeline RAG :**
 1. **Indexation** — au démarrage, chaque page du portfolio est encodée en vecteur via l'**API Mistral Embeddings** (`mistral-embed`) — mis en cache avec `@st.cache_resource`.
 2. **Récupération** — votre question est encodée, puis les 3 chunks les plus proches sont trouvés par **similarité cosinus** (numpy).
-3. **Génération streamée** — le contexte récupéré est injecté dans le prompt système, et la réponse est générée par **Mistral** (`mistral-small-latest`) en streaming SSE, affichée token par token via `st.write_stream`.
+3. **Génération streamée** — le contexte récupéré est injecté dans le prompt système, et la réponse est générée par **Mistral** (`ministral-3b-latest`) en streaming SSE, affichée token par token via `st.write_stream`.
 
 **Features Streamlit démontrées :** `st.chat_input`, `st.chat_message`, `st.write_stream`, `@st.cache_resource`, `st.session_state`.
         """
