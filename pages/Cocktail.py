@@ -123,6 +123,16 @@ def get_conn():
 
 conn = get_conn()
 
+
+def run_query(sql: str, **params) -> pd.DataFrame:
+    """Requête SQL sans cache, en fermant explicitement la connexion.
+
+    `conn.query()` ne referme pas la connexion qu'il ouvre : avec une requête par
+    cocktail, le pool SQLAlchemy (15 connexions) était épuisé.
+    """
+    with conn.connect() as c:
+        return pd.read_sql(text(sql), c, params=params or None)
+
 # ── Sidebar — gestion du bar ──────────────────────────────────────
 
 st.sidebar.title("Gestion du Bar")
@@ -140,7 +150,7 @@ with st.sidebar.form("form_ajout_ingredient"):
         st.rerun()
 
 st.sidebar.subheader("Ingrédients disponibles")
-bar_df = conn.query("SELECT ingredient FROM bar_ingredients ORDER BY ingredient", ttl=0)
+bar_df = run_query("SELECT ingredient FROM bar_ingredients ORDER BY ingredient")
 bar_ingredients = bar_df["ingredient"].tolist()
 
 with st.sidebar.form("form_suppression"):
@@ -158,7 +168,7 @@ with st.sidebar.form("form_suppression"):
 # ── Page principale ───────────────────────────────────────────────
 
 st.title("🍸 Mon Bar à Cocktails")
-st.caption("Stockage persistant via **SQLite** — `st.connection(type='sql')`, `conn.query()`, `conn.session`")
+st.caption("Stockage persistant via **SQLite** — `st.connection(type='sql')`, `conn.connect()`, `conn.session`")
 
 st.subheader("Cocktails réalisables avec vos ingrédients")
 
@@ -180,26 +190,23 @@ GROUP BY c.name
 HAVING pct >= :seuil
 ORDER BY pct DESC, c.name
 """
-resultats = conn.query(matching_sql, params={"seuil": seuil}, ttl=0)
+resultats = run_query(matching_sql, seuil=seuil)
 
 if resultats.empty:
     st.info("Aucun cocktail ne correspond au seuil sélectionné.")
 else:
-    # Ajouter la colonne ingrédients manquants
-    def manquants(name):
-        df = conn.query(
-            """
-            SELECT ingredient FROM cocktail_ingredients
-            WHERE cocktail_name = :name
-              AND ingredient NOT IN (SELECT ingredient FROM bar_ingredients)
-            """,
-            params={"name": name},
-            ttl=0,
-        )
-        return ", ".join(df["ingredient"].tolist()) if not df.empty else "—"
+    # Ingrédients manquants : une seule requête pour tous les cocktails
+    manquants_df = run_query(
+        """
+        SELECT cocktail_name, ingredient FROM cocktail_ingredients
+        WHERE ingredient NOT IN (SELECT ingredient FROM bar_ingredients)
+        ORDER BY ingredient
+        """
+    )
+    manquants = manquants_df.groupby("cocktail_name")["ingredient"].agg(", ".join)
 
     resultats["Matching (%)"] = resultats["pct"].astype(str) + " %"
-    resultats["Ingrédients manquants"] = resultats["Cocktail"].apply(manquants)
+    resultats["Ingrédients manquants"] = resultats["Cocktail"].map(manquants).fillna("—")
     st.dataframe(
         resultats[["Cocktail", "Matching (%)", "matched", "total", "Ingrédients manquants"]].rename(
             columns={"matched": "Présents", "total": "Total"}
