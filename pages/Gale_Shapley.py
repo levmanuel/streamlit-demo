@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+from lib.matching import gale_shapley
+
 # Configuration de base
 st.set_page_config(layout="wide")
 st.title("🎮 Système de Matching Équipes/Joueurs v2")
@@ -62,37 +64,6 @@ with st.expander("🎮 Configurer les préférences", expanded=True):
             if len(player_prefs[player]) != len(teams):
                 st.error(f"⚠️ Classer toutes les {len(teams)} équipes")
 
-# Algorithme Gale-Shapley modifié
-def gale_shapley(team_prefs, player_prefs, players_per_team):
-    proposals = {team: [] for team in teams}
-    player_matches = {player: None for player in players}
-    proposed = {team: set() for team in teams}
-
-    while True:
-        active_teams = [t for t in teams if len(proposals[t]) < players_per_team and len(proposed[t]) < len(players)]
-        if not active_teams:
-            break
-
-        for team in active_teams:
-            for player in team_prefs[team]:
-                if player not in proposed[team]:
-                    proposed[team].add(player)
-                    current_team = player_matches[player]
-                    
-                    if current_team is None:
-                        proposals[team].append(player)
-                        player_matches[player] = team
-                        break
-                    else:
-                        if player_prefs[player].index(team) < player_prefs[player].index(current_team):
-                            proposals[current_team].remove(player)
-                            proposals[team].append(player)
-                            player_matches[player] = team
-                            break
-                    if len(proposals[team]) == players_per_team:
-                        break
-    return proposals, player_matches
-
 # Exécution et résultats
 if st.button("🔍 Lancer le Matching"):
     valid_teams = all(len(v) == len(players) for v in team_prefs.values())
@@ -101,7 +72,9 @@ if st.button("🔍 Lancer le Matching"):
     if not (valid_teams and valid_players):
         st.error("❌ Completez toutes les préférences avant de lancer le matching !")
     else:
-        team_matches, player_matches = gale_shapley(team_prefs, player_prefs, players_per_team)
+        team_matches, player_matches = gale_shapley(
+            teams, players, team_prefs, player_prefs, players_per_team
+        )
         
         # Affichage amélioré
         st.success(f"✅ Matching réussi ! ({players_per_team} joueurs/équipe)")

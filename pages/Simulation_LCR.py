@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+from lib import lcr as calc
+
 st.set_page_config(page_title="LCR Simulation Demo", page_icon="📈")
 
 st.title("LCR Simulation Tool")
@@ -33,17 +35,17 @@ with col3:
     factor_in = st.slider("Inflows Factor %", -100, 100, 0)
 
 # --- Calcul des valeurs stressées ---
-hqla = hqla_base * (1 + factor_hqla / 100)
-outflow = outflow_base * (1 + factor_out / 100)
-inflow = inflow_base * (1 + factor_in / 100)
+hqla = calc.stresser(hqla_base, factor_hqla)
+outflow = calc.stresser(outflow_base, factor_out)
+inflow = calc.stresser(inflow_base, factor_in)
 
-inflow_cap = 0.75 * outflow
-inflow_capped = min(inflow_cap, inflow)
-net_outflow_base = outflow_base - min(0.75 * outflow_base, inflow_base)
-net_outflow = outflow - inflow_capped
+inflow_cap = calc.PLAFOND_INFLOWS * outflow
+inflow_capped = calc.inflows_cappes(outflow, inflow)
+net_outflow_base = calc.net_outflows(outflow_base, inflow_base)
+net_outflow = calc.net_outflows(outflow, inflow)
 
-lcr_base = round(100 * hqla_base / net_outflow_base, 2) if net_outflow_base > 0 else float("inf")
-lcr = round(100 * hqla / net_outflow, 2) if net_outflow > 0 else float("inf")
+lcr_base = calc.lcr(hqla_base, outflow_base, inflow_base)
+lcr = calc.lcr(hqla, outflow, inflow)
 
 # --- Tableaux de détail ---
 col1, col2 = st.columns(2)
@@ -100,17 +102,7 @@ st.markdown(
 st.subheader("Simulation : hausse quotidienne des Outflows sur 30 jours")
 of_factor = st.slider("Taux de hausse journalier des Outflows (%)", 0, 100, 1)
 
-days, lcr_sim, outflow_sim = [], [], []
-current_outflow = outflow  # part de l'état stressé
-
-for i in range(30):
-    current_outflow = round((1 + of_factor / 100) * current_outflow, 2)
-    current_inflow_capped = min(0.75 * current_outflow, inflow)
-    current_net = current_outflow - current_inflow_capped
-    current_lcr = round(100 * hqla / current_net, 1) if current_net > 0 else float("inf")
-    days.append(i + 1)
-    outflow_sim.append(current_outflow)
-    lcr_sim.append(current_lcr)
+days, outflow_sim, lcr_sim = calc.simulation(hqla, outflow, inflow, of_factor)
 
 fig = go.Figure()
 fig.add_trace(go.Bar(x=days, y=lcr_sim, name="LCR (%)", marker_color=[

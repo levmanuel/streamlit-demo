@@ -24,7 +24,7 @@ Portfolio interactif de démos Machine Learning, Data Science et outils métier,
 |------|-------------|
 | **Chat RAG** | Assistant conversationnel sur le portfolio : Mistral Embeddings + similarité cosinus + réponse en streaming (limité à 15 questions par session) |
 
-> Une page technique **API Test Mistral** (diagnostic 401/403/429, non listée sur l'accueil) complète la série.
+> Une page technique **API Test Mistral** (diagnostic 401/403/429, non listée sur l'accueil) complète la série. Elle est protégée par un mot de passe (`DIAGNOSTIC_PASSWORD`, voir Configuration) et désactivée tant qu'il n'est pas défini.
 
 ### NLP & Recherche
 
@@ -82,7 +82,7 @@ streamlit run home.py
 
 L'application démarre sur `http://localhost:8501`.
 
-Tests unitaires du calculateur TDEE :
+Tests unitaires (TDEE, LCR, ISIN, Gale-Shapley, cohérence du catalogue d'accueil) :
 
 ```bash
 pip install -r requirements-dev.txt
@@ -97,9 +97,18 @@ Certaines pages nécessitent des credentials dans `.streamlit/secrets.toml` :
 # Mistral AI — pages Reco, Chat RAG et API Test Mistral
 [api]
 MISTRAL_API_KEY = "votre_clé_mistral"
+DIAGNOSTIC_PASSWORD = "mot_de_passe_page_diagnostic"
 
 # Google Sheets — page GSheet
 [connections.gsheets]
 spreadsheet = "https://docs.google.com/spreadsheets/d/..."
 type = "st.connections.ExperimentalBaseConnection"
 ```
+
+## Structure
+
+- `pages/` : une page Streamlit par démo (nom de fichier = entrée du menu latéral).
+- `lib/` : logique pure testable (`tdee`, `lcr`, `isin`, `matching`), catalogue des démos (`catalogue.py`) et accès aux secrets.
+- `tests/` : tests pytest (CI GitHub Actions).
+
+Pour ajouter une démo : créer le fichier dans `pages/` et l'ajouter à `lib/catalogue.py` (un test vérifie que les deux restent synchronisés).
