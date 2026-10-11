@@ -3,6 +3,7 @@ import streamlit as st
 from lib import tdee as calc
 from lib import tdee_textes as T
 from lib.tdee_ui.activite import render_activite, render_objectif
+from lib.tdee_ui.macros import render_macros
 from lib.tdee_ui.profil import render_profil
 
 st.title(T.TITRE)
@@ -16,6 +17,7 @@ with col_reglages:
     profil = render_profil()
     niveau, mult, eat_pct, tef_pct = render_activite(avance)
     objectif_key, ajustement = render_objectif()
+    macros_pct, macros_kcalg = render_macros(avance)
 
 with col_resultats:
     bmr_value = calc.bmr(profil["sexe"], profil["poids"], profil["taille"],

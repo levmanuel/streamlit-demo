@@ -52,3 +52,9 @@ OBJECTIFS = {
     "prise_agressive": ("Prise de masse agressive", "0,25–0,5 kg pris par semaine"),
 }
 AJUSTEMENT = "Ajustement quotidien (kcal)"
+
+# --- Macros ---
+MACROS_TITRE = "Répartition des macronutriments"
+MACROS_NOMS = ("Protéines", "Glucides", "Lipides")
+MACROS_PCT = "{nom} (%)"
+MACROS_KCAL_G = "kcal par gramme — {nom}"
