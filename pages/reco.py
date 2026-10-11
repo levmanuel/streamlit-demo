@@ -2,6 +2,7 @@ import streamlit as st
 
 from lib.secrets import mistral_api_key
 import requests
+import html
 import json
 import time
 from datetime import date, timedelta
@@ -176,7 +177,7 @@ if st.button("Évaluer"):
     color = "#28a745" if isinstance(score_global, (int, float)) and score_global >= 7 else \
             "#ffc107" if isinstance(score_global, (int, float)) and score_global >= 4 else "#dc3545"
     st.markdown(
-        f"<h2 style='color:{color}'>Score global : {score_global}/10</h2>",
+        f"<h2 style='color:{color}'>Score global : {html.escape(str(score_global))}/10</h2>",
         unsafe_allow_html=True,
     )
 

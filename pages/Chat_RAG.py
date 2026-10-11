@@ -31,8 +31,9 @@ KNOWLEDGE_BASE = [
             "Ce portfolio Streamlit, développé par levmanuel, est un portfolio interactif "
             "de démos Machine Learning, Data Science et outils métier. "
             "Il est déployé sur levmanuel-demo.streamlit.app. "
-            "Il contient 14 pages organisées en 5 catégories : "
-            "Machine Learning & IA, NLP & Recherche, Vision par ordinateur, Finance & Audit, Outils & APIs."
+            "Il contient 16 démos organisées en 6 catégories : "
+            "Machine Learning & IA, NLP & Recherche, Vision par ordinateur, Finance & Audit, Outils & APIs, "
+            "LLM & RAG. Une page de diagnostic de l'API Mistral s'y ajoute."
         ),
     },
     {
@@ -184,10 +185,40 @@ KNOWLEDGE_BASE = [
         "id": "cocktail",
         "text": (
             "Page Cocktail (Outils & APIs) : Suggestions de recettes de cocktails selon les ingrédients disponibles. "
-            "L'utilisateur sélectionne ses ingrédients disponibles (multiselect) et l'application filtre "
-            "les recettes réalisables. Base de données de recettes stockée en JSON local (cocktails.json). "
-            "Inventaire personnel persistant dans mon_bar.json. "
-            "Bibliothèques : streamlit, json."
+            "Environ 65 recettes officielles IBA, stockées dans une base SQLite via st.connection(type='sql'). "
+            "L'utilisateur sélectionne les ingrédients de son bar et l'application filtre les recettes réalisables "
+            "(avec un seuil d'ingrédients manquants). Les ajouts et suppressions sont persistants. "
+            "Bibliothèques : streamlit, sqlalchemy."
+        ),
+    },
+    {
+        "id": "tdee",
+        "text": (
+            "Page TDEE (Outils & APIs) : Calculateur de dépense énergétique journalière. "
+            "Calcule le BMR (Mifflin-St Jeor ou Harris-Benedict), le TDEE selon le niveau d'activité, "
+            "l'objectif calorique (perte, maintien, prise) et la répartition en macronutriments avec curseurs liés. "
+            "Affiche aussi la répartition BMR / TEF / EAT / NEAT et la formule détaillée (mode avancé). "
+            "Les calculs sont des fonctions pures dans lib/tdee.py, testées avec pytest. "
+            "Bibliothèques : streamlit."
+        ),
+    },
+    {
+        "id": "chat_rag",
+        "text": (
+            "Page Chat RAG (LLM & RAG) : Assistant conversationnel sur le portfolio. "
+            "Les pages sont encodées avec Mistral Embeddings (mistral-embed), les 3 passages les plus proches "
+            "sont retrouvés par similarité cosinus (numpy) puis injectés dans le prompt de ministral-3b-latest, "
+            "dont la réponse est streamée. Limites : 15 questions par session, 500 caractères par question. "
+            "Bibliothèques : requests, numpy."
+        ),
+    },
+    {
+        "id": "diagnostic_mistral",
+        "text": (
+            "Page Diagnostic API Mistral : page technique qui fait des appels bruts, sans retry, "
+            "pour diagnostiquer une erreur 401/403/429 (statut HTTP, en-têtes, corps de la réponse). "
+            "Elle liste aussi les modèles accessibles et teste les embeddings. "
+            "Elle n'apparaît pas sur la page d'accueil. Bibliothèques : requests."
         ),
     },
     {
@@ -213,7 +244,7 @@ KNOWLEDGE_BASE = [
             "Le dépôt source est github.com/levmanuel/streamlit-demo. "
             "Pour lancer en local : pip install -r requirements.txt && streamlit run home.py. "
             "Les credentials sont stockés dans .streamlit/secrets.toml (non commité). "
-            "Secrets requis : [api] MISTRAL_API_KEY pour la page Reco et la page Chat RAG ; "
+            "Secrets requis : [api] MISTRAL_API_KEY pour les pages Reco, Chat RAG et Diagnostic Mistral ; "
             "[connections.gsheets] spreadsheet et type pour la page GSheet."
         ),
     },
