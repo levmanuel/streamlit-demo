@@ -244,7 +244,7 @@ KNOWLEDGE_BASE = [
             "Le dépôt source est github.com/levmanuel/streamlit-demo. "
             "Pour lancer en local : pip install -r requirements.txt && streamlit run home.py. "
             "Les credentials sont stockés dans .streamlit/secrets.toml (non commité). "
-            "Secrets requis : [api] MISTRAL_API_KEY pour les pages Reco, Chat RAG et Diagnostic Mistral ; "
+            "Secrets requis : [api] MISTRAL_API_KEY pour les pages Reco, Chat RAG et Diagnostic Mistral (plus DIAGNOSTIC_PASSWORD pour cette dernière) ; "
             "[connections.gsheets] spreadsheet et type pour la page GSheet."
         ),
     },
