@@ -11,17 +11,22 @@ class_mapping_path = "./models/class_mapping.json"
 species_names_path = "./models/noms_francais.json" 
 test_image_path = "./assets/test_image.jpg"
 
-model = tf_keras.models.load_model(model_path)
-with open(class_mapping_path, "r") as f:
-    class_mapping = json.load(f)
+@st.cache_resource(show_spinner="Chargement du modèle…")
+def load_resources():
+    model = tf_keras.models.load_model(model_path)
+    with open(class_mapping_path, "r") as f:
+        class_mapping = json.load(f)
+    with open(species_names_path, "r") as f:
+        species_names = json.load(f)
+    return model, class_mapping, species_names
 
-with open(species_names_path, "r") as f:
-    species_names = json.load(f)
+
+model, class_mapping, species_names = load_resources()
 
 image_size = (224, 224)
 
 def predict_species(img, model, class_mapping, species_names):
-    img = img.resize(image_size)
+    img = img.convert("RGB").resize(image_size)
     img_array = image.img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
     
@@ -39,6 +44,7 @@ def predict_species(img, model, class_mapping, species_names):
     return top_3_species
 
 st.title("Prédiction d'espèce d'arbre")
+img = None
 uploaded_file = st.file_uploader("Choisissez une image d'arbre...", type=["jpg", "jpeg", "png"])
 use_test_image = st.button("Utiliser une image d'essai")
 
@@ -51,7 +57,7 @@ elif use_test_image and os.path.exists(test_image_path):
 else:
     st.warning("Veuillez télécharger une image ou utiliser l'image d'essai.")
 
-if 'img' in locals():
+if img is not None:
     with st.spinner("Prédiction en cours..."):
         top_3_species = predict_species(img, model, class_mapping, species_names)
     

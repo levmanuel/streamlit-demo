@@ -18,6 +18,14 @@ Portfolio interactif de démos Machine Learning, Data Science et outils métier,
 | **Leaf Detection** | Classification d'espèces de plantes via un modèle TensorFlow (MobileNet) |
 | **Reco** | Évaluation de recommandations d'audit par LLM (Mistral) avec scoring structuré |
 
+### LLM & RAG
+
+| Page | Description |
+|------|-------------|
+| **Chat RAG** | Assistant conversationnel sur le portfolio : Mistral Embeddings + similarité cosinus + réponse en streaming (limité à 15 questions par session) |
+
+> Une page technique **API Test Mistral** (diagnostic 401/403/429, non listée sur l'accueil) complète la série.
+
 ### NLP & Recherche
 
 | Page | Description |
@@ -86,7 +94,7 @@ pytest
 Certaines pages nécessitent des credentials dans `.streamlit/secrets.toml` :
 
 ```toml
-# Mistral AI — page Reco
+# Mistral AI — pages Reco, Chat RAG et API Test Mistral
 [api]
 MISTRAL_API_KEY = "votre_clé_mistral"
 
