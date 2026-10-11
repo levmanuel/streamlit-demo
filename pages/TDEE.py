@@ -5,6 +5,8 @@ from lib import tdee_textes as T
 from lib.tdee_ui.activite import render_activite, render_objectif
 from lib.tdee_ui.macros import render_macros
 from lib.tdee_ui.profil import render_profil
+from lib.tdee_ui.resultats import (render_formule, render_indicateurs,
+                                   render_macros_resultats, render_repartition)
 
 st.title(T.TITRE)
 st.write(T.INTRO)
@@ -24,8 +26,9 @@ with col_resultats:
                          profil["age"], profil["equation"])
     tdee_value = calc.tdee(bmr_value, mult)
     objectif_value = calc.objectif(tdee_value, ajustement)
-    st.metric("BMR", f"{calc.fmt_fr(bmr_value)} kcal/jour")
-    st.metric("TDEE", f"{calc.fmt_fr(tdee_value)} kcal/jour")
-    st.metric("Objectif", f"{calc.fmt_fr(objectif_value)} kcal/jour")
+    render_indicateurs(bmr_value, tdee_value, objectif_value, ajustement)
+    render_repartition(bmr_value, tdee_value, tef_pct, eat_pct)
+    render_macros_resultats(objectif_value, macros_pct, macros_kcalg)
+    render_formule(profil, mult, bmr_value, tdee_value, objectif_value, ajustement)
 
 st.caption(T.AVERTISSEMENT)

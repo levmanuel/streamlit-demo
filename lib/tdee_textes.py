@@ -58,3 +58,27 @@ MACROS_TITRE = "Répartition des macronutriments"
 MACROS_NOMS = ("Protéines", "Glucides", "Lipides")
 MACROS_PCT = "{nom} (%)"
 MACROS_KCAL_G = "kcal par gramme — {nom}"
+
+# --- Résultats ---
+R_BMR = "BMR"
+R_TDEE = "TDEE"
+R_OBJECTIF = "Objectif"
+R_UNITE = "kcal/jour"
+R_VARIATION = "Variation de poids estimée : {texte}"
+R_REPARTITION = "Répartition du TDEE"
+R_PARTS = {
+    "bmr": "BMR (métabolisme de base)",
+    "tef": "TEF (effet thermique des aliments)",
+    "eat": "EAT (exercice)",
+    "neat": "NEAT (activité hors exercice)",
+}
+R_PARTS_COURT = {"bmr": "BMR", "tef": "TEF", "eat": "EAT", "neat": "NEAT"}
+R_COL_PART, R_COL_PCT, R_COL_KCAL = "Composante", "Part", "kcal"
+R_MACROS = "Macronutriments"
+R_GRAMMES = "{nom} : {grammes} g · {kcal} kcal ({pct} %)"
+R_ALERTE_MACROS = "Les macronutriments totalisent {total} % au lieu de 100 %."
+R_FORMULE = "Formule appliquée"
+F_BMR_MIFFLIN = "BMR = 10 × {w} + 6,25 × {h} − 5 × {a} {signe} {c} = {bmr} kcal"
+F_BMR_HARRIS = "BMR = {c0} + {c1} × {w} + {c2} × {h} − {c3} × {a} = {bmr} kcal"
+F_TDEE = "TDEE = {bmr} × {mult} = {tdee} kcal"
+F_OBJECTIF = "Objectif = {tdee} {signe} {ajust} = {objectif} kcal"

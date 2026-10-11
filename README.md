@@ -46,6 +46,7 @@ Portfolio interactif de démos Machine Learning, Data Science et outils métier,
 | **Open-Meteo API** | Exploration d'une API météo publique : conditions actuelles, prévisions, historique |
 | **The Game** | Implémentation du jeu de cartes The Game avec mode auto-play (IA) et mode joueur |
 | **Cocktail** | Suggestions de recettes de cocktails selon les ingrédients disponibles |
+| **TDEE** | Calculateur de dépense énergétique (BMR, TEF, EAT, NEAT), objectif de poids et macros ; calculs purs dans `lib/tdee.py` |
 
 ---
 
@@ -72,6 +73,13 @@ streamlit run home.py
 ```
 
 L'application démarre sur `http://localhost:8501`.
+
+Tests unitaires du calculateur TDEE :
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
 
 ## Configuration
 

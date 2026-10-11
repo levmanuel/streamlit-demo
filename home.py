@@ -54,6 +54,7 @@ DEMOS = [
             ("API METEO", "Exploration de l'API Open-Meteo : météo, prévisions, historique"),
             ("The Game", "Jeu de cartes The Game — mode joueur & auto-play IA"),
             ("Cocktail", "Suggestions de cocktails — st.connection SQLite (ajout/suppression persistant)"),
+            ("TDEE", "Calculateur de dépense énergétique : BMR, TDEE, objectif calorique et macros"),
         ],
     },
     {

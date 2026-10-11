@@ -14,7 +14,8 @@ def _init():
     # Valeurs internes : toujours en kg et en cm.
     ss.setdefault("poids_kg", calc.DEFAUTS["poids"])
     ss.setdefault("taille_cm", calc.DEFAUTS["taille"])
-    _afficher_depuis_interne()
+    if "poids_m" not in ss:  # première exécution seulement
+        _afficher_depuis_interne()
 
 
 def _afficher_depuis_interne():
