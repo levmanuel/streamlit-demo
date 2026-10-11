@@ -5,17 +5,24 @@ import numpy as np
 import requests
 import streamlit as st
 
+from lib.secrets import mistral_api_key
+
 st.set_page_config(
     page_title="Chat RAG — Portfolio",
     page_icon="💬",
     layout="wide",
 )
 
-MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
+MISTRAL_API_KEY = mistral_api_key()
 MISTRAL_CHAT_URL = "https://api.mistral.ai/v1/chat/completions"
 MISTRAL_EMBED_URL = "https://api.mistral.ai/v1/embeddings"
 CHAT_MODEL = "ministral-3b-latest"
 EMBED_MODEL = "mistral-embed"
+
+# Garde-fous de coût (la clé Mistral est partagée par tous les visiteurs)
+MAX_QUESTIONS_PAR_SESSION = 15
+MAX_CARACTERES_QUESTION = 500
+MAX_MESSAGES_HISTORIQUE = 6  # derniers messages renvoyés au modèle
 
 KNOWLEDGE_BASE = [
     {
@@ -308,7 +315,19 @@ for msg in st.session_state["messages"]:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-if prompt := st.chat_input("Ex : Comment fonctionne la page SHAP ?"):
+nb_questions = sum(m["role"] == "user" for m in st.session_state["messages"])
+limite_atteinte = nb_questions >= MAX_QUESTIONS_PAR_SESSION
+if limite_atteinte:
+    st.info(
+        f"Limite de {MAX_QUESTIONS_PAR_SESSION} questions par session atteinte. "
+        "Rechargez la page pour recommencer."
+    )
+
+if prompt := st.chat_input(
+    "Ex : Comment fonctionne la page SHAP ?",
+    max_chars=MAX_CARACTERES_QUESTION,
+    disabled=limite_atteinte,
+):
     st.session_state["messages"].append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -321,7 +340,7 @@ if prompt := st.chat_input("Ex : Comment fonctionne la page SHAP ?"):
             "role": "system",
             "content": f"{SYSTEM_PROMPT}\n\nContexte récupéré :\n{context}",
         }
-    ] + [{"role": m["role"], "content": m["content"]} for m in st.session_state["messages"]]
+    ] + [{"role": m["role"], "content": m["content"]} for m in st.session_state["messages"][-MAX_MESSAGES_HISTORIQUE:]]
 
     with st.chat_message("assistant"):
         response = st.write_stream(stream_mistral(api_messages))
