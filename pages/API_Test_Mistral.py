@@ -3,6 +3,8 @@ import time
 import requests
 import streamlit as st
 
+from lib.secrets import mistral_api_key
+
 st.set_page_config(page_title="Diagnostic API Mistral", page_icon="🔧")
 
 st.title("🔧 Diagnostic API Mistral")
@@ -11,7 +13,7 @@ st.caption(
     "statut HTTP, en-têtes complets et corps de la réponse."
 )
 
-MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
+MISTRAL_API_KEY = mistral_api_key()
 HEADERS = {"Authorization": f"Bearer {MISTRAL_API_KEY}"}
 
 if len(MISTRAL_API_KEY) > 8:

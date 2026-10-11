@@ -1,11 +1,13 @@
 import streamlit as st
+
+from lib.secrets import mistral_api_key
 import requests
 import json
 import time
 from datetime import date, timedelta
 
 MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
-MISTRAL_API_KEY = st.secrets["api"]["MISTRAL_API_KEY"]
+MISTRAL_API_KEY = mistral_api_key()
 MODEL = "ministral-3b-latest"
 
 CRITERES_LABELS = {
