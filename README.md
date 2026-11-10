@@ -52,7 +52,7 @@ Portfolio interactif de démos Machine Learning, Data Science et outils métier,
 | Page | Description |
 |------|-------------|
 | **Open-Meteo API** | Exploration d'une API météo publique : conditions actuelles, prévisions, historique |
-| **The Game** | Implémentation du jeu de cartes The Game avec mode auto-play (IA) et mode joueur |
+| **The Game** | Jeu de cartes The Game en solo : mode joueur (annulation, saut de 10 signalé, score) et auto-play IA ; règles pures dans `lib/the_game.py` |
 | **Cocktail** | Suggestions de recettes de cocktails selon les ingrédients disponibles |
 | **TDEE** | Calculateur de dépense énergétique (BMR, TEF, EAT, NEAT), objectif de poids et macros ; calculs purs dans `lib/tdee.py` |
 
