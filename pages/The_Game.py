@@ -1,236 +1,231 @@
-import streamlit as st
-import random
 import time
 
-st.set_page_config(
-    page_title="The Game",
-    page_icon="🎮",
-    layout="centered"
+import streamlit as st
+
+from lib import the_game as g
+
+st.set_page_config(page_title="The Game", page_icon="🎮", layout="centered")
+
+# Couleurs lisibles en thème clair comme en thème sombre (texte hérité du thème).
+st.markdown(
+    """
+    <style>
+        .tg-pile { text-align: center; padding: 4px 0 8px; }
+        .tg-pile .tg-sens { font-size: 0.8rem; font-weight: 600; letter-spacing: .04em;
+                            text-transform: uppercase; }
+        .tg-pile .tg-sommet { font-size: 3rem; font-weight: 700; line-height: 1.1;
+                              font-variant-numeric: tabular-nums; }
+        .tg-pile .tg-histo { font-size: 0.8rem; opacity: .6; min-height: 1.2em;
+                             font-variant-numeric: tabular-nums; }
+        .tg-asc .tg-sens, .tg-asc .tg-sommet { color: #1f9d55; }
+        .tg-desc .tg-sens, .tg-desc .tg-sommet { color: #e0533d; }
+        .tg-nouveau .tg-sommet { text-decoration: underline; text-underline-offset: 6px; }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
-st.markdown("""
-    <style>
-        .card {
-            background-color: #f0f2f6;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px 0;
-        }
-        .pile-ascending { color: #28a745; }
-        .pile-descending { color: #dc3545; }
-        .stButton>button { width: 100%; }
-        .game-status {
-            color: #4a4a4a;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-    </style>
-""", unsafe_allow_html=True)
+
+# --- État -------------------------------------------------------------------
+def nouvelle_partie():
+    st.session_state.tg_partie = g.nouvelle_partie()
+    st.session_state.tg_selection = None
+    st.session_state.tg_comptee = False
 
 
-def init_game():
-    piles = {
-        "↗️ Pile ascendante 1": [1],
-        "↗️ Pile ascendante 2": [1],
-        "↙️ Pile descendante 1": [100],
-        "↙️ Pile descendante 2": [100]
-    }
-    deck = list(range(2, 100))
-    random.shuffle(deck)
-    return piles, deck
+if "tg_partie" not in st.session_state:
+    nouvelle_partie()
+st.session_state.setdefault("tg_selection", None)
+st.session_state.setdefault("tg_comptee", False)
+st.session_state.setdefault("tg_stats", {"parties": 0, "victoires": 0, "meilleur": None})
+
+partie = st.session_state.tg_partie
 
 
-def is_valid_move(card, pile, ascending=True):
-    top = pile[-1]
-    if ascending:
-        return card > top or card == top - 10
-    else:
-        return card < top or card == top + 10
+# --- Actions (callbacks : exécutées avant le rendu, sans st.rerun) -----------
+def selectionner(carte):
+    actuelle = st.session_state.tg_selection
+    st.session_state.tg_selection = None if actuelle == carte else carte
 
 
-def has_valid_moves(hand, piles):
-    for card in hand:
-        for pile_name, pile in piles.items():
-            if is_valid_move(card, pile, ascending="↗️" in pile_name):
-                return True
-    return False
+def poser(index_pile):
+    carte = st.session_state.tg_selection
+    if carte in partie["main"] and g.coup_valide(carte, partie["piles"][index_pile]):
+        g.jouer(partie, carte, index_pile)
+    st.session_state.tg_selection = None
 
 
-def update_game_state(card, pile_key):
-    gs = st.session_state.game_state
-    gs["piles"][pile_key].append(card)
-    gs["hand"].remove(card)
-    if gs["deck"] and len(gs["hand"]) < 6:
-        gs["hand"].append(gs["deck"].pop())
-    gs["moves_this_turn"] += 1
-    st.session_state.game_state = gs
+def annuler():
+    g.annuler(partie)
+    st.session_state.tg_selection = None
 
 
-def end_turn():
-    gs = st.session_state.game_state
-    gs["moves_this_turn"] = 0
-    gs["turn_number"] += 1
-    st.session_state.game_state = gs  # FIX: persist state back
+def finir_tour():
+    if g.peut_finir_tour(partie):
+        g.fin_tour(partie)
+    st.session_state.tg_selection = None
 
 
-def ai_make_move():
-    gs = st.session_state.game_state
-    hand, piles = gs["hand"], gs["piles"]
-
-    # Score moves: prefer smallest gap (jump-back = 0 = highest priority)
-    scored = []
-    for card in hand:
-        for pile_name, pile in piles.items():
-            ascending = "↗️" in pile_name
-            if is_valid_move(card, pile, ascending):
-                top = pile[-1]
-                if ascending:
-                    gap = card - top if card > top else 0
-                else:
-                    gap = top - card if card < top else 0
-                scored.append((gap, card, pile_name))
-
-    if scored:
-        scored.sort(key=lambda x: x[0])
-        _, card, pile_name = scored[0]
-        update_game_state(card, pile_name)
-        return True
-    return False
-
-
-# --- Initialization ---
-if "game_state" not in st.session_state:
-    piles, deck = init_game()
-    hand = [deck.pop() for _ in range(6)]
-    st.session_state.game_state = {
-        "piles": piles,
-        "deck": deck,
-        "hand": hand,
-        "moves_this_turn": 0,
-        "turn_number": 1,
-    }
-    st.session_state.game_over = False
-    st.session_state.auto_play = False
-    st.session_state.selected_card = None
-
-
-def reset_game():
-    for key in ["game_state", "game_over", "auto_play", "selected_card"]:
-        st.session_state.pop(key, None)
-
-
-# Garantit la présence de toutes les clés même après un redéploiement à chaud
-st.session_state.setdefault("game_over", False)
-st.session_state.setdefault("auto_play", False)
-st.session_state.setdefault("selected_card", None)
-
-gs = st.session_state.game_state
-piles = gs["piles"]
-deck = gs["deck"]
-hand = gs["hand"]
-moves = gs["moves_this_turn"]
-min_moves = 1 if not deck else 2
-
-# Compute once per render
-can_move = has_valid_moves(hand, piles)
-
+# --- En-tête ----------------------------------------------------------------
 st.title("🎮 The Game")
+st.caption(
+    "Jeu coopératif en solo : posez les 98 cartes sur quatre piles avant d'être bloqué."
+)
 
-# --- Auto-play controls ---
-col1, col2 = st.columns([1, 1])
-with col1:
-    auto_play = st.checkbox("Auto-play (IA)", key="auto_play")
-with col2:
-    if auto_play:
-        st.slider("Vitesse (s)", 0.1, 2.0, 0.5, key="ai_speed")
+with st.expander("📖 Règles"):
+    st.markdown(
+        f"""
+- **Piles ascendantes** (départ 1) : posez une carte **plus grande** que le sommet.
+- **Piles descendantes** (départ 100) : posez une carte **plus petite**.
+- **Le saut de 10** : une carte valant *exactement 10 de moins* (pile ascendante)
+  ou *10 de plus* (pile descendante) peut être posée — c'est le seul moyen de
+  faire reculer une pile.
+- Chaque tour, posez **au moins 2 cartes** (1 seule quand la pioche est vide),
+  puis terminez le tour pour compléter votre main à {g.TAILLE_MAIN} cartes.
+- La partie est **gagnée** si toutes les cartes sont posées, **perdue** si vous
+  ne pouvez plus jouer le minimum requis. Moins de 10 cartes restantes est déjà
+  un excellent résultat.
+"""
+    )
 
-# --- Auto-play loop ---
-if st.session_state.auto_play and not st.session_state.game_over:
-    if can_move:
-        ai_make_move()
-        time.sleep(st.session_state.get("ai_speed", 0.5))
-        st.rerun()
-    elif moves >= min_moves:
-        end_turn()
-        st.rerun()
+col_auto, col_vitesse, col_new = st.columns([2, 3, 2])
+auto = col_auto.toggle("🤖 Auto-play (IA)", key="tg_auto")
+if auto:
+    col_vitesse.slider("Délai entre deux coups (s)", 0.1, 2.0, 0.5, 0.1, key="tg_vitesse")
+col_new.button("🔄 Nouvelle partie", on_click=nouvelle_partie, use_container_width=True)
+
+# --- Tour de l'IA -----------------------------------------------------------
+if auto and g.statut(partie) == g.EN_COURS:
+    g.jouer_ia(partie)
+    st.session_state.tg_selection = None
+
+etat = g.statut(partie)
+selection = st.session_state.tg_selection
+if selection not in partie["main"]:
+    selection = st.session_state.tg_selection = None
+restantes = g.cartes_restantes(partie)
+nb_coups, minimum = len(partie["coups_ce_tour"]), g.min_coups(partie)
+dernier = partie["coups_ce_tour"][-1][1] if partie["coups_ce_tour"] else None
+
+# --- Indicateurs ------------------------------------------------------------
+m1, m2, m3, m4 = st.columns(4)
+m1.metric("Tour", partie["tour"])
+m2.metric("Pioche", len(partie["pioche"]))
+m3.metric("Cartes restantes", restantes)
+m4.metric("Posées ce tour", f"{nb_coups} / {minimum} min")
+st.progress((98 - restantes) / 98, text=f"{98 - restantes} cartes posées sur 98")
+
+# --- Piles ------------------------------------------------------------------
+cols = st.columns(4)
+for i, (col, pile) in enumerate(zip(cols, partie["piles"])):
+    with col.container(border=True):
+        sens = "↗ Ascendante" if pile["ascendante"] else "↘ Descendante"
+        classes = "tg-asc" if pile["ascendante"] else "tg-desc"
+        if i == dernier:
+            classes += " tg-nouveau"
+        histo = " · ".join(str(c) for c in pile["cartes"][-4:-1]) or "&nbsp;"
+        st.markdown(
+            f"<div class='tg-pile {classes}'>"
+            f"<div class='tg-sens'>{sens}</div>"
+            f"<div class='tg-sommet'>{pile['cartes'][-1]}</div>"
+            f"<div class='tg-histo'>{histo}</div></div>",
+            unsafe_allow_html=True,
+        )
+        if etat == g.EN_COURS:
+            jouable = not auto and selection is not None and g.coup_valide(selection, pile)
+            if jouable:
+                ecart = g.cout(selection, pile)
+                label = "⏪ Saut −10" if g.est_saut(selection, pile) else f"Poser (+{ecart})"
+            else:
+                label = "Poser"
+            st.button(
+                label,
+                key=f"tg_pile_{i}",
+                disabled=not jouable,
+                type="primary" if jouable and g.est_saut(selection, pile) else "secondary",
+                on_click=poser,
+                args=(i,),
+                help="Écart consommé sur la pile" if jouable else None,
+                use_container_width=True,
+            )
+
+# --- Fin de partie ----------------------------------------------------------
+if etat != g.EN_COURS:
+    stats = st.session_state.tg_stats
+    if not st.session_state.tg_comptee:
+        stats["parties"] += 1
+        stats["victoires"] += etat == g.GAGNEE
+        if stats["meilleur"] is None or restantes < stats["meilleur"]:
+            stats["meilleur"] = restantes
+        st.session_state.tg_comptee = True
+        if etat == g.GAGNEE:
+            st.balloons()
+    if etat == g.GAGNEE:
+        st.success(f"🎉 {g.appreciation(0)} — les 98 cartes sont posées en {partie['tour']} tours !")
     else:
-        st.session_state.game_over = True
+        st.error(
+            f"💀 Plus aucun coup possible — **{restantes} cartes restantes**. "
+            f"{g.appreciation(restantes)}."
+        )
+        if partie["main"]:
+            st.caption("Main restante : " + " · ".join(map(str, partie["main"])))
 
-# --- Piles display ---
-col_left, col_right = st.columns(2)
-with col_left:
-    st.subheader("Piles ascendantes ↗️")
-    for name, pile in piles.items():
-        if "↗️" not in name:
-            continue
-        st.markdown(f"""
-            <div class='card pile-ascending'>
-                <h3>{name}</h3>
-                <h2>{pile[-1]}</h2>
-            </div>
-        """, unsafe_allow_html=True)
-        sel = st.session_state.selected_card
-        if not auto_play and sel is not None and is_valid_move(sel, pile, ascending=True):
-            if st.button(f"Jouer {sel} ici", key=f"play_{name}"):
-                update_game_state(sel, name)
-                st.session_state.selected_card = None
-                st.rerun()
+# --- Main du joueur ---------------------------------------------------------
+else:
+    # En auto-play, la main reste visible (lecture seule) pour suivre l'IA.
+    st.subheader("Main de l'IA" if auto else "Votre main")
+    jouables = set() if auto else {carte for carte, _ in g.coups_possibles(partie)}
+    if partie["main"]:
+        for col, carte in zip(st.columns(g.TAILLE_MAIN), partie["main"]):
+            col.button(
+                str(carte),
+                key=f"tg_carte_{carte}",
+                type="primary" if carte == selection else "secondary",
+                disabled=carte not in jouables,
+                on_click=selectionner,
+                args=(carte,),
+                use_container_width=True,
+            )
+    else:
+        st.caption("Main vide — terminez le tour pour repiocher.")
 
-with col_right:
-    st.subheader("Piles descendantes ↙️")
-    for name, pile in piles.items():
-        if "↙️" not in name:
-            continue
-        st.markdown(f"""
-            <div class='card pile-descending'>
-                <h3>{name}</h3>
-                <h2>{pile[-1]}</h2>
-            </div>
-        """, unsafe_allow_html=True)
-        sel = st.session_state.selected_card
-        if not auto_play and sel is not None and is_valid_move(sel, pile, ascending=False):
-            if st.button(f"Jouer {sel} ici", key=f"play_{name}"):
-                update_game_state(sel, name)
-                st.session_state.selected_card = None
-                st.rerun()
+    if auto:
+        st.caption("L'IA pose la carte la moins coûteuse et privilégie les sauts de 10.")
+    elif selection is None:
+        if not jouables:
+            st.info("Aucune carte jouable : terminez le tour pour repiocher.")
+        elif nb_coups < minimum:
+            st.caption(f"Choisissez une carte, puis une pile (encore {minimum - nb_coups} à poser).")
+        else:
+            st.caption("Minimum atteint : continuez à poser ou terminez le tour.")
+    else:
+        st.caption(f"Carte **{selection}** sélectionnée — choisissez une pile ci-dessus.")
 
-# --- Status bar ---
-st.markdown(f"""
-    <div class='game-status' style='background-color: {"#e6f4ff" if auto_play else "#f0f2f6"}'>
-        Tour {gs['turn_number']} — Cartes jouées ce tour : {moves}/{min_moves} minimum
-        <br>Cartes restantes : {len(deck)} dans le deck • {len(hand)} en main
-    </div>
-""", unsafe_allow_html=True)
+    c1, c2 = st.columns(2)
+    c1.button(
+        "↩️ Annuler la dernière carte",
+        disabled=auto or nb_coups == 0,
+        on_click=annuler,
+        use_container_width=True,
+    )
+    c2.button(
+        "✅ Fin de tour" + (" (repiocher)" if partie["pioche"] else ""),
+        type="primary",
+        disabled=auto or not g.peut_finir_tour(partie),
+        on_click=finir_tour,
+        use_container_width=True,
+    )
 
-# --- Manual play: hand + end turn ---
-if not auto_play and not st.session_state.game_over:
-    st.subheader("Votre main")
-    if hand:
-        cols = st.columns(len(hand))
-        for i, card in enumerate(sorted(hand)):
-            with cols[i]:
-                is_selected = st.session_state.selected_card == card
-                label = f"**[{card}]**" if is_selected else str(card)
-                if st.button(label, key=f"card_{i}_{card}"):
-                    st.session_state.selected_card = None if is_selected else card
-                    st.rerun()
+# --- Statistiques de session ------------------------------------------------
+stats = st.session_state.tg_stats
+if stats["parties"]:
+    st.divider()
+    s1, s2, s3 = st.columns(3)
+    s1.metric("Parties terminées", stats["parties"])
+    s2.metric("Victoires", stats["victoires"])
+    s3.metric("Meilleur score (cartes restantes)", stats["meilleur"])
 
-    if st.button("Fin de tour ✅", disabled=(moves < min_moves)):
-        end_turn()
-        st.session_state.selected_card = None
-        st.rerun()
-
-# --- Win condition ---
-if not deck and not hand:
-    st.success("🎉 Félicitations, vous avez gagné !")
-    if st.button("Nouvelle partie", key="btn_win"):
-        reset_game()
-        st.rerun()
-
-# --- Game over condition ---
-elif st.session_state.game_over or (not can_move and moves < min_moves):
-    st.error("💀 Partie terminée — Aucun mouvement possible !")
-    if st.button("Nouvelle partie", key="btn_loss"):
-        reset_game()
-        st.rerun()
+# --- Boucle auto-play : on affiche l'état, on attend, puis on relance --------
+if auto and etat == g.EN_COURS:
+    time.sleep(st.session_state.get("tg_vitesse", 0.5))
+    st.rerun()
